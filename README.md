@@ -35,10 +35,10 @@ Trilingual (French · German · English) — even server-computed labels follow 
 
 - **Full retirement projection** — AHV/AVS + occupational pension (BVG/LPP) + pillar 3a, replacement rate, year-by-year projection, PDF export.
 - **3a tax savings** — real federal, cantonal, and communal tax rates for all 26 cantons.
-- **Life scenarios** — couple simulation, staggered withdrawal, home purchase (EPL), divorce impact, retroactive 3a catch-up (new Swiss rule since 2026).
+- **Life scenarios** — couple simulation, staggered withdrawal, home purchase (EPL), divorce impact, retroactive 3a catch-up (Swiss reform — contribution gaps from 2025 onward).
 - **Recommendations engine** — server-side rules, prioritized by estimated annual impact.
 - **Provider comparison** — fees, performance, ESG, server-scored best match.
-- **Document vault** — encrypted storage, 5-minute signed download links.
+- **Document vault** — private storage (encrypted at rest), 5-minute signed download links.
 - **Year-end checklist** — what to pay in before December 31.
 
 ## Swiss-grade accuracy
@@ -46,7 +46,7 @@ Trilingual (French · German · English) — even server-computed labels follow 
 The tax engine is anchored to the **official calculator of the Swiss Federal
 Tax Administration (FTA)**: cantonal income-tax tables sampled through 10,686
 calls to the official API (26 cantons, single + married, interpolated on a
-CHF 1,000 grid), real cantonal multipliers and real communal multipliers,
+CHF 1,000 grid up to CHF 150,000, coarser above), real cantonal multipliers and real communal multipliers,
 capital-withdrawal taxes from the official per-canton tables, and the official
 2026 federal tax tariff. Validation anchors reproduce the official calculator
 **to the franc** and are re-checkable with one command

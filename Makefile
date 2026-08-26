@@ -44,12 +44,12 @@ clean: ## Remove build artifacts
 
 # ─── Docker ───────────────────────────────────
 
-docker-up: ## Start PostgreSQL + Redis containers (starts OrbStack if needed, waits for healthy)
+docker-up: ## Start PostgreSQL + Redis containers (waits for healthy)
 	@if ! docker info > /dev/null 2>&1; then \
-		echo "→ Docker unreachable — starting OrbStack…"; \
-		open -a OrbStack; \
+		open -a OrbStack 2>/dev/null || open -a Docker 2>/dev/null || true; \
+		echo "→ Docker daemon unreachable — trying to start it (macOS)…"; \
 		for i in $$(seq 1 30); do docker info > /dev/null 2>&1 && break; sleep 1; done; \
-		docker info > /dev/null 2>&1 || { echo "❌ Docker still unreachable after 30s"; exit 1; }; \
+		docker info > /dev/null 2>&1 || { echo "❌ Docker daemon unreachable — start it, then retry"; exit 1; }; \
 	fi
 	docker compose up -d --wait
 
@@ -98,7 +98,7 @@ setup: ## First-time project setup
 
 up: docker-up dev ## Start everything (docker + dev server)
 
-test: ## Full stack for manual testing: OrbStack + Docker healthy + migrations + backend (NOT the unit tests — see npm test)
+test: ## Full stack for manual testing: Docker healthy + migrations + backend (NOT the unit tests — see npm test)
 	$(MAKE) docker-up
 	$(MAKE) db-migrate
 	@if curl -s -m 2 -o /dev/null http://localhost:$(API_PORT)/health; then \

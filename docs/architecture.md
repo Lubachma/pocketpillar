@@ -14,9 +14,9 @@
 │  modules: auth · user · financial-profile · calculator ·   │
 │           recommendation · provider · document ·           │
 │           subscription · health                            │
-│  plugins: auth (JWT verify + Redis cache) · cors · helmet  │
-│           rate-limit · error-handler · prisma · redis ·    │
-│           swagger                                          │
+│  plugins: auth (JWT verify + Redis cache) · cors · i18n ·  │
+│           error-handler · prisma · redis · swagger         │
+│  inline: helmet · rate-limit (src/app.ts)                  │
 ├────────────┬───────────────────────┬───────────────────────┤
 │ PostgreSQL │ Supabase Auth+Storage │ Redis (Upstash)       │
 │ (Supabase) │ accounts · documents  │ JWT cache (≤ 5 min)   │

@@ -5,11 +5,13 @@
 # calculation → documents), then deletes the account (DELETE /users/me). Along the
 # way, validates SUPABASE_SERVICE_ROLE_KEY (Storage upload + auth deletion).
 #
-# Usage: scripts/smoke-api.sh [API_BASE_URL]   (default http://localhost:7777)
-# Prerequisites: backend listening + mobile/.env filled in (SUPABASE_URL + anon key).
+# Usage: scripts/smoke-api.sh [API_BASE_URL]   (default http://localhost:${PORT:-3000})
+# Prerequisites: backend listening + mobile/.env (SUPABASE_URL + anon key)
+# + SUPABASE_SERVICE_ROLE_KEY in the root .env (admin user creation/cleanup).
+# Any Supabase project of your own works — no PocketPillar secret required.
 set -euo pipefail
 
-API="${1:-http://localhost:7777}"
+API="${1:-http://localhost:${PORT:-3000}}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SUPABASE_URL=$(sed -n 's/^SUPABASE_URL=//p' "$ROOT/mobile/.env" | tr -d ' \r"')
 ANON=$(sed -n 's/^SUPABASE_ANON_KEY=//p' "$ROOT/mobile/.env" | tr -d ' \r"')

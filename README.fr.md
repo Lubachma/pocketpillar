@@ -35,10 +35,10 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 
 - **Projection retraite complète** — AVS + LPP + pilier 3a, taux de remplacement, projection année par année, export PDF.
 - **Économies fiscales 3a** — barèmes fédéraux, cantonaux et communaux réels pour les 26 cantons.
-- **Scénarios de vie** — simulation couple, retrait échelonné, achat immobilier (EPL), impact divorce, rachat rétroactif 3a (nouveauté légale 2026).
+- **Scénarios de vie** — simulation couple, retrait échelonné, achat immobilier (EPL), impact divorce, rachat rétroactif 3a (réforme suisse — lacunes dès 2025).
 - **Moteur de recommandations** — règles côté serveur, priorisées par impact annuel estimé.
 - **Comparaison de prestataires** — frais, performance, ESG, meilleur choix scoré côté serveur.
-- **Coffre-fort documents** — stockage chiffré, liens de téléchargement signés (5 minutes).
+- **Coffre-fort documents** — stockage privé (chiffré au repos), liens de téléchargement signés (5 minutes).
 - **Checklist de fin d'année** — ce qu'il reste à verser avant le 31 décembre.
 
 ## Précision suisse
@@ -46,7 +46,7 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 Le moteur fiscal est ancré au **calculateur officiel de l'Administration
 fédérale des contributions (AFC)** : tables cantonales échantillonnées via
 10 686 appels à l'API officielle (26 cantons, célibataire + marié,
-interpolation sur une grille de 1 000 CHF), multiplicateurs cantonaux et
+interpolation sur une grille de 1 000 CHF jusqu'à 150 000 CHF, plus large au-delà), multiplicateurs cantonaux et
 communaux réels, impôt sur les retraits en capital selon les vraies tables par
 canton, et tarif fédéral officiel 2026. Les ancres de validation reproduisent
 le calculateur officiel **au franc près** et sont re-vérifiables en une

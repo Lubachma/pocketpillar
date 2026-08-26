@@ -21,7 +21,8 @@ Administration (FTA/ESTV)**:
 
 - **10,686 calls** to the official calculator API
   (<https://swisstaxcalculator.estv.admin.ch>) produced per-canton tax
-  tables for single and married taxpayers on a **CHF 1,000 income grid**
+  tables for single and married taxpayers on a **CHF 1,000 income grid up
+  to CHF 150,000** (coarser steps above)
   (`src/lib/constants/cantonal-income-tables.ts`).
 - Values between grid points are **linearly interpolated** — the error is
   bounded to a few francs.
@@ -35,16 +36,18 @@ Administration (FTA/ESTV)**:
   (`src/lib/constants/capital-withdrawal-tables.ts`) — including the
   federal art. 38 DBG/LIFD one-fifth-of-tariff rule — replacing the naive
   "divide by 5" heuristic that flattens real cantonal differences (the
-  actual ZH/VD spread on a CHF 500k withdrawal is ≈ CHF 5,100).
+  engine's own ZH/VD spread on a CHF 500k withdrawal is ≈ CHF 6,900).
 - The **federal direct tax (IFD)** uses the official 2026 tariff
   (ESTV circular / Rundschreiben no. 215), for both single and married
   scales.
 
 ## Validation: to the franc, reproducible
 
-- Anchor values reproduce the official FTA calculator **exactly, to the
-  franc** — e.g. federal tax for a single taxpayer at CHF 100,000:
-  CHF 2,684; married at CHF 100,000 / 200,000: CHF 1,816 / 11,880.
+- Anchor values reproduce the official FTA calculator **to the franc** on
+  the federal and ZH anchors — e.g. federal tax for a single taxpayer at
+  CHF 100,000: CHF 2,684; married at CHF 100,000 / 200,000:
+  CHF 1,816 / 11,880 — and within a CHF 20 sampling tolerance on the
+  GE/VD cantonal anchors (currently also exact).
 - The anchors are re-checkable with one command (no write, exit 0 = no
   drift against the sampled tables):
 

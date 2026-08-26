@@ -18,7 +18,9 @@ cross-cutting rules and pitfalls** to know before any integration.
 - **i18n**: error messages are localized via `Accept-Language`
   (`fr` by default, `de`, `en` supported; `fr-CH` → `fr`, etc.).
 - **Auth**: `Authorization: Bearer <JWT Supabase>` on every route except
-  `GET /health*`, `POST /calculator/*`, `GET /calculator/municipalities`,
+  `GET /health*`, `POST /calculator/*` **except the four Premium scenarios
+  (couple, staggered-withdrawal, property-purchase, divorce-impact — §7/§11)**,
+  `GET /calculator/municipalities`,
   `GET /providers*`. *(Correction, 2026-08-26: `POST /providers/best-match`
   was previously listed here as exempt from auth. It is in fact
   **Premium-gated** — authenticated + active subscription required,
