@@ -89,8 +89,9 @@ mobile/lib/
 - **Demo account**: a scheduled Fly machine resets it nightly by replaying
   the real API end to end (`src/scripts/reset-demo.ts`) and re-granting
   premium directly in the `subscriptions` table.
-- **CI** (GitHub Actions): backend typecheck + lint + format + tests with
-  coverage thresholds; mobile analyze + tests + debug APK build.
+- **CI** (GitHub Actions, on push/PR to `main`): backend typecheck + lint +
+  format + tests with coverage thresholds; mobile analyze + tests + debug
+  APK build.
 
 ## API reference
 

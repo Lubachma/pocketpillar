@@ -80,7 +80,7 @@ Référence API : [docs/api-contract.md](docs/api-contract.md) (en anglais)
 
 - **390 tests backend** (Vitest) — fonctions de calcul pures, testées contre les valeurs d'ancrage officielles.
 - **499 tests Flutter** (unitaires + widget) et parcours E2E mockés ; `flutter analyze` à **0 issue**.
-- CI à chaque push (typecheck, lint, format, tests avec seuils de couverture, build APK debug).
+- CI à chaque push/PR vers `main` (typecheck, lint, format, tests avec seuils de couverture, build APK debug).
 - Smoke test en conditions réelles contre n'importe quel déploiement : `scripts/smoke-api.sh <base-url>` (7 étapes, auto-nettoyant).
 - La démo publique est réinitialisée chaque nuit par une tâche planifiée qui rejoue la vraie API de bout en bout.
 
