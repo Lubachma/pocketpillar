@@ -12,6 +12,9 @@
 |---|---|---|---|
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Check-up wizard](docs/screenshots/wizard.png) | ![Life scenarios](docs/screenshots/scenarios.png) | ![Document vault](docs/screenshots/documents.png) |
 
+<sub>Screenshots show the English UI; the app ships in French (default),
+German, and English — even server-computed labels follow `Accept-Language`.</sub>
+
 ## What it does
 
 - **Full retirement projection** — AHV/AVS + occupational pension (BVG/LPP) + pillar 3a, replacement rate, year-by-year projection, PDF export.
