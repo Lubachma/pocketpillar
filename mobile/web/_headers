@@ -1,0 +1,9 @@
+# Cloudflare Pages headers (copied into build/web by flutter build web).
+# Security hardening — 2026-08-26 audit. No CSP: Flutter web's wasm/service
+# worker runtime is CSP-fragile; these headers are safe for it.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

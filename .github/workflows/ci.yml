@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests (with coverage thresholds)
+        run: npm run test:coverage
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+  mobile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
+
+      - name: Pub get
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Generate localizations
+        working-directory: mobile
+        run: flutter gen-l10n
+
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze
+
+      - name: Tests
+        working-directory: mobile
+        run: flutter test
+
+      - name: Build APK (debug)
+        working-directory: mobile
+        run: flutter build apk --debug

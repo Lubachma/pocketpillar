@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.git
+.github
+*.md
+coverage
+.DS_Store
+# Out of scope for the backend image
+mobile
+docs
+tests
+supabase
+scripts

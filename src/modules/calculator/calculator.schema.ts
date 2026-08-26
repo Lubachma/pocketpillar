@@ -1,0 +1,174 @@
+import { z } from 'zod';
+import { SWISS_PENSION } from '../../lib/constants/swiss-pension.js';
+
+const cantonValues = [
+  'ZH',
+  'BE',
+  'LU',
+  'UR',
+  'SZ',
+  'OW',
+  'NW',
+  'GL',
+  'ZG',
+  'FR',
+  'SO',
+  'BS',
+  'BL',
+  'SH',
+  'AR',
+  'AI',
+  'SG',
+  'GR',
+  'AG',
+  'TG',
+  'TI',
+  'VD',
+  'VS',
+  'NE',
+  'GE',
+  'JU',
+] as const;
+
+export const municipalitiesQuerySchema = z.object({
+  canton: z.enum(cantonValues),
+});
+
+const maritalStatusValues = [
+  'SINGLE',
+  'MARRIED',
+  'REGISTERED_PARTNERSHIP',
+  'DIVORCED',
+  'WIDOWED',
+] as const;
+
+export const lppGapRequestSchema = z
+  .object({
+    grossAnnualIncome: z.number().int().positive(),
+    age: z.number().int().min(25).max(70),
+    retirementAge: z.number().int().min(58).max(70).default(65),
+    currentBvgCapital: z.number().int().nonnegative(),
+    actualAnnualContribution: z.number().int().nonnegative(),
+    conversionRate: z.number().min(0).max(100).default(6.8),
+  })
+  .refine((d) => d.retirementAge > d.age, {
+    message: 'retirementAge must be greater than age',
+  });
+
+export const taxSavingsRequestSchema = z.object({
+  canton: z.enum(cantonValues),
+  taxableIncome: z.number().int().positive(),
+  contribution: z.number().int().positive(),
+  maritalStatus: z.enum(maritalStatusValues).default('SINGLE'),
+  churchTax: z.boolean().default(false),
+  hasSecondPillar: z.boolean().default(true),
+  // Municipality of residence (optional) — real communal multiplier if the
+  // municipality is covered, otherwise falls back to the cantonal average.
+  municipality: z.string().min(1).max(100).optional(),
+});
+
+export const pillar3aCatchupRequestSchema = z.object({
+  currentYear: z.number().int().default(SWISS_PENSION.CURRENT_YEAR),
+  yearsSinceFirstEligible: z.number().int().min(0).max(10).default(1),
+  pastContributions: z.record(z.coerce.number(), z.number().int().nonnegative()).default({}),
+  hasSecondPillar: z.boolean().default(true),
+  taxableIncome: z.number().int().positive(),
+  // Canton/marital status/municipality (optional): present → tax savings
+  // calculated on the real FTA (Federal Tax Administration) 2026 brackets
+  // (year by year); absent → flat historical estimate (marginal rate 25/30/35%).
+  canton: z.enum(cantonValues).optional(),
+  maritalStatus: z.enum(maritalStatusValues).default('SINGLE'),
+  municipality: z.string().min(1).max(100).optional(),
+});
+
+export const propertyPurchaseRequestSchema = z
+  .object({
+    age: z.number().int().min(25).max(65),
+    retirementAge: z.number().int().min(58).max(70).default(65),
+    currentBvgCapital: z.number().int().nonnegative(),
+    bvgCapitalAtAge50: z.number().int().nonnegative().optional(),
+    withdrawalAmount: z.number().int().positive(),
+    annualContribution: z.number().int().nonnegative(),
+    interestRate: z.number().min(0).max(20).default(1.25),
+    conversionRate: z.number().min(0).max(100).default(6.8),
+  })
+  .refine((d) => d.retirementAge > d.age, {
+    message: 'retirementAge must be greater than age',
+  });
+
+export const divorceImpactRequestSchema = z
+  .object({
+    age: z.number().int().min(25).max(70),
+    retirementAge: z.number().int().min(58).max(70).default(65),
+    bvgCapitalAtMarriage: z.number().int().nonnegative(),
+    bvgCapitalNow: z.number().int().nonnegative(),
+    spouseBvgCapitalAtMarriage: z.number().int().nonnegative(),
+    spouseBvgCapitalNow: z.number().int().nonnegative(),
+    yearsMarried: z.number().int().min(0).max(50),
+    annualContribution: z.number().int().nonnegative(),
+    interestRate: z.number().min(0).max(20).default(1.25),
+    conversionRate: z.number().min(0).max(100).default(6.8),
+  })
+  .refine((d) => d.retirementAge > d.age, {
+    message: 'retirementAge must be greater than age',
+  })
+  // Capital acquired during the marriage cannot be negative.
+  .refine((d) => d.bvgCapitalAtMarriage <= d.bvgCapitalNow, {
+    message: 'bvgCapitalAtMarriage must not exceed bvgCapitalNow',
+  })
+  .refine((d) => d.spouseBvgCapitalAtMarriage <= d.spouseBvgCapitalNow, {
+    message: 'spouseBvgCapitalAtMarriage must not exceed spouseBvgCapitalNow',
+  });
+
+export const staggeredWithdrawalRequestSchema = z
+  .object({
+    canton: z.enum(cantonValues),
+    totalPillar3aBalance: z.number().int().nonnegative(),
+    numberOfAccounts: z.number().int().min(1).max(5).default(1),
+    retirementAge: z.number().int().min(58).max(70).default(65),
+    currentAge: z.number().int().min(25).max(70),
+    maritalStatus: z.enum(['SINGLE', 'MARRIED']).default('SINGLE'),
+    pillar2AsCapital: z.number().int().nonnegative().default(0),
+    // Municipality of residence (optional) — see tax-savings.
+    municipality: z.string().min(1).max(100).optional(),
+  })
+  .refine((d) => d.retirementAge > d.currentAge, {
+    message: 'retirementAge must be greater than currentAge',
+  });
+
+export const retirementProjectionRequestSchema = z
+  .object({
+    currentAge: z.number().int().min(18).max(70),
+    retirementAge: z.number().int().min(58).max(70).default(65),
+    grossAnnualIncome: z.number().int().positive(),
+    currentPillar2Capital: z.number().int().nonnegative(),
+    annualPillar2Contribution: z.number().int().nonnegative(),
+    pillar2InterestRate: z.number().min(0).max(20).default(1.25),
+    conversionRate: z.number().min(0).max(100).default(6.8),
+    currentPillar3aBalance: z.number().int().nonnegative().default(0),
+    annualPillar3aContribution: z.number().int().nonnegative().default(0),
+    pillar3aReturnRate: z
+      .number()
+      .min(-20)
+      .max(20)
+      .default(SWISS_PENSION.PILLAR_3A_DEFAULT_RETURN_RATE),
+    // No flat default: when the field is omitted, the handler estimates the
+    // pension from income (simplified scale 44, `estimateAvsPension` — contract §7).
+    estimatedAvsPension: z.number().int().nonnegative().optional(),
+  })
+  .refine((d) => d.retirementAge > d.currentAge, {
+    message: 'retirementAge must be greater than currentAge',
+  });
+
+// Each spouse reuses exactly the inputs of an individual retirement
+// projection (same bounds, same defaults, same refine).
+export const coupleSimulationRequestSchema = z.object({
+  canton: z.enum(cantonValues),
+  // Marital statuses that change the couple's tax: marriage and registered
+  // partnership = joint taxation; concubinage = 2 × single.
+  maritalStatus: z.enum(['MARRIED', 'REGISTERED_PARTNERSHIP', 'CONCUBINAGE']),
+  // Couple's municipality of residence (optional) — see tax-savings.
+  municipality: z.string().min(1).max(100).optional(),
+  person1: retirementProjectionRequestSchema,
+  person2: retirementProjectionRequestSchema,
+});

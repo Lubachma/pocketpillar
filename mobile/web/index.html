@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Optimisez votre 2e et 3e pilier (AVS/LPP/3a) — calculateurs officiels 2026, indépendant et sans publicité.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="PocketPillar">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>PocketPillar — Prévoyance suisse</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+  <!-- banner: fr/de/en strings handled in the script below -->
+  <div id="pp-install" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;background:#0a2540;color:#fff;padding:14px 16px;border-radius:12px;font-family:-apple-system,system-ui,sans-serif;font-size:14px;line-height:1.4;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+    <div id="pp-install-text"></div>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button id="pp-install-accept" style="flex:1;background:#007AFF;color:#fff;border:0;border-radius:8px;padding:10px;font-size:14px;font-weight:600"></button>
+      <button id="pp-install-dismiss" aria-label="Close" style="background:transparent;color:#9db2c8;border:0;padding:10px;font-size:14px">✕</button>
+    </div>
+  </div>
+  <script>
+  (function () {
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) return;
+    if (localStorage.getItem('pp-install-dismissed')) return;
+    var all = {
+      fr: { ios: 'Installez PocketPillar : touchez « Partager » puis « Sur l’écran d’accueil ».', android: 'Installez PocketPillar sur votre appareil pour un accès rapide.', install: 'Installer', ok: 'OK' },
+      de: { ios: 'PocketPillar installieren: „Teilen“ antippen, dann „Zum Home-Bildschirm“.', android: 'PocketPillar für schnellen Zugriff installieren.', install: 'Installieren', ok: 'OK' },
+      en: { ios: 'Install PocketPillar: tap "Share" then "Add to Home Screen".', android: 'Install PocketPillar for quick access.', install: 'Install', ok: 'OK' }
+    };
+    var t = all[(navigator.language || 'fr').slice(0, 2)] || all.fr;
+    var banner = document.getElementById('pp-install');
+    var text = document.getElementById('pp-install-text');
+    var accept = document.getElementById('pp-install-accept');
+    function dismiss() {
+      localStorage.setItem('pp-install-dismissed', '1');
+      banner.style.display = 'none';
+    }
+    document.getElementById('pp-install-dismiss').addEventListener('click', dismiss);
+    var isIos = (/iP(hone|ad|od)/.test(navigator.userAgent) ||
+        (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) && !window.MSStream;
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isIos && isSafari) {
+      // iOS: no beforeinstallprompt — guided instructions.
+      text.textContent = t.ios;
+      accept.textContent = t.ok;
+      accept.addEventListener('click', dismiss);
+      banner.style.display = 'block';
+      return;
+    }
+    var deferred = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferred = e;
+      text.textContent = t.android;
+      accept.textContent = t.install;
+      accept.addEventListener('click', function () {
+        banner.style.display = 'none';
+        if (deferred) { deferred.prompt(); deferred = null; }
+      });
+      banner.style.display = 'block';
+    });
+  })();
+  </script>
+</body>
+</html>

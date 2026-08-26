@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  S2 (revue complète 2026-08) : rien ne quitte l'appareil — ni sauvegarde
+  cloud, ni transfert appareil-à-appareil. La session Supabase vit dans le
+  stockage chiffré (clé Keystore non exportable) et les SharedPreferences
+  ne contiennent que des réglages non sensibles, facilement re-saisis.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="file" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="file" path="." />
+    </device-transfer>
+</data-extraction-rules>

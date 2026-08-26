@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Canton {
+  ZH
+  BE
+  LU
+  UR
+  SZ
+  OW
+  NW
+  GL
+  ZG
+  FR
+  SO
+  BS
+  BL
+  SH
+  AR
+  AI
+  SG
+  GR
+  AG
+  TG
+  TI
+  VD
+  VS
+  NE
+  GE
+  JU
+}
+
+enum EmploymentStatus {
+  EMPLOYED
+  SELF_EMPLOYED
+  UNEMPLOYED
+  RETIRED
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  REGISTERED_PARTNERSHIP
+  DIVORCED
+  WIDOWED
+}
+
+enum Pillar3aAccountType {
+  BANK
+  INSURANCE
+}
+
+enum InvestmentCategory {
+  SAVINGS_ACCOUNT
+  PASSIVE_INDEX
+  ACTIVE_MANAGED
+  MIXED
+  INSURANCE
+}
+
+enum RiskLevel {
+  CONSERVATIVE
+  MODERATE
+  BALANCED
+  GROWTH
+  AGGRESSIVE
+}
+
+model User {
+  id          String   @id @default(uuid()) @db.Uuid
+  supabaseId  String   @unique @map("supabase_id")
+  email       String   @unique
+  canton      Canton?
+  birthYear   Int?     @map("birth_year")
+  /** Place of residence (free text) — real communal multiplier used in
+   * tax calculations when the municipality is covered. */
+  municipality String?
+  /** Target replacement rate for retirement income (50-100 %) */
+  replacementRateGoal Int @default(70) @map("replacement_rate_goal")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  financialProfile FinancialProfile?
+  pillar2Accounts  Pillar2Account[]
+  pillar3aAccounts Pillar3aAccount[]
+  taxSituation     TaxSituation?
+  documents        Document[]
+  subscription     Subscription?
+
+  @@map("users")
+}
+
+model FinancialProfile {
+  id               String           @id @default(uuid()) @db.Uuid
+  userId           String           @unique @map("user_id") @db.Uuid
+  employmentStatus EmploymentStatus @map("employment_status")
+  maritalStatus    MaritalStatus    @map("marital_status")
+  numberOfChildren Int              @default(0) @map("number_of_children")
+  grossAnnualIncome Int             @map("gross_annual_income") // centimes
+  netAnnualIncome  Int?             @map("net_annual_income") // centimes
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("financial_profiles")
+}
+
+model Pillar2Account {
+  id                      String   @id @default(uuid()) @db.Uuid
+  userId                  String   @map("user_id") @db.Uuid
+  providerName            String?  @map("provider_name")
+  currentCapital          Int      @map("current_capital") // centimes
+  projectedCapitalAtRetirement Int? @map("projected_capital_at_retirement") // centimes
+  conversionRate          Float?   @map("conversion_rate") // e.g. 6.8
+  insuredSalary           Int?     @map("insured_salary") // centimes
+  coordinationDeduction   Int?     @map("coordination_deduction") // centimes
+  annualBvgContribution   Int?     @map("annual_bvg_contribution") // centimes
+  annualSupraContribution Int?     @map("annual_supra_contribution") // centimes
+  isVestedBenefits        Boolean  @default(false) @map("is_vested_benefits")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("pillar2_accounts")
+}
+
+model Pillar3aAccount {
+  id                   String              @id @default(uuid()) @db.Uuid
+  userId               String              @map("user_id") @db.Uuid
+  providerName         String              @map("provider_name")
+  accountType          Pillar3aAccountType @map("account_type")
+  currentBalance       Int                 @map("current_balance") // centimes
+  annualContribution   Int?                @map("annual_contribution") // centimes
+  interestRateOrReturn Float?              @map("interest_rate_or_return") // %
+  createdAt            DateTime            @default(now()) @map("created_at")
+  updatedAt            DateTime            @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("pillar3a_accounts")
+}
+
+model TaxSituation {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @unique @map("user_id") @db.Uuid
+  taxableIncome  Int      @map("taxable_income") // centimes
+  totalDeductions Int?    @map("total_deductions") // centimes
+  churchTax      Boolean  @default(false) @map("church_tax")
+  taxableWealth  Int?     @map("taxable_wealth") // centimes
+  municipality   String? // DEPRECATED: prefer users.municipality (single source of truth used by the calculators)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tax_situations")
+}
+
+// ─── Documents ───────────────────────────────
+
+enum DocumentType {
+  SALARY_SLIP
+  BVG_STATEMENT
+  PILLAR3A_STATEMENT
+  TAX_DECLARATION
+  OTHER
+}
+
+model Document {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @map("user_id") @db.Uuid
+  type        DocumentType
+  filename    String
+  storagePath String       @map("storage_path")
+  mimeType    String       @map("mime_type")
+  sizeBytes   Int          @map("size_bytes")
+  year        Int?
+  uploadedAt  DateTime     @default(now()) @map("uploaded_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("documents")
+}
+
+// ─── Premium subscription (RevenueCat) ─────────
+
+model Subscription {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @unique @map("user_id") @db.Uuid
+  /** RevenueCat store: APP_STORE, PLAY_STORE, STRIPE, PROMOTIONAL, … (free-form string — forward-compatible) */
+  store         String
+  productId     String    @map("product_id")
+  /** SANDBOX or PRODUCTION */
+  environment   String
+  /** Current entitlement end — premium is active as long as expiresAt > now (grace periods included by RevenueCat). */
+  expiresAt     DateTime? @map("expires_at")
+  lastEventType String    @map("last_event_type")
+  /** RevenueCat timestamp of the last applied event — guards against event reordering. */
+  lastEventAt   DateTime  @map("last_event_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// ─── Provider Data (Phase 2) ─────────────────
+
+model Pillar3aProvider {
+  id          String    @id @default(uuid()) @db.Uuid
+  slug        String    @unique
+  name        String
+  description String?
+  website     String?
+  isDigital   Boolean   @default(true) @map("is_digital")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  products Pillar3aProduct[]
+
+  @@map("pillar3a_providers")
+}
+
+model Pillar3aProduct {
+  id                 String             @id @default(uuid()) @db.Uuid
+  providerId         String             @map("provider_id") @db.Uuid
+  name               String
+  slug               String             @unique
+  investmentCategory InvestmentCategory @map("investment_category")
+  riskLevel          RiskLevel          @map("risk_level")
+  equityAllocation   Int                @map("equity_allocation") // 0-100 %
+  sustainableEsg     Boolean            @default(false) @map("sustainable_esg")
+  isActive           Boolean            @default(true) @map("is_active")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+
+  provider           Pillar3aProvider    @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  fees               Pillar3aProductFee?
+  performanceHistory Pillar3aPerformance[]
+
+  @@index([providerId])
+  @@map("pillar3a_products")
+}
+
+model Pillar3aProductFee {
+  id                String          @id @default(uuid()) @db.Uuid
+  productId         String          @unique @map("product_id") @db.Uuid
+  terPercent        Float           @map("ter_percent")
+  custodyFeePercent Float?          @map("custody_fee_percent")
+  allInFeePercent   Float           @map("all_in_fee_percent")
+  entryFeePercent   Float           @default(0) @map("entry_fee_percent")
+  exitFeePercent    Float           @default(0) @map("exit_fee_percent")
+  notes             String?
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  product           Pillar3aProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("pillar3a_product_fees")
+}
+
+model Pillar3aPerformance {
+  id            String          @id @default(uuid()) @db.Uuid
+  productId     String          @map("product_id") @db.Uuid
+  year          Int
+  returnPercent Float           @map("return_percent")
+  createdAt     DateTime        @default(now()) @map("created_at")
+
+  product       Pillar3aProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, year])
+  @@map("pillar3a_performance")
+}

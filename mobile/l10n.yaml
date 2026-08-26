@@ -1,0 +1,9 @@
+# Configuration flutter gen-l10n — PocketPillar
+# Locale de référence : français (comme Localizable.xcstrings de l'app iOS).
+arb-dir: lib/core/l10n
+template-arb-file: app_fr.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+# Fichiers générés dans le package (les synthetic packages sont retirés de Flutter).
+output-dir: lib/core/l10n/gen
+nullable-getter: false

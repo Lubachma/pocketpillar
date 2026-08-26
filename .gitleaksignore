@@ -1,0 +1,9 @@
+# False positives only — every entry must carry its justification.
+#
+# The four entries below are the SAME string: the canonical RFC 4122
+# example UUID '123e4567-e89b-42d3-a456-426614174000', used as a fake JWT
+# subject (TOKEN_SUB) in test fixtures. Not a credential.
+tests/modules/auth/auth.handler.test.ts:generic-api-key:21
+tests/integration/http-contract.test.ts:generic-api-key:25
+tests/modules/subscription/subscription.test.ts:generic-api-key:21
+tests/plugins/auth.test.ts:generic-api-key:22
