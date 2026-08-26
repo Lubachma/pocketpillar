@@ -7,9 +7,9 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Release signing: `key.properties` (gitignored, see docs/lancement/plan-sprint.md
-// Phase 4) describes the upload keystore. Absent → falls back to the debug key so
-// `flutter run --release` and dev builds keep working.
+// Release signing: `key.properties` (gitignored) describes the upload keystore.
+// Absent → falls back to the debug key so `flutter run --release` and dev
+// builds keep working.
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties().apply {
     if (keystorePropertiesFile.exists()) {

@@ -1,7 +1,7 @@
 {
   "name": "pocketpillar-api",
   "version": "0.1.0",
-  "description": "PocketPillar — AI-powered pension optimizer for Switzerland (2nd/3rd pillar)",
+  "description": "PocketPillar — Swiss pension planning API (2nd/3rd pillar), anchored to official FTA tax data",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
