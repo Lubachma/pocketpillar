@@ -23,6 +23,10 @@ COPY package.json package-lock.json ./
 COPY prisma ./prisma
 RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+# --ignore-scripts skipped @prisma/engines' postinstall: bring the engine
+# binaries from the build stage (migrate deploy needs the schema engine, and
+# the runtime user cannot write into the root-owned node_modules).
+COPY --from=build /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
 COPY --from=build /app/dist ./dist
 USER node
 EXPOSE 3000
