@@ -75,7 +75,7 @@ class _DivorceImpactScreenState extends ConsumerState<DivorceImpactScreen> {
   /// the current capital **of the same spouse** (the backend accepts
   /// the inversion and would return nonsensical results — the
   /// suggestion of a Zod refine on the API side is logged in the
-  /// journal). The comparison is skipped while the current capital
+  /// during development). The comparison is skipped while the current capital
   /// isn't parsable: its own validator already flags that.
   String? _validateMarriageCapital(
     AppLocalizations l10n,

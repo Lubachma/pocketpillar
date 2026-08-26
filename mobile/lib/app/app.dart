@@ -63,7 +63,7 @@ class _PocketPillarAppState extends ConsumerState<PocketPillarApp> {
       );
     } on Object catch (e) {
       // The generic one stays scheduled; the next launch will retry.
-      debugLog('Rappel 3a contextuel non planifié au démarrage : $e');
+      debugLog('Contextual 3a reminder not scheduled at startup: $e');
     }
   }
 

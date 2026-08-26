@@ -66,7 +66,7 @@ class AuthService {
     try {
       await _registerOnBackend(identity);
     } on Exception catch (e) {
-      debugLog('Register backend après Sign in with Apple ignoré : $e');
+      debugLog('Backend register after Sign in with Apple skipped: $e');
     }
   }
 

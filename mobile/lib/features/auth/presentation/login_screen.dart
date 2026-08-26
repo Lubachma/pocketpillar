@@ -37,7 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String? _errorMessage;
 
   /// Sign in with Apple: iOS only. No Android web flow for
-  /// now (decision logged in the journal, phase 3.1).
+  /// now (deliberate product decision).
   static bool get _showAppleButton =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 

@@ -45,7 +45,7 @@ Future<void> main() async {
       );
     } on Object catch (e) {
       // Platform channel unavailable: the app starts without rescheduling.
-      debugLog('Rappels annuels non replanifiés au démarrage : $e');
+      debugLog('Annual reminders not rescheduled at startup: $e');
     }
   }
 

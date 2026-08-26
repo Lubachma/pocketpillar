@@ -4,7 +4,7 @@
 
 - **Backend API** (repo root): Node.js + TypeScript + Fastify
 - **Mobile App** (`mobile/`): Flutter (iOS + Android + web/PWA)
-- Legacy iOS SwiftUI app: archived on branch `archive/ios-swift`
+- Legacy iOS SwiftUI app: archived in the private repo history
 
 ## Backend
 

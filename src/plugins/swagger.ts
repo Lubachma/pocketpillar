@@ -8,8 +8,9 @@ export default fp(async (fastify: FastifyInstance) => {
     openapi: {
       info: {
         title: 'PocketPillar API',
-        description: 'AI-powered pension optimizer for Switzerland',
-        version: '0.1.0',
+        description:
+          'Swiss 2nd/3rd-pillar pension planning API — tax engine anchored to official FTA data',
+        version: '1.0.0',
       },
       tags: [
         { name: 'health', description: 'Health check endpoints' },

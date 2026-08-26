@@ -1,8 +1,8 @@
 import { t } from '../../../lib/i18n/index.js';
 import { SWISS_PENSION } from '../../../lib/constants/swiss-pension.js';
 import { calculateLppGap } from '../../calculator/lpp-gap.js';
-import { calculateProgressiveTax } from '../../../lib/constants/federal-tax.js';
 import {
+  calculateProgressiveTax,
   FEDERAL_TAX_BRACKETS_SINGLE,
   FEDERAL_TAX_BRACKETS_MARRIED,
 } from '../../../lib/constants/federal-tax.js';

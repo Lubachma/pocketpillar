@@ -22,11 +22,11 @@ import 'document_upload_sheet.dart';
 /// - Swipe deletion **with confirmation** (Flutter addition,
 ///   mission) → `DELETE /documents/:id` via the backend: deletion
 ///   actually works, unlike iOS (empty `storagePath` —
-///   `parite.md` §4 pitfalls).
+///   known platform pitfalls).
 /// - Upload via [DocumentUploadSheet] ("+" button in the appbar).
 ///
 /// Not ported: the anti-screenshot protection (iOS's `SecureView`)
-/// — no off-the-shelf Flutter equivalent (`parite.md` §4).
+/// — no off-the-shelf Flutter equivalent.
 class DocumentsScreen extends ConsumerStatefulWidget {
   const DocumentsScreen({super.key});
 
@@ -52,7 +52,7 @@ class _DocumentsScreenState extends ConsumerState<DocumentsScreen> {
         Uri.parse(download.url),
         mode: LaunchMode.externalApplication,
       );
-      if (!launched) throw StateError('launchUrl a renvoyé false');
+      if (!launched) throw StateError('launchUrl returned false');
     } on ApiException catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.message)));
     } on NetworkException {

@@ -81,7 +81,7 @@ class _ProviderDetailBody extends StatelessWidget {
         Uri.parse(url),
         mode: LaunchMode.externalApplication,
       );
-      if (!launched) throw StateError('launchUrl a renvoyé false');
+      if (!launched) throw StateError('launchUrl returned false');
     } on Object {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

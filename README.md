@@ -87,6 +87,7 @@ API reference: [docs/api-contract.md](docs/api-contract.md)
 ## Getting started
 
 Prerequisites: Node.js ≥ 20, Docker (PostgreSQL + Redis), Flutter 3.44+.
+The `make` convenience targets assume macOS; the plain `npm`/`flutter` commands work anywhere.
 
 ### Backend
 

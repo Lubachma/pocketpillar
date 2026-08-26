@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { config } from '../../config/index.js';
 import { revenueCatWebhookSchema } from './subscription.schema.js';
@@ -21,7 +22,12 @@ export async function revenueCatWebhookHandler(
   // Authorization — accept both the raw form and the `Bearer <value>` form.
   const header = request.headers.authorization ?? '';
   const expected = config.REVENUECAT_WEBHOOK_AUTH;
-  if (header !== expected && header !== `Bearer ${expected}`) {
+  const matches = (candidate: string): boolean => {
+    const a = Buffer.from(candidate);
+    const b = Buffer.from(expected);
+    return a.length === b.length && timingSafeEqual(a, b);
+  };
+  if (!matches(header) && !matches(header.replace(/^Bearer /, ''))) {
     return reply.status(401).send({ error: 'Unauthorized' });
   }
 

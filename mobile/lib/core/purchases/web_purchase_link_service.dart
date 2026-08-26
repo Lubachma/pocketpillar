@@ -5,7 +5,7 @@ import 'purchases_config.dart';
 import 'purchases_service.dart';
 
 /// **Web** purchases via a RevenueCat Web Purchase Link (hosted
-/// checkout — spec 2026-08-25, workstream W3).
+/// checkout).
 ///
 /// `purchaseAnnual` opens the checkout in the same tab with
 /// `app_user_id` (= backend `users.id`, passed via `logIn`, same
@@ -63,7 +63,7 @@ class WebPurchaseLinkService implements PurchasesService {
       final opened = await _opener(uri);
       if (!opened) return PurchaseOutcome.failed;
     } on Object catch (e) {
-      debugLog('Ouverture du checkout web échouée : $e');
+      debugLog('Opening the web checkout failed: $e');
       return PurchaseOutcome.failed;
     }
     // Silent: the purchase outcome arrives via the webhook then the

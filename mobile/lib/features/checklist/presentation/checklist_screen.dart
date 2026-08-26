@@ -35,7 +35,7 @@ class ChecklistScreen extends ConsumerWidget {
     final items = YearEndChecklist.applicableItems(hasPillar3a: hasPillar3a);
     final doneCount = items.where((item) => completed.contains(item.id)).length;
     // 3a cap displayed on the "max 3a" item (OPP3 art. 7, reviewed
-    // batch 12): 7'258 with a 2nd pillar — EMPLOYED status **or an existing
+    // note): 7'258 with a 2nd pillar — EMPLOYED status **or an existing
     // LPP account** (a self-employed person's optional LPP included) — otherwise
     // min(36'288, 20% of income), declared net basis falling back to gross (same
     // rule as the annual reminder, `pillar3aMaxForProfile`). Profile
@@ -75,7 +75,7 @@ class ChecklistScreen extends ConsumerWidget {
   /// Check persisted, then navigation to the target tab if the item
   /// was just checked. iOS navigated on **uncheck** (inverted
   /// condition, contradicting its own chevron) — fixed here
-  /// (journal 3.9).
+  ///
   void _onItemTap(
     BuildContext context,
     WidgetRef ref,

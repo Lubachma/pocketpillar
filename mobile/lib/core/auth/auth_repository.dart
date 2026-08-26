@@ -99,7 +99,7 @@ class AuthRepository {
     );
     final user = response.user;
     if (user == null) {
-      throw StateError('Supabase n\'a pas retourné d\'utilisateur.');
+      throw StateError('Supabase returned no user.');
     }
     return AuthIdentity(userId: user.id, email: user.email);
   }
@@ -148,7 +148,7 @@ class AuthRepository {
   /// Only signs out if a session exists: `signOut()` without a session
   /// still emits an auth event, which makes the router re-evaluate and
   /// re-invalidate the profile aggregate → refetch → 401 → new attempt
-  /// (refresh/signOut storm observed in the journal on 2026-08-07).
+  /// (refresh/signOut storm observed during development).
   Future<void> signOutIfAuthenticated() async {
     final auth = _client?.auth;
     if (auth == null || auth.currentSession == null) return;

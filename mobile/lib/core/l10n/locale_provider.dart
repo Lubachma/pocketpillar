@@ -8,11 +8,11 @@ import '../notifications/pillar3a_reminder.dart';
 import '../storage/preferences.dart';
 import '../utils/debug_log.dart';
 
-/// Locale courante de l'app.
+/// Current app locale.
 ///
-/// Défaut : français (parité iOS). Le choix fait dans les Paramètres est
-/// persisté (shared_preferences) et relu au démarrage ; utilisé aussi pour
-/// l'en-tête `Accept-Language` des appels API.
+/// Default: French. The choice made in Settings is persisted
+/// (shared_preferences) and read back at startup; also used for the
+/// `Accept-Language` header of API calls.
 final localeProvider = NotifierProvider<LocaleNotifier, Locale>(
   LocaleNotifier.new,
 );
@@ -26,11 +26,11 @@ class LocaleNotifier extends Notifier<Locale> {
     state = locale;
     final prefs = ref.read(preferencesRepositoryProvider);
     await prefs.setLocale(locale);
-    // Rappels annuels activés : replanifiés immédiatement dans la nouvelle
-    // langue (sinon ils garderaient l'ancienne jusqu'au prochain démarrage).
+    // Annual reminders enabled: rescheduled immediately in the new
+    // language (otherwise they would keep the old one until next startup).
     try {
-      // Contexte 3a (batch 7) : résolu via la fabrique injectée dans
-      // main() — null (ou absente) → corps générique.
+      // 3a context: resolved via the factory injected in main() —
+      // null (or absent) → generic body.
       final loadPillar3aContext = ref.read(
         pillar3aReminderContextLoaderProvider,
       );
@@ -41,9 +41,9 @@ class LocaleNotifier extends Notifier<Locale> {
         pillar3aContext: await loadPillar3aContext?.call(),
       );
     } on Object catch (e) {
-      // Canal plateforme indisponible : la langue change quand même, les
-      // rappels seront replanifiés au prochain démarrage.
-      debugLog('Rappels non replanifiés au changement de langue : $e');
+      // Platform channel unavailable: the language still changes; the
+      // reminders will be rescheduled at next startup.
+      debugLog('Reminders not rescheduled on language change: $e');
     }
   }
 }

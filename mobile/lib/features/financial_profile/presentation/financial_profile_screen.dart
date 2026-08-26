@@ -486,7 +486,7 @@ class _Pillar2Section extends ConsumerWidget {
             .read(profileAggregateProvider.notifier)
             .refreshPillar2Accounts();
       } on Object catch (e) {
-        debugLog('Rechargement des comptes LPP après CRUD : $e');
+        debugLog('LPP accounts reload after CRUD failed: $e');
       }
       if (!context.mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(l10n.profileAccountSaved)));
@@ -535,7 +535,7 @@ class _Pillar2Section extends ConsumerWidget {
             .read(profileAggregateProvider.notifier)
             .refreshPillar2Accounts();
       } on Object catch (e) {
-        debugLog('Rechargement des comptes LPP après suppression : $e');
+        debugLog('LPP accounts reload after delete failed: $e');
       }
       if (!context.mounted) return;
       messenger.showSnackBar(
@@ -654,7 +654,7 @@ class _Pillar3aSection extends ConsumerWidget {
             .read(profileAggregateProvider.notifier)
             .refreshPillar3aAccounts();
       } on Object catch (e) {
-        debugLog('Rechargement des comptes 3a après CRUD : $e');
+        debugLog('3a accounts reload after CRUD failed: $e');
       }
       if (!context.mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(l10n.profileAccountSaved)));
@@ -703,7 +703,7 @@ class _Pillar3aSection extends ConsumerWidget {
             .read(profileAggregateProvider.notifier)
             .refreshPillar3aAccounts();
       } on Object catch (e) {
-        debugLog('Rechargement des comptes 3a après suppression : $e');
+        debugLog('3a accounts reload after delete failed: $e');
       }
       if (!context.mounted) return;
       messenger.showSnackBar(

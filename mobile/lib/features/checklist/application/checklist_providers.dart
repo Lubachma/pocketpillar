@@ -81,5 +81,5 @@ class ChecklistCompletedIdsNotifier extends Notifier<Set<String>> {
     title: l10n.checklistPlanNextTitle,
     description: l10n.checklistPlanNextDescription,
   ),
-  _ => throw ArgumentError.value(itemId, 'itemId', 'Item checklist inconnu'),
+  _ => throw ArgumentError.value(itemId, 'itemId', 'Unknown checklist item'),
 };

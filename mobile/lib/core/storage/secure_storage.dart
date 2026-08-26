@@ -62,7 +62,7 @@ class SecureSessionLocalStorage extends LocalStorage {
     } on Object catch (e) {
       // See the class doc: failure → clean sign-out, the legacy key
       // stays in place for another attempt.
-      debugLog('Migration de la session Supabase vers le Keychain : $e');
+      debugLog('Supabase session migration to the Keychain failed: $e');
       return;
     }
     await prefs.remove(persistSessionKey);

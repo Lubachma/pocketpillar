@@ -16,7 +16,7 @@ primary_region = "lhr"
   auto_stop_machines = "stop"
   auto_start_machines = true
   # Portfolio demo: the machine stops with no traffic (cold start ~2-3 s on the
-  # first hit, accepted — spec 2026-08-25 §6). Set back to 1 for a real launch.
+  # first hit, accepted for the public demo). Set back to 1 for a real launch.
   min_machines_running = 0
   [http_service.concurrency]
     type = "requests"

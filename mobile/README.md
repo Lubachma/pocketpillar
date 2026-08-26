@@ -1,7 +1,7 @@
 # PocketPillar — Flutter App (mobile/)
 
-Flutter iOS/Android app for Swiss pension planning, replacing the SwiftUI
-iOS app (see the repository README).
+Flutter app (iOS, Android, and web/PWA) for Swiss pension planning —
+a full rewrite of an earlier native SwiftUI app.
 
 ## Prerequisites
 
@@ -15,8 +15,8 @@ iOS app (see the repository README).
 ## Configuration (dart-defines)
 
 The app reads its configuration at compile time via `--dart-define`.
-**No real value is ever committed**: ask the project owner for them, or
-retrieve them from the project's Supabase dashboard.
+**No real value is ever committed**: create your own (free) Supabase
+project and copy its URL and anon key from the project dashboard.
 
 > **Two separate environment files**: the `.env` at the repo root serves
 > the **backend** (database, Redis, **Supabase service role key** — admin
@@ -246,8 +246,7 @@ flutter build web --release \
 ```
 
 Prod: `--dart-define=API_BASE_URL=https://api.pocketpillar.ch` + `--dart-define=REVENUECAT_WEB_PURCHASE_LINK=…`.
-Deployment: `wrangler pages deploy build/web --project-name=pocketpillar-app`
-(see the repository README).
+Deployment: `wrangler pages deploy build/web --project-name=pocketpillar-app`.
 Native features missing from web (v1): OCR, biometric lock, local reminders, Sign in with Apple.
 
 ## E2E (Smoke) Tests
@@ -324,7 +323,6 @@ API).
 
 ## Status
 
-Redesign shipped (v1.0.0-refonte): 10 features ported, 400+ unit/widget
-tests green, smoke E2E green on iOS and Android, icons and splash
-generated. See the repository README for phase details and feature
-parity with the SwiftUI app.
+Rewrite shipped (1.0.0): 10 features ported from the original SwiftUI
+app, 499 unit/widget tests green, mocked E2E smoke green on iOS and
+Android, icons and splash generated, web/PWA build live.

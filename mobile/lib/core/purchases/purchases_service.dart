@@ -101,7 +101,7 @@ class RevenueCatPurchasesService implements PurchasesService {
       );
       _configured = true;
     } on Object catch (e) {
-      debugLog('Configuration RevenueCat échouée : $e');
+      debugLog('RevenueCat configuration failed: $e');
     }
     return _configured;
   }
@@ -117,7 +117,7 @@ class RevenueCatPurchasesService implements PurchasesService {
       _loggedInUserId = backendUserId;
     } on Object catch (e) {
       // Best-effort: the next pass (new aggregate) will retry.
-      debugLog('Purchases.logIn échoué : $e');
+      debugLog('Purchases.logIn failed: $e');
     }
   }
 
@@ -130,7 +130,7 @@ class RevenueCatPurchasesService implements PurchasesService {
       await Purchases.logOut();
     } on Object catch (e) {
       // `logOut` throws if the user is already anonymous — harmless.
-      debugLog('Purchases.logOut ignoré : $e');
+      debugLog('Purchases.logOut ignored: $e');
     }
   }
 
@@ -161,10 +161,10 @@ class RevenueCatPurchasesService implements PurchasesService {
           PurchasesErrorCode.purchaseCancelledError) {
         return PurchaseOutcome.cancelled;
       }
-      debugLog('Achat premium échoué : $e');
+      debugLog('Premium purchase failed: $e');
       return PurchaseOutcome.failed;
     } on Object catch (e) {
-      debugLog('Achat premium échoué : $e');
+      debugLog('Premium purchase failed: $e');
       return PurchaseOutcome.failed;
     }
   }
@@ -178,7 +178,7 @@ class RevenueCatPurchasesService implements PurchasesService {
           ? RestoreOutcome.restored
           : RestoreOutcome.nothingToRestore;
     } on Object catch (e) {
-      debugLog('Restauration des achats échouée : $e');
+      debugLog('Purchase restore failed: $e');
       return RestoreOutcome.failed;
     }
   }

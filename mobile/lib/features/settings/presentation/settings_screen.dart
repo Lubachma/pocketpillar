@@ -163,13 +163,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           .setEnabled(false);
       await ref.read(notificationServiceProvider).cancelAnnualReminders();
     } on Object catch (e) {
-      debugLog('Rappels annuels non annulés à la suppression : $e');
+      debugLog('Annual reminders not cancelled on account deletion: $e');
     }
     // Any network revoke doesn't hide the success.
     try {
       await ref.read(authRepositoryProvider).signOut();
     } on Object catch (e) {
-      debugLog('signOut après suppression du compte : $e');
+      debugLog('signOut after account deletion failed: $e');
     }
   }
 

@@ -3,7 +3,7 @@ import type { Locale } from '../../lib/i18n/index.js';
 
 /**
  * Pension score /100 — faithful port of `UserProfileStore.computeScore`
- * and `Benchmarks` from the archived iOS app (`archive/ios-swift`).
+ * and `Benchmarks` from the archived iOS app (kept in the private history).
  *
  * Three additive criteria, total capped 0–100:
  * - replacement rate (0–40 pts): ≥ 80% → 40; 60–80 → 30 + (r−60)/2;

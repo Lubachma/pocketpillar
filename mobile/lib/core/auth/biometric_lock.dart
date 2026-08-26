@@ -69,7 +69,7 @@ class BiometricService {
       return canUnlock;
     } on PlatformException catch (e) {
       // Safety net (e.g. missing plugin): we never unlock.
-      debugLog('Erreur biométrique (${e.code}) : verrou maintenu');
+      debugLog('Biometric error (${e.code}): lock kept');
       return false;
     }
   }
