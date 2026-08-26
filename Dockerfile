@@ -6,8 +6,9 @@
 FROM node:24-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# prisma/ before npm ci: the postinstall hook (prisma generate) needs the schema.
 COPY prisma ./prisma
+RUN npm ci
 COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
 # Dummy DATABASE_URL: prisma.config.ts reads it at load time, generate doesn't need it.
@@ -19,8 +20,8 @@ FROM node:24-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force
 COPY prisma ./prisma
+RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=build /app/dist ./dist
 USER node
