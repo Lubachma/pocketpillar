@@ -1,19 +1,35 @@
-# PocketPillar
+<p align="center">🇫🇷 <a href="README.fr.md"><strong>Version française disponible ici</strong></a></p>
 
-> Swiss pension planning, finally clear — an independent 2nd & 3rd pillar
-> optimizer. **[Live demo → app.pocketpillar.ch](https://app.pocketpillar.ch)**
-> — demo account `demo@pocketpillar.ch` / `Demo-2026.` (shared & public,
-> fictional data, reset nightly).
+<h1 align="center">🏛️ PocketPillar</h1>
 
-![CI](https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml/badge.svg)
-&nbsp;·&nbsp; License: [PolyForm Noncommercial 1.0.0](LICENSE) &nbsp;·&nbsp; FR / DE / EN
+<hr>
+
+<p align="center"><strong>Swiss pension planning, finally clear.</strong> An independent 2nd & 3rd pillar optimizer — guided retirement check-up, real tax savings, life scenarios.</p>
+
+<p align="center">▶ <a href="https://app.pocketpillar.ch"><strong>Try it live</strong></a> — nothing to install, no sign-up: tap “Sign in with the demo account”.</p>
+
+<p align="center">Tax engine anchored to <strong>official Swiss FTA data</strong>, validated to the franc.<br>
+Trilingual (French · German · English) — even server-computed labels follow <code>Accept-Language</code>.</p>
+
+<p align="center">
+  <a href="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm--NC%201.0.0-blue"></a>
+</p>
+
+<p align="center">
+  <img alt="Flutter 3.44" src="https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter&logoColor=white">
+  <img alt="Dart 3.12" src="https://img.shields.io/badge/Dart-3.12-0175C2?logo=dart&logoColor=white">
+  <img alt="TypeScript 5" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white">
+  <img alt="Fastify 5" src="https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white">
+  <img alt="Prisma 7" src="https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma&logoColor=white">
+  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white">
+</p>
 
 | Dashboard | Guided check-up | Scenarios | Documents |
 |---|---|---|---|
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Check-up wizard](docs/screenshots/wizard.png) | ![Life scenarios](docs/screenshots/scenarios.png) | ![Document vault](docs/screenshots/documents.png) |
 
-<sub>Screenshots show the English UI; the app ships in French (default),
-German, and English — even server-computed labels follow `Accept-Language`.</sub>
+<sub>Screenshots show the English UI; the demo account is shared and public — fictional data, reset nightly.</sub>
 
 ## What it does
 
