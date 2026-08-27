@@ -178,7 +178,10 @@ describe('authenticate — JWT Redis cache', () => {
   });
 
   it('invalid token → 401 with a 30 s negative marker (distinct key, never the claims key)', async () => {
-    mocks.getUser.mockResolvedValue({ data: { user: null }, error: new Error('bad token') });
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('bad token'), { name: 'AuthApiError', status: 403 }),
+    });
     const { request, reply, redis } = setup();
 
     await authenticate(request, reply);
@@ -195,6 +198,55 @@ describe('authenticate — JWT Redis cache', () => {
     expect(ttl).toBe(30);
   });
 
+  it('Supabase outage (retryable error) → 503, and the token is NOT negatively cached', async () => {
+    // supabase-js RETURNS network failures instead of throwing:
+    // AuthRetryableFetchError with status 0/5xx. Caching that as "invalid"
+    // logged every valid user out for 30 s per flap (review 08.2026).
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('fetch failed'), {
+        name: 'AuthRetryableFetchError',
+        status: 0,
+      }),
+    });
+    const { request, reply, redis } = setup();
+
+    await authenticate(request, reply);
+
+    expect(reply.statusCode).toBe(503);
+    expect(redis.set).not.toHaveBeenCalled();
+
+    // Supabase back up: the SAME token authenticates again immediately
+    // (fresh setup — the point is that NO negative marker was written).
+    mockValidToken();
+    const second = setup();
+    await authenticate(second.request, second.reply);
+    expect(second.reply.statusCode).toBe(200);
+  });
+
+  it('a 503 from Supabase Auth → 503 (5xx statuses are availability, not validity)', async () => {
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('upstream'), { status: 503 }),
+    });
+    const { request, reply, redis } = setup();
+
+    await authenticate(request, reply);
+
+    expect(reply.statusCode).toBe(503);
+    expect(redis.set).not.toHaveBeenCalled();
+  });
+
+  it('a THROWN network error → 503, not a 401 (nothing cached either)', async () => {
+    mocks.getUser.mockRejectedValue(new Error('socket hang up'));
+    const { request, reply, redis } = setup();
+
+    await authenticate(request, reply);
+
+    expect(reply.statusCode).toBe(503);
+    expect(redis.set).not.toHaveBeenCalled();
+  });
+
   it('negative cache hit: an already-rejected token gets an immediate 401, no Supabase call', async () => {
     const { request, reply, redis, findUnique } = setup({ invalidCached: '1' });
 
@@ -209,7 +261,10 @@ describe('authenticate — JWT Redis cache', () => {
   });
 
   it('two requests with the same invalid token → a single Supabase call', async () => {
-    mocks.getUser.mockResolvedValue({ data: { user: null }, error: new Error('bad token') });
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('bad token'), { name: 'AuthApiError', status: 403 }),
+    });
     // Stateful Redis fake: the marker written by the first request is seen by the second.
     const store = new Map<string, string>();
     const redis = {
@@ -239,7 +294,10 @@ describe('authenticate — JWT Redis cache', () => {
   });
 
   it('revalidates with Supabase once the negative marker has expired', async () => {
-    mocks.getUser.mockResolvedValue({ data: { user: null }, error: new Error('bad token') });
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('bad token'), { name: 'AuthApiError', status: 403 }),
+    });
     const store = new Map<string, string>();
     const redis = {
       get: vi.fn(async (key: string) => store.get(key) ?? null),

@@ -4,6 +4,8 @@ export const de: TranslationMap = {
   // Auth
   'auth.missing_header': 'Fehlender oder ungültiger Autorisierungs-Header',
   'auth.invalid_token': 'Ungültiges oder abgelaufenes Token',
+  'auth.unavailable':
+    'Authentifizierungsdienst vorübergehend nicht verfügbar — bitte erneut versuchen',
   'auth.user_not_found': 'Benutzer nicht gefunden',
   'auth.forbidden': 'Aktion nicht erlaubt',
   'auth.register_success': 'Registrierung erfolgreich',

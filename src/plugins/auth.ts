@@ -111,7 +111,19 @@ async function writeInvalidMarker(request: FastifyRequest, key: string): Promise
   }
 }
 
-export type AuthFailure = 'missing_header' | 'invalid_token' | 'user_not_found';
+export type AuthFailure = 'missing_header' | 'invalid_token' | 'user_not_found' | 'unavailable';
+
+/** True when a Supabase Auth error says nothing about the TOKEN — network
+ * failures and 5xx are availability problems. supabase-js RETURNS them
+ * (AuthRetryableFetchError, status 0/5xx) instead of throwing, and an
+ * error without a status is indistinguishable from an outage: caching any
+ * of these as "invalid" logged every valid user out for 30 s per flap
+ * (review 08.2026). Real token rejections are AuthApiError with a 4xx. */
+function isAvailabilityError(error: { name?: string; status?: number }): boolean {
+  if (error.name === 'AuthRetryableFetchError') return true;
+  const status = error.status;
+  return status === undefined || status === 0 || status >= 500;
+}
 
 /**
  * Bearer resolution — Supabase JWT (including caches) then local user.
@@ -139,18 +151,22 @@ export async function resolveAuth(
   let claims = await readCachedClaims(request, cacheKey);
 
   if (!claims) {
-    // A network/Supabase failure must surface as a clean 401, not an unhandled 500.
+    // Availability vs validity: an outage must NEVER poison the negative
+    // cache (or reply 401) — only a genuine token rejection may.
     try {
       const { data, error } = await supabaseAdmin.auth.getUser(token);
+      if (error && isAvailabilityError(error)) {
+        return { failure: 'unavailable' };
+      }
       if (error || !data.user) {
-        // Cache the rejection briefly — a thrown network error is NOT cached:
-        // it says nothing about the token's validity.
+        // Genuine rejection (AuthApiError 4xx): cache it briefly.
         await writeInvalidMarker(request, invalidKey);
         return { failure: 'invalid_token' };
       }
       claims = { userId: data.user.id };
     } catch {
-      return { failure: 'invalid_token' };
+      // A THROWN error is transport-level too — same availability path.
+      return { failure: 'unavailable' };
     }
     await writeCachedClaims(request, cacheKey, token, claims);
   }
@@ -171,6 +187,11 @@ export async function resolveAuth(
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
   const auth = await resolveAuth(request);
   if ('failure' in auth) {
+    if (auth.failure === 'unavailable') {
+      // Not the caller's fault and not a dead session: the client should
+      // retry, not sign out.
+      return reply.status(503).send({ error: t(request.locale, 'auth.unavailable') });
+    }
     const key =
       auth.failure === 'missing_header'
         ? 'auth.missing_header'

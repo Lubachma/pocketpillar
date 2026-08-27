@@ -4,6 +4,7 @@ export const fr: TranslationMap = {
   // Auth
   'auth.missing_header': "En-tête d'autorisation manquant ou invalide",
   'auth.invalid_token': 'Jeton invalide ou expiré',
+  'auth.unavailable': "Service d'authentification momentanément indisponible — réessayez",
   'auth.user_not_found': 'Utilisateur non trouvé',
   'auth.forbidden': 'Action non autorisée',
   'auth.register_success': 'Inscription réussie',

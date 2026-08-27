@@ -7,6 +7,7 @@ export interface TranslationMap {
   // ─── Auth errors ────────────────────────
   'auth.missing_header': string;
   'auth.invalid_token': string;
+  'auth.unavailable': string;
   'auth.user_not_found': string;
   'auth.forbidden': string;
   'auth.register_success': string;
