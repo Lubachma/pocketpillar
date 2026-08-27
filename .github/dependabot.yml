@@ -24,10 +24,12 @@ updates:
     ignore:
       # freezed 4 requires Dart >=3.13; we pin Flutter 3.44 / Dart 3.12.
       # Lift when the Flutter pin moves (revisit at the next Flutter bump).
+      # update-types syntax (not version ranges): the most reliably
+      # honored ignore form for pub group updates.
       - dependency-name: freezed
-        versions: ['>=4.0.0']
+        update-types: ['version-update:semver-major']
       - dependency-name: freezed_annotation
-        versions: ['>=4.0.0']
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /
