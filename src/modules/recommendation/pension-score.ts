@@ -19,7 +19,15 @@ import type { Locale } from '../../lib/i18n/index.js';
  * truth. iOS used its local `OfflineCalculator` with its own constants.
  */
 
-/** Swiss averages per age bracket (data from iOS `Benchmarks.swift`). */
+/**
+ * Age-bracket benchmarks — INDICATIVE orders of magnitude carried over
+ * from the iOS app (`Benchmarks.swift`), NOT official statistics: no
+ * public source publishes 3a balances or replacement rates per age
+ * bracket at this granularity. The app's help sheet says so explicitly
+ * (practitioner-review follow-up, 08.2026); anchoring the BVG capital
+ * column on the Swisscanto pension-fund study is on the roadmap. Kept
+ * stable across releases so score comparisons stay meaningful.
+ */
 export interface AgeBracketBenchmark {
   minAge: number;
   maxAge: number;

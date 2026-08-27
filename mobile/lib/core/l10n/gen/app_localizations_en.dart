@@ -203,7 +203,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get understandCalcIntro =>
-      'Every number in the app comes from one of the rules below — 2026 legal parameters and official schedules, never made-up averages.';
+      'Every projected amount comes from one of the rules below — 2026 legal parameters and official schedules.';
 
   @override
   String get understandCalcAvsTitle => 'AHV pension';
@@ -1418,7 +1418,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpPensionScoreWhy =>
-      'It shows at a glance where you stand and what weighs most. The comparison shows your age bracket\'s average — a reference point, not a target.';
+      'It shows at a glance where you stand and what weighs most. The age-bracket comparison uses indicative orders of magnitude (not official statistics) — a reference point, not a target.';
 
   @override
   String get helpPensionScoreWhere =>

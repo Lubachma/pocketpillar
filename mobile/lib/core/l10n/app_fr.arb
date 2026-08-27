@@ -62,7 +62,7 @@
   "understandIntro": "La prévoyance suisse repose sur 3 piliers : l'AVS de l'État, la caisse de pension de votre employeur et votre épargne personnelle 3a. Touchez un pilier pour comprendre son rôle.",
   "understandPillarsTitle": "Les 3 piliers",
   "understandCalcTitle": "Comment calculons-nous ?",
-  "understandCalcIntro": "Chaque chiffre de l'app vient d'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels, jamais de moyennes inventées.",
+  "understandCalcIntro": "Chaque montant projeté vient d'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels.",
   "understandCalcAvsTitle": "Rente AVS",
   "understandCalcAvsBody": "Estimée à partir de votre revenu et de vos années de cotisation projetées jusqu'à la retraite (échelle 44 simplifiée). Dès 2026, la 13e rente est incluse (13 mensualités par an). Votre rente réelle dépendra de votre parcours exact — demandez un extrait de compte AVS pour le connaître.",
   "understandCalcLppTitle": "Capital et rente LPP",
@@ -453,7 +453,7 @@
   "helpWithdrawalTaxWhere": "Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l'année du retrait.",
   "helpPensionScoreTitle": "Score de prévoyance",
   "helpPensionScoreExplanation": "Une note sur 100 qui résume votre préparation à la retraite : taux de remplacement (40 pts), épargne 3a (30 pts) et temps restant pour agir (30 pts).",
-  "helpPensionScoreWhy": "Il montre d'un coup d'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d'âge — un repère, pas un objectif.",
+  "helpPensionScoreWhy": "Il montre d'un coup d'œil où vous en êtes et ce qui pèse le plus. La comparaison par tranche d'âge utilise des ordres de grandeur indicatifs (pas une statistique officielle) — un repère, pas un objectif.",
   "helpPensionScoreWhere": "Calculé par PocketPillar à partir de votre profil ; il se met à jour dès que vous modifiez vos données.",
 
   "tipMax3a2026Title": "Maximum 3a 2026",

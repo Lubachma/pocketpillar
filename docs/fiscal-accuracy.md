@@ -178,6 +178,12 @@ non-blocking; the app words all results as estimates:
 - **Incomplete careers** (arrival in Switzerland, contribution gaps): only
   representable through the projected contribution years — the estimate
   assumes an uninterrupted career from age 20.
+- **Pension-score benchmarks**: the age-bracket "averages" shown next to
+  the /100 score are indicative orders of magnitude (no official source
+  publishes 3a balances or replacement rates at this granularity) — the
+  in-app help sheet says so; anchoring the BVG-capital column on the
+  Swisscanto pension-fund study is on the roadmap. The score itself and
+  every projected amount follow the legal parameters above.
 - **Inflation/indexation**: projections are in constant nominal francs.
 
 ## Annual update process

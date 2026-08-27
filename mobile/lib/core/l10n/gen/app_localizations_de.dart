@@ -205,7 +205,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get understandCalcIntro =>
-      'Jede Zahl in der App stammt aus einer der folgenden Regeln — gesetzliche Parameter 2026 und offizielle Tarife, nie erfundene Durchschnitte.';
+      'Jeder projizierte Betrag stammt aus einer der folgenden Regeln — gesetzliche Parameter 2026 und offizielle Tarife.';
 
   @override
   String get understandCalcAvsTitle => 'AHV-Rente';
@@ -1422,7 +1422,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpPensionScoreWhy =>
-      'Er zeigt auf einen Blick, wo Sie stehen und was am stärksten wiegt. Der Vergleich zeigt den Durchschnitt Ihrer Altersgruppe — ein Anhaltspunkt, kein Ziel.';
+      'Er zeigt auf einen Blick, wo Sie stehen und was am stärksten wiegt. Der Altersgruppen-Vergleich nutzt indikative Richtwerte (keine offizielle Statistik) — ein Anhaltspunkt, kein Ziel.';
 
   @override
   String get helpPensionScoreWhere =>

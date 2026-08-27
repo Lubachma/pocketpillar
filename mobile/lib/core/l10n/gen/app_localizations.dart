@@ -463,7 +463,7 @@ abstract class AppLocalizations {
   /// No description provided for @understandCalcIntro.
   ///
   /// In fr, this message translates to:
-  /// **'Chaque chiffre de l\'app vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels, jamais de moyennes inventées.'**
+  /// **'Chaque montant projeté vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels.'**
   String get understandCalcIntro;
 
   /// No description provided for @understandCalcAvsTitle.
@@ -2653,7 +2653,7 @@ abstract class AppLocalizations {
   /// No description provided for @helpPensionScoreWhy.
   ///
   /// In fr, this message translates to:
-  /// **'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d\'âge — un repère, pas un objectif.'**
+  /// **'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison par tranche d\'âge utilise des ordres de grandeur indicatifs (pas une statistique officielle) — un repère, pas un objectif.'**
   String get helpPensionScoreWhy;
 
   /// No description provided for @helpPensionScoreWhere.

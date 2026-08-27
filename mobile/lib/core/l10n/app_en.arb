@@ -60,7 +60,7 @@
   "understandIntro": "Swiss retirement planning rests on 3 pillars: the state AHV, your employer's pension fund and your personal 3a savings. Tap a pillar to understand its role.",
   "understandPillarsTitle": "The 3 pillars",
   "understandCalcTitle": "How do we calculate?",
-  "understandCalcIntro": "Every number in the app comes from one of the rules below — 2026 legal parameters and official schedules, never made-up averages.",
+  "understandCalcIntro": "Every projected amount comes from one of the rules below — 2026 legal parameters and official schedules.",
   "understandCalcAvsTitle": "AHV pension",
   "understandCalcAvsBody": "Estimated from your income and your contribution years projected to retirement (simplified scale 44). From 2026 the 13th pension is included (13 monthly payments per year). Your real pension depends on your exact record — order an AHV account statement to know it.",
   "understandCalcLppTitle": "BVG capital and pension",
@@ -437,7 +437,7 @@
   "helpWithdrawalTaxWhere": "Estimated with your canton's and municipality's official 2026 schedules. The exact amount depends on your situation in the withdrawal year.",
   "helpPensionScoreTitle": "Pension score",
   "helpPensionScoreExplanation": "A mark out of 100 summarising your retirement readiness: replacement rate (40 pts), 3a savings (30 pts) and time left to act (30 pts).",
-  "helpPensionScoreWhy": "It shows at a glance where you stand and what weighs most. The comparison shows your age bracket's average — a reference point, not a target.",
+  "helpPensionScoreWhy": "It shows at a glance where you stand and what weighs most. The age-bracket comparison uses indicative orders of magnitude (not official statistics) — a reference point, not a target.",
   "helpPensionScoreWhere": "Computed by PocketPillar from your profile; it updates as soon as you change your data.",
 
   "tipMax3a2026Title": "3a maximum 2026",

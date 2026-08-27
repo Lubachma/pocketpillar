@@ -205,7 +205,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get understandCalcIntro =>
-      'Chaque chiffre de l\'app vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels, jamais de moyennes inventées.';
+      'Chaque montant projeté vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels.';
 
   @override
   String get understandCalcAvsTitle => 'Rente AVS';
@@ -1421,7 +1421,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get helpPensionScoreWhy =>
-      'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d\'âge — un repère, pas un objectif.';
+      'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison par tranche d\'âge utilise des ordres de grandeur indicatifs (pas une statistique officielle) — un repère, pas un objectif.';
 
   @override
   String get helpPensionScoreWhere =>
