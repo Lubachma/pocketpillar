@@ -3,6 +3,45 @@
 All notable changes are documented here. Format inspired by
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.1] — 2026-08-27 — External-review hardening
+
+Fixes from an independent code review of the public repo — every claim
+was re-verified against the code before acting on it.
+
+### Fixed
+- **Auth no longer converts a Supabase outage into 401s**: availability
+  errors (network failure, 5xx, `AuthRetryableFetchError`) now return
+  **503** with a retry message instead of caching the token as invalid
+  for 10 minutes — a transient outage could previously sign everyone
+  out until the negative cache expired.
+- **Cross-account data leak in the app**: dashboard, recommendations,
+  score and documents providers are invalidated on account change —
+  user B logging in after user A in the same run no longer sees A's
+  cached data (the financial-profile aggregate was already covered).
+- **Malformed `:id` params return 404, not 500** (Prisma P2023 mapped
+  in the global error handler).
+- **Money bounds match the database**: Zod (and the app's inline
+  validators) now cap amounts at int4 max centimes (CHF 21,474,836.47)
+  instead of 10¹¹ — over-limit values were previously accepted by
+  validation and crashed at the driver with a 500.
+- **Biometric lock arms at cold start**: with the toggle ON, killing
+  and relaunching the app now locks it (it only armed on background
+  return before). A fresh password login does not prompt.
+- **Upload send timeout** (30 s) on the API client — a stalled upload
+  no longer hangs indefinitely.
+
+### Security
+- CI: gitleaks secret scan on every push/PR; all GitHub Actions pinned
+  to commit SHAs; CI runs Node 24 (production parity).
+- `SECURITY.md`: known-advisories section (deepmerge-ts via Prisma CLI,
+  dev-only, no fix released).
+
+### Changed
+- Removed dead codegen dependencies (freezed, json_serializable,
+  build_runner) — nothing in the app used them.
+- HTTP contract tests for the financial-profile and provider routes
+  (the two core modules the integration harness was missing).
+
 ## [1.1.0] — 2026-08-27 — Practitioner review & pedagogy release
 
 Shaped by a working insurance advisor's review of the live demo (see

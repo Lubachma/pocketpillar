@@ -84,8 +84,8 @@ API reference: [docs/api-contract.md](docs/api-contract.md)
 
 ## Quality
 
-- **411 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
-- **521 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
+- **421 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
+- **526 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
 - CI on every push/PR to `main` (typecheck, lint, format, tests with coverage thresholds, debug APK build).
 - Real-conditions smoke script against any deployment: `scripts/smoke-api.sh <base-url>` (7 steps, self-cleaning).
 - The public demo is reset every night by a scheduled job that replays the real API end to end.
