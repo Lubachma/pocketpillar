@@ -6,8 +6,10 @@ import '../../../core/utils/currency.dart';
 /// (`src/modules/financial-profile/financial-profile.schema.ts`,
 /// `src/modules/user/user.schema.ts`).
 
-/// Backend upper bound: 10¹¹ centimes = CHF 1 billion.
-const int maxMoneyCentimes = 100000000000;
+/// Backend upper bound: int4 max centimes (money is a Prisma Int —
+/// `MAX_MONEY_CENTIMES` in `src/lib/constants/limits.ts`), i.e.
+/// CHF 21'474'836.47.
+const int maxMoneyCentimes = 2147483647;
 
 /// Input CHF amount → centimes, or null if empty/invalid (negative
 /// included: inline validation can be short-circuited when the field

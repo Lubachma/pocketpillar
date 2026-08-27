@@ -16,6 +16,8 @@ import '../core/storage/preferences.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/debug_log.dart';
 import '../features/financial_profile/application/financial_profile_providers.dart';
+import '../features/dashboard/application/dashboard_providers.dart';
+import '../features/documents/application/documents_providers.dart';
 import '../features/premium/application/premium_providers.dart';
 import 'router.dart';
 
@@ -82,6 +84,14 @@ class _PocketPillarAppState extends ConsumerState<PocketPillarApp> {
       final nextUserId = next.valueOrNull?.user.id;
       if (previousUserId != nextUserId) {
         ref.invalidate(profileAggregateProvider);
+        // Same leak class for every non-autoDispose account-data provider
+        // (review 08.2026): user A opens Documents/Dashboard → sign-out →
+        // user B logs in in the SAME run → without these, B saw A's
+        // documents, recommendations and score.
+        ref.invalidate(dashboardProvider);
+        ref.invalidate(recommendationsProvider);
+        ref.invalidate(scoreProvider);
+        ref.invalidate(documentsProvider);
       }
       // Sign-out: `Purchases.logOut()` (best-effort, no-op without an
       // SDK key) and end of the optimistic unlock — the next account

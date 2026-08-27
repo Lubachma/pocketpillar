@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show Session;
 import 'package:local_auth/local_auth.dart';
 
 import '../l10n/l10n.dart';
@@ -20,8 +21,7 @@ final biometricLockEnabledProvider =
 
 class BiometricLockEnabledNotifier extends Notifier<bool> {
   @override
-  bool build() =>
-      ref.watch(preferencesRepositoryProvider).biometricLockEnabled;
+  bool build() => ref.watch(preferencesRepositoryProvider).biometricLockEnabled;
 
   Future<void> setEnabled(bool enabled) async {
     state = enabled;
@@ -96,8 +96,35 @@ class _BiometricLockState extends ConsumerState<BiometricLock> {
   late final AppLifecycleListener _lifecycleListener;
   DateTime? _backgroundedAt;
 
+  /// Cold-start arming done once per run (review 08.2026: the lock only
+  /// armed on background return — a kill/relaunch with a persisted
+  /// session landed straight on the financial data).
+  bool _coldStartChecked = false;
+
   /// Veil for the multitasking thumbnail visibility (app inactive/backgrounded).
   bool _obscured = false;
+
+  /// Arms the lock only when the run STARTS with a persisted session
+  /// (`sessionChanges` yields the restored session first, so the first
+  /// resolved emission decides — it may still be loading at the first
+  /// frame, hence the build-time listener rather than a one-shot
+  /// initState read). A session appearing later is a fresh login: the
+  /// user just proved who they are, prompting biometrics on top would
+  /// be wrong. Known miss: an expired persisted token resolves to null
+  /// before its async refresh, so that relaunch skips the lock.
+  void _maybeArmColdStart(AsyncValue<Session?> session) {
+    if (_coldStartChecked) return;
+    if (session.isLoading) return;
+    _coldStartChecked = true;
+    if (session.valueOrNull == null) return;
+    if (!ref.read(biometricLockEnabledProvider)) return;
+    // Never mutate providers during build: arm and prompt after the frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(biometricLockedProvider.notifier).state = true;
+      unawaited(_unlock());
+    });
+  }
 
   @override
   void initState() {
@@ -160,6 +187,8 @@ class _BiometricLockState extends ConsumerState<BiometricLock> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authSessionProvider, (_, next) => _maybeArmColdStart(next));
+    _maybeArmColdStart(ref.read(authSessionProvider));
     final locked = ref.watch(biometricLockedProvider);
     return Stack(
       children: [

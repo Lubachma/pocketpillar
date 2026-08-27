@@ -48,15 +48,13 @@ void main() {
   });
 
   group('validateMoneyField', () {
-    test('backend upper bound (CHF 1 billion)', () {
+    test('backend upper bound (int4 max centimes = CHF 21 474 836.47)', () {
+      expect(validateMoneyField(l10n, '21474836.47', required: true), isNull);
       expect(
-        validateMoneyField(l10n, '1000000000', required: true),
-        isNull,
-      );
-      expect(
-        validateMoneyField(l10n, '1000000001', required: true),
+        validateMoneyField(l10n, '21474836.48', required: true),
         isNotNull,
       );
+      expect(validateMoneyField(l10n, '1000000000', required: true), isNotNull);
       // Scientific notation: finite but out of range → rejected.
       expect(validateMoneyField(l10n, '1e300', required: true), isNotNull);
     });

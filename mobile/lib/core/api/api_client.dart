@@ -35,6 +35,9 @@ class ApiClient {
              BaseOptions(
                baseUrl: baseUrl,
                connectTimeout: const Duration(seconds: 10),
+               // Uploads too: a stalled 10 MB document send must surface
+               // as an error, not an infinite spinner (review 08.2026).
+               sendTimeout: const Duration(seconds: 30),
                receiveTimeout: const Duration(seconds: 20),
                headers: {'Accept': 'application/json'},
              ),

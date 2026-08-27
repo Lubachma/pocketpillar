@@ -303,7 +303,12 @@ class FakeDocumentRepository extends DocumentRepository {
   }
 
   @override
-  Future<List<DocumentDto>> listDocuments() => _run(documents);
+  Future<List<DocumentDto>> listDocuments() {
+    listCalls++;
+    return _run(documents);
+  }
+
+  int listCalls = 0;
 
   @override
   Future<DocumentDto> uploadDocument({
@@ -669,7 +674,8 @@ class FakeProfileAggregateNotifier extends ProfileAggregateNotifier {
 
 /// Simulated profile repository that counts its calls (I9: deduplicating
 /// the load across the 4 endpoints; invalidation on session transition).
-class CountingFakeFinancialProfileRepository extends FinancialProfileRepository {
+class CountingFakeFinancialProfileRepository
+    extends FinancialProfileRepository {
   CountingFakeFinancialProfileRepository() : super(FakeApiClient());
 
   int loadBaseCalls = 0;

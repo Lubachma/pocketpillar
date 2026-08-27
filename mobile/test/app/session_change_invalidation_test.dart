@@ -7,6 +7,11 @@ import 'package:pocketpillar/core/auth/auth_repository.dart';
 import 'package:pocketpillar/core/storage/preferences.dart';
 import 'package:pocketpillar/features/financial_profile/application/financial_profile_providers.dart';
 import 'package:pocketpillar/features/financial_profile/data/financial_profile_repository.dart';
+import 'package:pocketpillar/features/dashboard/application/dashboard_providers.dart';
+import 'package:pocketpillar/features/dashboard/data/dashboard_repository.dart';
+import 'package:pocketpillar/features/dashboard/data/dashboard_dtos.dart';
+import 'package:pocketpillar/features/documents/application/documents_providers.dart';
+import 'package:pocketpillar/features/documents/data/document_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -42,8 +47,9 @@ class _ControllableAuthRepository extends FakeAuthRepository {
 
 void main() {
   testWidgets('session → null (401): the profile aggregate is invalidated '
-      '(no cross-account leak); a token refresh invalidates nothing',
-      (tester) async {
+      '(no cross-account leak); a token refresh invalidates nothing', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
     final prefs = await SharedPreferences.getInstance();
     final auth = _ControllableAuthRepository();
@@ -82,5 +88,75 @@ void main() {
     auth.emitSession(null);
     await tester.pumpAndSettle();
     expect(profiles.loadBaseCalls, 2);
+  });
+
+  testWidgets('session change also resets dashboard, recommendations, score '
+      'and documents (cross-account leak, review 08.2026)', (tester) async {
+    SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
+    final prefs = await SharedPreferences.getInstance();
+    final auth = _ControllableAuthRepository();
+    final profiles = CountingFakeFinancialProfileRepository();
+    final dashboard = FakeDashboardRepository()
+      ..data = const DashboardData(
+        user: UserDto(
+          id: 'u-1',
+          email: 'user@example.ch',
+          birthYear: 1991,
+          replacementRateGoal: 70,
+        ),
+      );
+    final documents = FakeDocumentRepository();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          authRepositoryProvider.overrideWithValue(auth),
+          financialProfileRepositoryProvider.overrideWithValue(profiles),
+          dashboardRepositoryProvider.overrideWithValue(dashboard),
+          documentRepositoryProvider.overrideWithValue(documents),
+        ],
+        child: const PocketPillarApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(PocketPillarApp)),
+    );
+    // Keep all four alive the way open screens would (they are
+    // non-autoDispose: user A's data survives in the SAME run otherwise).
+    final subs = [
+      container.listen(dashboardProvider, (_, _) {}),
+      container.listen(recommendationsProvider, (_, _) {}),
+      container.listen(scoreProvider, (_, _) {}),
+      container.listen(documentsProvider, (_, _) {}),
+    ];
+    for (final sub in subs) {
+      addTearDown(sub.close);
+    }
+
+    await container.read(dashboardProvider.future);
+    await container.read(recommendationsProvider.future);
+    await container.read(scoreProvider.future);
+    await container.read(documentsProvider.future);
+    expect(dashboard.loadCalls, 1);
+    expect(dashboard.recommendationsCalls, 1);
+    expect(dashboard.scoreCalls, 1);
+    expect(documents.listCalls, 1);
+
+    // Token refresh (same user): nothing refetches.
+    auth.emitSession(buildFakeSession());
+    await tester.pumpAndSettle();
+    expect(dashboard.loadCalls, 1);
+    expect(documents.listCalls, 1);
+
+    // Sign-out: user B must never see user A's cached data.
+    auth.emitSession(null);
+    await tester.pumpAndSettle();
+    expect(dashboard.loadCalls, 2);
+    expect(dashboard.recommendationsCalls, 2);
+    expect(dashboard.scoreCalls, 2);
+    expect(documents.listCalls, 2);
   });
 }

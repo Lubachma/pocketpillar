@@ -9,14 +9,12 @@ import '../../../../core/theme/components/canton_picker_sheet.dart';
 import '../../../../core/theme/components/primary_button.dart';
 import '../../../../core/utils/currency.dart';
 import '../../../../core/utils/swiss_canton.dart';
+import '../../../financial_profile/presentation/profile_form_validators.dart'
+    show maxMoneyCentimes;
 import '../../../financial_profile/presentation/widgets/municipality_picker_sheet.dart';
 import '../../application/guided_calculator_controller.dart';
 import '../../data/calculator_payloads.dart';
 import 'help_sheet.dart';
-
-/// Backend upper bound: 10¹¹ centimes = CHF 1 billion (same bound as
-/// the financial profile validators).
-const int _maxMoneyCentimes = 100000000000;
 
 /// Shared CHF validation for the steps: [required] enforces an input,
 /// [allowZero] false enforces a strictly positive amount (Zod bounds
@@ -33,7 +31,7 @@ String? validateChfField(
   if (centimes == null ||
       centimes < 0 ||
       (!allowZero && centimes == 0) ||
-      centimes > _maxMoneyCentimes) {
+      centimes > maxMoneyCentimes) {
     return l10n.profileAmountInvalid;
   }
   return null;
@@ -294,9 +292,7 @@ class _OptionRow extends StatelessWidget {
             Expanded(child: Text(label)),
             Icon(
               selected ? Icons.check_circle : Icons.circle_outlined,
-              color: selected
-                  ? accent
-                  : Theme.of(context).colorScheme.outline,
+              color: selected ? accent : Theme.of(context).colorScheme.outline,
             ),
           ],
         ),
@@ -672,9 +668,7 @@ class _ToggleButton extends StatelessWidget {
           color: selected ? accent.withValues(alpha: 0.15) : null,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: selected
-                ? accent
-                : Theme.of(context).colorScheme.outline,
+            color: selected ? accent : Theme.of(context).colorScheme.outline,
             width: selected ? 2 : 1,
           ),
         ),

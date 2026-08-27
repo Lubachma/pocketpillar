@@ -232,34 +232,37 @@ void main() {
       expect(calls, 3);
     });
 
-    test('replays connection/receive TIMEOUTS too (the actual cold-start mode)', () async {
-      var calls = 0;
-      final harness = _Harness(
-        retryDelays: const [Duration.zero, Duration.zero],
-        handler: (options) async {
-          calls++;
-          if (calls == 1) {
-            throw DioException.connectionTimeout(
-              requestOptions: options,
-              timeout: const Duration(seconds: 10),
-            );
-          }
-          if (calls == 2) {
-            throw DioException.receiveTimeout(
-              requestOptions: options,
-              timeout: const Duration(seconds: 20),
-            );
-          }
-          return _json({'status': 'ok'}, 200);
-        },
-      );
+    test(
+      'replays connection/receive TIMEOUTS too (the actual cold-start mode)',
+      () async {
+        var calls = 0;
+        final harness = _Harness(
+          retryDelays: const [Duration.zero, Duration.zero],
+          handler: (options) async {
+            calls++;
+            if (calls == 1) {
+              throw DioException.connectionTimeout(
+                requestOptions: options,
+                timeout: const Duration(seconds: 10),
+              );
+            }
+            if (calls == 2) {
+              throw DioException.receiveTimeout(
+                requestOptions: options,
+                timeout: const Duration(seconds: 20),
+              );
+            }
+            return _json({'status': 'ok'}, 200);
+          },
+        );
 
-      final response = await harness.client.get<Map<String, dynamic>>(
-        '/health',
-      );
-      expect(response.data, {'status': 'ok'});
-      expect(calls, 3);
-    });
+        final response = await harness.client.get<Map<String, dynamic>>(
+          '/health',
+        );
+        expect(response.data, {'status': 'ok'});
+        expect(calls, 3);
+      },
+    );
 
     test('gives up after the configured retries', () async {
       var calls = 0;
@@ -301,21 +304,24 @@ void main() {
       expect(calls, 1);
     });
 
-    test('HTTP errors (5xx) are not replayed — only transport failures', () async {
-      var calls = 0;
-      final harness = _Harness(
-        retryDelays: const [Duration.zero, Duration.zero],
-        handler: (options) async {
-          calls++;
-          return _json({'error': 'boom'}, 500);
-        },
-      );
+    test(
+      'HTTP errors (5xx) are not replayed — only transport failures',
+      () async {
+        var calls = 0;
+        final harness = _Harness(
+          retryDelays: const [Duration.zero, Duration.zero],
+          handler: (options) async {
+            calls++;
+            return _json({'error': 'boom'}, 500);
+          },
+        );
 
-      await expectLater(
-        harness.client.get<void>('/health'),
-        throwsA(isA<ApiException>()),
-      );
-      expect(calls, 1);
-    });
+        await expectLater(
+          harness.client.get<void>('/health'),
+          throwsA(isA<ApiException>()),
+        );
+        expect(calls, 1);
+      },
+    );
   });
 }

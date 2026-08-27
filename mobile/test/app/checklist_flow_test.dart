@@ -23,7 +23,12 @@ void main() {
       'return → ring updated', (tester) async {
     // In season (October–January): the checklist card is shown.
     final fixedNow = DateTime(2026, 11, 15, 10);
-    SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
+    SharedPreferences.setMockInitialValues({
+      'hasSeenOnboarding': true,
+      // Signed-in harness: without this, the cold-start biometric
+      // lock (default ON) would cover the app under test.
+      'biometricLockEnabled': false,
+    });
     final prefs = await SharedPreferences.getInstance();
 
     final dashboard = FakeDashboardRepository()
@@ -68,7 +73,9 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
-          authRepositoryProvider.overrideWithValue(SignedInFakeAuthRepository()),
+          authRepositoryProvider.overrideWithValue(
+            SignedInFakeAuthRepository(),
+          ),
           dashboardRepositoryProvider.overrideWithValue(dashboard),
           profileAggregateProvider.overrideWith(
             () => FakeProfileAggregateNotifier(buildFakeProfileAggregate()),

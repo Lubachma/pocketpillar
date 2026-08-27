@@ -51,9 +51,16 @@ void main() {
   });
 
   /// Pumps the app and opens the Settings tab.
+  ///
+  /// The biometric pref (default ON) is disabled here: with the
+  /// signed-in session, the cold-start lock would cover the whole app
+  /// (that behavior is covered by `biometric_lock_test.dart`).
   Future<void> pumpSettings(
     WidgetTester tester, {
-    Map<String, Object> initialPrefs = const {'hasSeenOnboarding': true},
+    Map<String, Object> initialPrefs = const {
+      'hasSeenOnboarding': true,
+      'biometricLockEnabled': false,
+    },
   }) async {
     // Tall surface: all tiles visible without scrolling.
     tester.view.physicalSize = const Size(900, 2400);
@@ -145,16 +152,18 @@ void main() {
   });
 
   testWidgets('biometric lock: toggle persisted', (tester) async {
+    // The harness starts with the pref OFF (see pumpSettings) — the
+    // default-ON semantics are pinned by the cold-start test in
+    // `biometric_lock_test.dart` (empty prefs → lock armed).
     await pumpSettings(tester);
 
-    // Default: enabled (phase 2 baseline parity).
-    expect(prefs.getBool('biometricLockEnabled'), isNull);
+    expect(prefs.getBool('biometricLockEnabled'), isFalse);
     await tester.tap(
       find.widgetWithText(SwitchListTile, 'Verrouillage biométrique'),
     );
     await tester.pumpAndSettle();
 
-    expect(prefs.getBool('biometricLockEnabled'), isFalse);
+    expect(prefs.getBool('biometricLockEnabled'), isTrue);
   });
 
   testWidgets('annual reminders ON: permission, scheduling, '
@@ -229,7 +238,11 @@ void main() {
   ) async {
     await pumpSettings(
       tester,
-      initialPrefs: {'hasSeenOnboarding': true, 'annualRemindersEnabled': true},
+      initialPrefs: {
+        'hasSeenOnboarding': true,
+        'annualRemindersEnabled': true,
+        'biometricLockEnabled': false,
+      },
     );
 
     await tester.tap(find.widgetWithText(SwitchListTile, 'Rappels annuels'));
@@ -294,7 +307,11 @@ void main() {
       'cancelled + pref reset, signOut, redirect to /login', (tester) async {
     await pumpSettings(
       tester,
-      initialPrefs: {'hasSeenOnboarding': true, 'annualRemindersEnabled': true},
+      initialPrefs: {
+        'hasSeenOnboarding': true,
+        'annualRemindersEnabled': true,
+        'biometricLockEnabled': false,
+      },
     );
 
     await tester.tap(find.text('Supprimer le compte'));
