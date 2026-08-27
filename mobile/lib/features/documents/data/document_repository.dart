@@ -50,8 +50,7 @@ class DocumentRepository {
     int? year,
     ProgressCallback? onSendProgress,
   }) async {
-    final formData = FormData()
-      ..fields.add(MapEntry('type', type));
+    final formData = FormData()..fields.add(MapEntry('type', type));
     if (year != null) formData.fields.add(MapEntry('year', '$year'));
     // The part's content-type is inferred from the filename's
     // extension (pdf/jpeg/png — extensions already filtered by the picker).

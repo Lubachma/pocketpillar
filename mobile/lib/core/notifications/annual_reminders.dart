@@ -13,9 +13,7 @@ import 'pillar3a_reminder.dart';
 /// reminder's generic body — **derived** from `pillar3aMaxWithPillar2`
 /// ("7,258" — parity with iOS `SwissPensionConstants.max3aFrancs`; batch
 /// 7 review, no more hardcoded constant).
-final String pillar3aMaxReminderLabel = formatChfFrancs(
-  pillar3aMaxWithPillar2,
-);
+final String pillar3aMaxReminderLabel = formatChfFrancs(pillar3aMaxWithPillar2);
 
 /// Annual reminders enabled (persisted in settings, reread at
 /// startup). Default: false — explicit opt-in via the Settings toggle

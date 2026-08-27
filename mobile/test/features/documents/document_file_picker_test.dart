@@ -36,8 +36,11 @@ class _FakeFilePickerPlatform extends FilePicker {
   }
 }
 
-PlatformFile _platformFile({required String name, required int size, String? path}) =>
-    PlatformFile(name: name, size: size, path: path);
+PlatformFile _platformFile({
+  required String name,
+  required int size,
+  String? path,
+}) => PlatformFile(name: name, size: size, path: path);
 
 void main() {
   late _FakeFilePickerPlatform platform;
@@ -74,20 +77,23 @@ void main() {
     expect(await picker.pick(), isA<DocumentPickInvalidType>());
   });
 
-  test('> 10 MB → TooLarge WITHOUT reading the file (nonexistent path)', () async {
-    // The path doesn't exist: if the picker tried to read it, the
-    // result would be Unreadable — TooLarge proves the size guard
-    // runs before the read (review 3.8 #1).
-    platform.result = FilePickerResult([
-      _platformFile(
-        name: 'gros.pdf',
-        size: documentMaxSizeBytes + 1,
-        path: '/chemin/inexistant.pdf',
-      ),
-    ]);
+  test(
+    '> 10 MB → TooLarge WITHOUT reading the file (nonexistent path)',
+    () async {
+      // The path doesn't exist: if the picker tried to read it, the
+      // result would be Unreadable — TooLarge proves the size guard
+      // runs before the read (review 3.8 #1).
+      platform.result = FilePickerResult([
+        _platformFile(
+          name: 'gros.pdf',
+          size: documentMaxSizeBytes + 1,
+          path: '/chemin/inexistant.pdf',
+        ),
+      ]);
 
-    expect(await picker.pick(), isA<DocumentPickTooLarge>());
-  });
+      expect(await picker.pick(), isA<DocumentPickTooLarge>());
+    },
+  );
 
   test('size OK but unreadable file → DocumentPickUnreadable', () async {
     platform.result = FilePickerResult([

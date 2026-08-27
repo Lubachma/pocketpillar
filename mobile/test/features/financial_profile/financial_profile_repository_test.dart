@@ -358,7 +358,8 @@ void main() {
 
       test('network error: nothing is cached, the retry refetches', () async {
         final (repo, _) = clockedRepo(DateTime(2026, 8, 5));
-        api.getResponses['/calculator/municipalities'] = const NetworkException();
+        api.getResponses['/calculator/municipalities'] =
+            const NetworkException();
 
         await expectLater(repo.fetchMunicipalities('VD'), throwsA(anything));
 
@@ -452,10 +453,7 @@ void main() {
 
       final call = api.postCalls.single;
       expect(call.path, '/financial-profile/pillar2');
-      expect(call.data, {
-        'currentCapital': 1500000,
-        'isVestedBenefits': false,
-      });
+      expect(call.data, {'currentCapital': 1500000, 'isVestedBenefits': false});
     });
 
     test('POST: advanced fields included in the body when entered', () async {

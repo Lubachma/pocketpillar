@@ -68,7 +68,9 @@ void main() {
   group('ScoreBadge — iOS color thresholds', () {
     Future<void> pumpBadge(WidgetTester tester, int score) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: ScoreBadge(score: score))),
+        MaterialApp(
+          home: Scaffold(body: ScoreBadge(score: score)),
+        ),
       );
     }
 

@@ -84,9 +84,7 @@ class _PropertyPurchaseScreenState
             buildPropertyPurchasePayload(
               age: _age,
               currentBvgCapital: chfFieldToCentimes(_capitalController.text),
-              withdrawalAmount: chfFieldToCentimes(
-                _withdrawalController.text,
-              ),
+              withdrawalAmount: chfFieldToCentimes(_withdrawalController.text),
               annualContribution: _annualContribution,
             ),
           );
@@ -174,8 +172,7 @@ class _PropertyPurchaseScreenState
                   sliderValue: _age.toDouble(),
                   min: scenarioMinAge.toDouble(),
                   max: scenarioMaxAge.toDouble(),
-                  onChanged: (value) =>
-                      setState(() => _age = value.round()),
+                  onChanged: (value) => setState(() => _age = value.round()),
                 ),
                 const SizedBox(height: 8),
                 AppTextField(

@@ -5,11 +5,20 @@ library;
 
 String normalizeDiacritics(String value) {
   const accents = {
-    'à': 'a', 'â': 'a', 'ä': 'a',
-    'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
-    'î': 'i', 'ï': 'i',
-    'ô': 'o', 'ö': 'o',
-    'ù': 'u', 'û': 'u', 'ü': 'u',
+    'à': 'a',
+    'â': 'a',
+    'ä': 'a',
+    'é': 'e',
+    'è': 'e',
+    'ê': 'e',
+    'ë': 'e',
+    'î': 'i',
+    'ï': 'i',
+    'ô': 'o',
+    'ö': 'o',
+    'ù': 'u',
+    'û': 'u',
+    'ü': 'u',
   };
   final lower = value.toLowerCase();
   final buffer = StringBuffer();

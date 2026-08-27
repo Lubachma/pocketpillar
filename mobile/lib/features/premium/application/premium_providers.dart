@@ -26,11 +26,7 @@ final optimisticPremiumProvider = StateProvider<bool>((ref) => false);
 /// shown; any 402 opens the paywall regardless).
 final premiumStatusProvider = Provider<PremiumStatus>((ref) {
   final backend =
-      ref
-          .watch(profileAggregateProvider)
-          .valueOrNull
-          ?.base
-          .premium ??
+      ref.watch(profileAggregateProvider).valueOrNull?.base.premium ??
       PremiumStatus.none;
   if (backend.active) return backend;
   if (ref.watch(optimisticPremiumProvider)) {

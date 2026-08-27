@@ -102,12 +102,10 @@ class Pillar2AccountDto {
             (json['projectedCapitalAtRetirement'] as num?)?.toInt(),
         conversionRate: (json['conversionRate'] as num?)?.toDouble(),
         insuredSalary: (json['insuredSalary'] as num?)?.toInt(),
-        coordinationDeduction:
-            (json['coordinationDeduction'] as num?)?.toInt(),
-        annualBvgContribution:
-            (json['annualBvgContribution'] as num?)?.toInt(),
-        annualSupraContribution:
-            (json['annualSupraContribution'] as num?)?.toInt(),
+        coordinationDeduction: (json['coordinationDeduction'] as num?)?.toInt(),
+        annualBvgContribution: (json['annualBvgContribution'] as num?)?.toInt(),
+        annualSupraContribution: (json['annualSupraContribution'] as num?)
+            ?.toInt(),
         isVestedBenefits: json['isVestedBenefits'] as bool? ?? false,
       );
 }
@@ -145,14 +143,15 @@ class Pillar3aAccountDto {
         accountType: json['accountType'] as String,
         currentBalance: (json['currentBalance'] as num).toInt(),
         annualContribution: (json['annualContribution'] as num?)?.toInt(),
-        interestRateOrReturn:
-            (json['interestRateOrReturn'] as num?)?.toDouble(),
+        interestRateOrReturn: (json['interestRateOrReturn'] as num?)
+            ?.toDouble(),
       );
 }
 
 /// Profile screen aggregate: user + financial profile (null on
 /// initial 404 → form in creation mode).
-class ProfileBaseData {  const ProfileBaseData({
+class ProfileBaseData {
+  const ProfileBaseData({
     required this.userId,
     required this.email,
     this.canton,

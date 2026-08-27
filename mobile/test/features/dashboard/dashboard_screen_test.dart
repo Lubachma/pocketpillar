@@ -66,19 +66,18 @@ DashboardData _fullData() {
   );
 }
 
-RecommendationResultDto _recommendations(int count) =>
-    RecommendationResultDto(
-      recommendations: [
-        for (var i = 0; i < count; i++)
-          RecommendationDto(
-            type: 'MAX_3A_CONTRIBUTION',
-            priority: 'HIGH',
-            title: 'Reco ${String.fromCharCode(65 + i)}',
-            description: 'Description ${String.fromCharCode(65 + i)}',
-            estimatedAnnualImpact: 215000,
-          ),
-      ],
-    );
+RecommendationResultDto _recommendations(int count) => RecommendationResultDto(
+  recommendations: [
+    for (var i = 0; i < count; i++)
+      RecommendationDto(
+        type: 'MAX_3A_CONTRIBUTION',
+        priority: 'HIGH',
+        title: 'Reco ${String.fromCharCode(65 + i)}',
+        description: 'Description ${String.fromCharCode(65 + i)}',
+        estimatedAnnualImpact: 215000,
+      ),
+  ],
+);
 
 void main() {
   late FakeDashboardRepository repository;
@@ -148,8 +147,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('empty state (initial 404): invitation + CTA to the profile',
-      (tester) async {
+  testWidgets('empty state (initial 404): invitation + CTA to the profile', (
+    tester,
+  ) async {
     repository.data = _emptyProfileData();
     await pumpDashboard(tester);
 
@@ -163,8 +163,9 @@ void main() {
     expect(find.text('Profil financier'), findsOneWidget);
   });
 
-  testWidgets('loaded: summary, pillars and top 3 recommendations',
-      (tester) async {
+  testWidgets('loaded: summary, pillars and top 3 recommendations', (
+    tester,
+  ) async {
     repository.data = _fullData();
     repository.recommendations = _recommendations(4);
     await pumpDashboard(tester);
@@ -190,8 +191,9 @@ void main() {
     expect(find.text("Impact estimé : CHF 2'150.00/an"), findsNWidgets(3));
   });
 
-  testWidgets('OPEN_ADDITIONAL_3A recommendation: dedicated icon displayed',
-      (tester) async {
+  testWidgets('OPEN_ADDITIONAL_3A recommendation: dedicated icon displayed', (
+    tester,
+  ) async {
     repository.data = _fullData();
     repository.recommendations = const RecommendationResultDto(
       recommendations: [
@@ -206,17 +208,15 @@ void main() {
     );
     await pumpDashboard(tester);
 
-    expect(
-      find.text('Ouvrir un compte 3a supplémentaire'),
-      findsOneWidget,
-    );
+    expect(find.text('Ouvrir un compte 3a supplémentaire'), findsOneWidget);
     expect(find.byIcon(Icons.call_split), findsOneWidget);
     // Zero annual impact → no 'Impact estimé' line (one-time withdrawal).
     expect(find.textContaining('Impact estimé'), findsNothing);
   });
 
-  testWidgets('network error: message + retry reloads the dashboard',
-      (tester) async {
+  testWidgets('network error: message + retry reloads the dashboard', (
+    tester,
+  ) async {
     repository.data = _fullData();
     repository.recommendations = _recommendations(1);
     repository.failLoadOnce = true;
@@ -231,8 +231,9 @@ void main() {
     expect(repository.loadCalls, 2);
   });
 
-  testWidgets('422 recommendations: empty section state, screen loaded',
-      (tester) async {
+  testWidgets('422 recommendations: empty section state, screen loaded', (
+    tester,
+  ) async {
     repository.data = _fullData();
     repository.recommendations = null; // 422 mapped to null by the repository.
     await pumpDashboard(tester);
@@ -247,8 +248,9 @@ void main() {
     );
   });
 
-  testWidgets('recommendations error: retry scoped to the section',
-      (tester) async {
+  testWidgets('recommendations error: retry scoped to the section', (
+    tester,
+  ) async {
     repository.data = _fullData();
     repository.recommendations = _recommendations(1);
     repository.failRecommendationsOnce = true;
@@ -267,8 +269,9 @@ void main() {
     expect(repository.recommendationsCalls, 2);
   });
 
-  testWidgets('checklist season: card displayed with remaining actions',
-      (tester) async {
+  testWidgets('checklist season: card displayed with remaining actions', (
+    tester,
+  ) async {
     fixedNow = DateTime(2026, 10, 15, 10);
     repository.data = _fullData();
     repository.recommendations = _recommendations(0);

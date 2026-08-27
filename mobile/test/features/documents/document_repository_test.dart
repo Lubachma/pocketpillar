@@ -79,22 +79,24 @@ const _documentJson = <String, dynamic>{
 };
 
 void main() {
-  test('listDocuments: GET /documents, list parsed (null year tolerated)',
-      () async {
-    final (client, adapter) = _harness(
-      (options) async => _json([
-        _documentJson,
-        {..._documentJson, 'id': 'd2', 'year': null},
-      ], 200),
-    );
+  test(
+    'listDocuments: GET /documents, list parsed (null year tolerated)',
+    () async {
+      final (client, adapter) = _harness(
+        (options) async => _json([
+          _documentJson,
+          {..._documentJson, 'id': 'd2', 'year': null},
+        ], 200),
+      );
 
-    final documents = await DocumentRepository(client).listDocuments();
+      final documents = await DocumentRepository(client).listDocuments();
 
-    expect(adapter.calls.single, (method: 'GET', path: '/documents'));
-    expect(documents, hasLength(2));
-    expect(documents.first.filename, 'fiche-salaire.pdf');
-    expect(documents.last.year, isNull);
-  });
+      expect(adapter.calls.single, (method: 'GET', path: '/documents'));
+      expect(documents, hasLength(2));
+      expect(documents.first.filename, 'fiche-salaire.pdf');
+      expect(documents.last.year, isNull);
+    },
+  );
 
   test('uploadDocument: type/year fields BEFORE file on the wire', () async {
     final (client, adapter) = _harness(
@@ -150,7 +152,8 @@ void main() {
 
   test('uploadDocument: 400 propagated (contract message)', () async {
     final (client, _) = _harness(
-      (options) async => _json({'error': 'Type de fichier non pris en charge'}, 400),
+      (options) async =>
+          _json({'error': 'Type de fichier non pris en charge'}, 400),
     );
 
     await expectLater(
@@ -162,7 +165,11 @@ void main() {
       throwsA(
         isA<ApiException>()
             .having((e) => e.statusCode, 'statusCode', 400)
-            .having((e) => e.message, 'message', contains('non pris en charge')),
+            .having(
+              (e) => e.message,
+              'message',
+              contains('non pris en charge'),
+            ),
       ),
     );
   });
@@ -193,24 +200,26 @@ void main() {
     );
   });
 
-  test('getDownloadUrl: GET /documents/:id/download, response parsed',
-      () async {
-    final (client, adapter) = _harness(
-      (options) async => _json({
-        'url': 'https://storage.supabase.co/sign/abc?token=xyz',
-        'filename': 'fiche-salaire.pdf',
-        'mimeType': 'application/pdf',
-      }, 200),
-    );
+  test(
+    'getDownloadUrl: GET /documents/:id/download, response parsed',
+    () async {
+      final (client, adapter) = _harness(
+        (options) async => _json({
+          'url': 'https://storage.supabase.co/sign/abc?token=xyz',
+          'filename': 'fiche-salaire.pdf',
+          'mimeType': 'application/pdf',
+        }, 200),
+      );
 
-    final download = await DocumentRepository(client).getDownloadUrl('d1');
+      final download = await DocumentRepository(client).getDownloadUrl('d1');
 
-    expect(
-      adapter.calls.single,
-      (method: 'GET', path: '/documents/d1/download'),
-    );
-    expect(download.url, contains('token=xyz'));
-  });
+      expect(adapter.calls.single, (
+        method: 'GET',
+        path: '/documents/d1/download',
+      ));
+      expect(download.url, contains('token=xyz'));
+    },
+  );
 
   test('deleteDocument: DELETE /documents/:id (204)', () async {
     final (client, adapter) = _harness(

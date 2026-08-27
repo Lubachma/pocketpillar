@@ -31,10 +31,7 @@ class TipOfDaySection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      tip.title(l10n),
-                      style: theme.textTheme.titleSmall,
-                    ),
+                    Text(tip.title(l10n), style: theme.textTheme.titleSmall),
                     const SizedBox(height: 4),
                     Text(
                       tip.body(l10n),

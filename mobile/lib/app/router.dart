@@ -195,8 +195,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'property-purchase',
-                    builder: (context, state) =>
-                        const PropertyPurchaseScreen(),
+                    builder: (context, state) => const PropertyPurchaseScreen(),
                   ),
                   GoRoute(
                     path: 'divorce-impact',
@@ -258,8 +257,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: 'profile',
-                    builder: (context, state) =>
-                        const FinancialProfileScreen(),
+                    builder: (context, state) => const FinancialProfileScreen(),
                   ),
                   GoRoute(
                     path: 'privacy',

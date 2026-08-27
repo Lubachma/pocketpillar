@@ -71,9 +71,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final service = ref.read(notificationServiceProvider);
     if (!enabled) {
-      await ref
-          .read(annualRemindersEnabledProvider.notifier)
-          .setEnabled(false);
+      await ref.read(annualRemindersEnabledProvider.notifier).setEnabled(false);
       await service.cancelAnnualReminders();
       return;
     }
@@ -158,9 +156,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     // Without this reset, reminders would be rescheduled on next
     // startup for a deleted account.
     try {
-      await ref
-          .read(annualRemindersEnabledProvider.notifier)
-          .setEnabled(false);
+      await ref.read(annualRemindersEnabledProvider.notifier).setEnabled(false);
       await ref.read(notificationServiceProvider).cancelAnnualReminders();
     } on Object catch (e) {
       debugLog('Annual reminders not cancelled on account deletion: $e');

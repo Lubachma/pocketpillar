@@ -142,7 +142,9 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
-          authRepositoryProvider.overrideWithValue(SignedInFakeAuthRepository()),
+          authRepositoryProvider.overrideWithValue(
+            SignedInFakeAuthRepository(),
+          ),
         ],
         child: const PocketPillarApp(),
       ),
@@ -154,8 +156,10 @@ void main() {
     // not be followed: rejected → defaults to dashboard (never an external target).
     final context = tester.element(find.byType(DashboardScreen));
     GoRouter.of(context).go(
-      Uri(path: Routes.login, queryParameters: {'from': '//evil.com'})
-          .toString(),
+      Uri(
+        path: Routes.login,
+        queryParameters: {'from': '//evil.com'},
+      ).toString(),
     );
     await tester.pumpAndSettle();
 

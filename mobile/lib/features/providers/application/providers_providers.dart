@@ -28,9 +28,7 @@ String riskLevelForAge(int age) {
 
 /// Ranking risk filter — defaults to GROWTH (iOS default
 /// `ProvidersViewModel.selectedRisk`).
-final providersRiskFilterProvider = StateProvider<String>(
-  (ref) => 'GROWTH',
-);
+final providersRiskFilterProvider = StateProvider<String>((ref) => 'GROWTH');
 
 /// Providers catalogue (`GET /providers`). Pull-to-refresh /
 /// retry: `ref.invalidate(providersCatalogueProvider)`.
@@ -54,7 +52,7 @@ final compareSelectionProvider = StateProvider<Set<String>>((ref) => {});
 
 /// Provider detail sheet (`GET /providers/:slug`) — null if the slug
 /// is unknown (repository 404 → "not found" state).
-final providerDetailProvider =
-    FutureProvider.autoDispose.family<ProviderDto?, String>(
+final providerDetailProvider = FutureProvider.autoDispose
+    .family<ProviderDto?, String>(
       (ref, slug) => ref.watch(providerRepositoryProvider).getProvider(slug),
     );

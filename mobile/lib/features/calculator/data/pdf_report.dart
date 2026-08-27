@@ -56,10 +56,7 @@ Future<List<int>> buildPensionReportPdf({
         ),
       ),
       pw.SizedBox(height: 4),
-      pw.Text(
-        dateLabel,
-        style: const pw.TextStyle(fontSize: 11, color: grey),
-      ),
+      pw.Text(dateLabel, style: const pw.TextStyle(fontSize: 11, color: grey)),
       pw.SizedBox(height: 12),
       pw.Container(height: 2, color: accent),
       pw.SizedBox(height: 12),
@@ -80,10 +77,7 @@ Future<List<int>> buildPensionReportPdf({
     (l10n.pdfPillar2, retirement.annualPillar2Pension, pillar2),
     (l10n.pdfPillar3a, retirement.projectedPillar3aBalance, pillar3a),
   ];
-  final maxValue = pillarRows.fold<int>(
-    1,
-    (max, p) => p.$2 > max ? p.$2 : max,
-  );
+  final maxValue = pillarRows.fold<int>(1, (max, p) => p.$2 > max ? p.$2 : max);
   final pillars = pw.Column(
     crossAxisAlignment: pw.CrossAxisAlignment.start,
     children: [
@@ -126,10 +120,7 @@ Future<List<int>> buildPensionReportPdf({
     (l10n.pdfRetirementAge, '$calculatorRetirementAge'),
     (l10n.pdfYearsRemaining, '${retirement.yearsToRetirement}'),
     (l10n.pdfReplacementRate, '${retirement.replacementRate.round()} %'),
-    (
-      l10n.pdfAnnualIncome,
-      formatChf(retirement.totalAnnualRetirementIncome),
-    ),
+    (l10n.pdfAnnualIncome, formatChf(retirement.totalAnnualRetirementIncome)),
     (
       l10n.pdfMonthlyIncome,
       formatChf(retirement.totalAnnualRetirementIncome ~/ 12),

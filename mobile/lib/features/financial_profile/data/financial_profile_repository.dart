@@ -331,7 +331,6 @@ class _UserMe {
   );
 }
 
-final financialProfileRepositoryProvider =
-    Provider<FinancialProfileRepository>(
-      (ref) => FinancialProfileRepository(ref.watch(apiClientProvider)),
-    );
+final financialProfileRepositoryProvider = Provider<FinancialProfileRepository>(
+  (ref) => FinancialProfileRepository(ref.watch(apiClientProvider)),
+);

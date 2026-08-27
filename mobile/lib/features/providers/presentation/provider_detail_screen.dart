@@ -116,20 +116,14 @@ class _ProviderDetailBody extends StatelessWidget {
           AppCard(
             padding: EdgeInsets.zero,
             child: ListTile(
-              leading: Icon(
-                Icons.language,
-                color: theme.colorScheme.primary,
-              ),
+              leading: Icon(Icons.language, color: theme.colorScheme.primary),
               title: Text(l10n.providersVisitWebsite),
               trailing: const Icon(Icons.open_in_new, size: 18),
               onTap: () => _openWebsite(context, provider.website!),
             ),
           ),
         const SizedBox(height: 16),
-        Text(
-          l10n.providersProducts,
-          style: theme.textTheme.titleMedium,
-        ),
+        Text(l10n.providersProducts, style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
         for (final product in provider.products) ...[
           _ProductCard(product: product),
@@ -137,14 +131,9 @@ class _ProviderDetailBody extends StatelessWidget {
         ],
         if (productsWithFees.length > 1) ...[
           const SizedBox(height: 16),
-          Text(
-            l10n.providersFeeComparison,
-            style: theme.textTheme.titleMedium,
-          ),
+          Text(l10n.providersFeeComparison, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          AppCard(
-            child: _FeeComparisonBars(products: productsWithFees),
-          ),
+          AppCard(child: _FeeComparisonBars(products: productsWithFees)),
         ],
       ],
     );
@@ -189,10 +178,7 @@ class _ProductCard extends StatelessWidget {
           const SizedBox(height: 12),
           _DetailRow(
             label: l10n.providersCategory,
-            value: investmentCategoryLabel(
-              l10n,
-              product.investmentCategory,
-            ),
+            value: investmentCategoryLabel(l10n, product.investmentCategory),
           ),
           _DetailRow(
             label: l10n.providersEquityShort,
@@ -200,10 +186,7 @@ class _ProductCard extends StatelessWidget {
           ),
           if (fees != null) ...[
             const Divider(height: 24),
-            Text(
-              l10n.providersFeesDetail,
-              style: theme.textTheme.labelLarge,
-            ),
+            Text(l10n.providersFeesDetail, style: theme.textTheme.labelLarge),
             const SizedBox(height: 4),
             _DetailRow(
               label: l10n.providersAllInFee,
@@ -231,10 +214,7 @@ class _ProductCard extends StatelessWidget {
           ],
           if (product.performanceHistory.isNotEmpty) ...[
             const Divider(height: 24),
-            Text(
-              l10n.providersPerformance,
-              style: theme.textTheme.labelLarge,
-            ),
+            Text(l10n.providersPerformance, style: theme.textTheme.labelLarge),
             // The backend caps history at 5 years (take: 5) — the
             // seeded 6th year never arrives: we label the window
             // rather than imply a complete history (2026-08 review).
@@ -310,8 +290,7 @@ class _FeeComparisonBars extends StatelessWidget {
     final colors = context.appColors;
     final maxFee = products.fold<double>(
       0.01,
-      (max, p) =>
-          p.fees!.allInFeePercent > max ? p.fees!.allInFeePercent : max,
+      (max, p) => p.fees!.allInFeePercent > max ? p.fees!.allInFeePercent : max,
     );
     return Column(
       children: [

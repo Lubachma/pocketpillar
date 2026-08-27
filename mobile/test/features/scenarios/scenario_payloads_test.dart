@@ -58,10 +58,16 @@ void main() {
   });
 
   group('mapMaritalStatusForWithdrawal', () {
-    test('MARRIED and REGISTERED_PARTNERSHIP → MARRIED (marital tax scale)', () {
-      expect(mapMaritalStatusForWithdrawal('MARRIED'), 'MARRIED');
-      expect(mapMaritalStatusForWithdrawal('REGISTERED_PARTNERSHIP'), 'MARRIED');
-    });
+    test(
+      'MARRIED and REGISTERED_PARTNERSHIP → MARRIED (marital tax scale)',
+      () {
+        expect(mapMaritalStatusForWithdrawal('MARRIED'), 'MARRIED');
+        expect(
+          mapMaritalStatusForWithdrawal('REGISTERED_PARTNERSHIP'),
+          'MARRIED',
+        );
+      },
+    );
 
     test('SINGLE, DIVORCED, WIDOWED → SINGLE', () {
       expect(mapMaritalStatusForWithdrawal('SINGLE'), 'SINGLE');

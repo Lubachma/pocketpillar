@@ -60,8 +60,7 @@ void main() {
     return container.read(scenarioPrefillProvider.future);
   }
 
-  test('age from birth year, profile and account totals',
-      () async {
+  test('age from birth year, profile and account totals', () async {
     profileRepo.pillar2 = const [
       Pillar2AccountDto(
         id: 'p2-1',
@@ -103,8 +102,7 @@ void main() {
     expect(prefill.pillar3aAccountCount, 2);
   });
 
-  test('no profile (404) or birth year: null fields, totals 0',
-      () async {
+  test('no profile (404) or birth year: null fields, totals 0', () async {
     profileRepo.baseData = ProfileBaseData(
       userId: 'u-1',
       email: 'user@example.ch',

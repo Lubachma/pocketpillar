@@ -11,10 +11,7 @@ import 'package:pocketpillar/features/scenarios/presentation/scenarios_screen.da
 import '../../helpers/fakes.dart';
 
 void main() {
-  Future<GoRouter> pumpHub(
-    WidgetTester tester, {
-    bool premium = true,
-  }) async {
+  Future<GoRouter> pumpHub(WidgetTester tester, {bool premium = true}) async {
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -28,10 +25,8 @@ void main() {
           routes: [
             GoRoute(
               path: 'couple',
-              builder: (_, _) => Scaffold(
-                appBar: AppBar(),
-                body: const Text('ROUTE couple'),
-              ),
+              builder: (_, _) =>
+                  Scaffold(appBar: AppBar(), body: const Text('ROUTE couple')),
             ),
             GoRoute(
               path: 'catchup-3a',
@@ -56,19 +51,15 @@ void main() {
             ),
             GoRoute(
               path: 'divorce-impact',
-              builder: (_, _) => Scaffold(
-                appBar: AppBar(),
-                body: const Text('ROUTE divorce'),
-              ),
+              builder: (_, _) =>
+                  Scaffold(appBar: AppBar(), body: const Text('ROUTE divorce')),
             ),
           ],
         ),
         GoRoute(
           path: Routes.paywall,
-          builder: (_, _) => Scaffold(
-            appBar: AppBar(),
-            body: const Text('ROUTE paywall'),
-          ),
+          builder: (_, _) =>
+              Scaffold(appBar: AppBar(), body: const Text('ROUTE paywall')),
         ),
       ],
     );
@@ -104,9 +95,7 @@ void main() {
     return router;
   }
 
-  testWidgets('hub: title, 5 localized cards and warning', (
-    tester,
-  ) async {
+  testWidgets('hub: title, 5 localized cards and warning', (tester) async {
     await pumpHub(tester);
 
     expect(find.text('Scénarios de vie'), findsOneWidget);

@@ -235,9 +235,7 @@ class _BestMatchScreenState extends ConsumerState<BestMatchScreen> {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: _submitting
-                    ? null
-                    : () => setState(() => _step = 0),
+                onPressed: _submitting ? null : () => setState(() => _step = 0),
                 child: Text(l10n.guidedBack),
               ),
             ),
@@ -310,10 +308,7 @@ class _BestMatchScreenState extends ConsumerState<BestMatchScreen> {
     return Column(
       children: [
         const SizedBox(height: 8),
-        Text(
-          l10n.bestmatchResultsTitle,
-          style: theme.textTheme.titleLarge,
-        ),
+        Text(l10n.bestmatchResultsTitle, style: theme.textTheme.titleLarge),
         const SizedBox(height: 16),
         for (var i = 0; i < results.length; i++) ...[
           _BestMatchResultCard(

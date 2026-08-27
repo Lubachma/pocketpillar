@@ -156,10 +156,7 @@ class _MunicipalityPickerSheetState
             children: [
               Text(l10n.municipalityPickerError, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(
-                onPressed: _retry,
-                child: Text(l10n.commonRetry),
-              ),
+              FilledButton(onPressed: _retry, child: Text(l10n.commonRetry)),
             ],
           ),
         ),
@@ -185,9 +182,8 @@ class _MunicipalityPickerSheetState
                     color: Theme.of(context).colorScheme.primary,
                   )
                 : null,
-            onTap: () => Navigator.of(
-              context,
-            ).pop(municipalityCantonalAverageSentinel),
+            onTap: () =>
+                Navigator.of(context).pop(municipalityCantonalAverageSentinel),
           );
         }
         if (index == 1) {

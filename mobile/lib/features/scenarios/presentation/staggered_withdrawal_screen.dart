@@ -97,9 +97,7 @@ class _StaggeredWithdrawalScreenState
           .staggeredWithdrawal(
             buildStaggeredWithdrawalPayload(
               canton: _canton,
-              totalPillar3aBalance: chfFieldToCentimes(
-                _balanceController.text,
-              ),
+              totalPillar3aBalance: chfFieldToCentimes(_balanceController.text),
               numberOfAccounts: _numberOfAccounts,
               currentAge: _age,
               maritalStatus: mapMaritalStatusForWithdrawal(_maritalStatus),

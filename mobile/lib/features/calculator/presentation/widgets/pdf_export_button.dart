@@ -20,7 +20,11 @@ import '../../data/pdf_report.dart';
 /// Premium feature (app-side gate, contract §11): padlock for
 /// non-subscribers, tapping then opens the paywall.
 class PdfExportButton extends ConsumerStatefulWidget {
-  const PdfExportButton({required this.input, required this.results, super.key});
+  const PdfExportButton({
+    required this.input,
+    required this.results,
+    super.key,
+  });
 
   final GuidedCalculatorInput input;
   final CalculatorResults results;

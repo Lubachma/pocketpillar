@@ -81,7 +81,12 @@ class DashboardRepository {
       profile: profile,
       pillar2Accounts: pillar2,
       pillar3aAccounts: pillar3a,
-      projection: await _fetchProjectionOrNull(user, profile, pillar2, pillar3a),
+      projection: await _fetchProjectionOrNull(
+        user,
+        profile,
+        pillar2,
+        pillar3a,
+      ),
     );
   }
 

@@ -114,7 +114,9 @@ class _ProfileFormState extends ConsumerState<ProfileForm> {
       text: (profile?.numberOfChildren ?? 0).toString(),
     );
     _grossIncomeController = TextEditingController(
-      text: profile != null ? centimesToChfInput(profile.grossAnnualIncome) : '',
+      text: profile != null
+          ? centimesToChfInput(profile.grossAnnualIncome)
+          : '',
     );
     _netIncomeController = TextEditingController(
       text: profile?.netAnnualIncome != null
@@ -174,8 +176,9 @@ class _ProfileFormState extends ConsumerState<ProfileForm> {
     if (name != null) {
       setState(() {
         // "Cantonal average" sentinel → deselection (null).
-        _municipality =
-            name == municipalityCantonalAverageSentinel ? null : name;
+        _municipality = name == municipalityCantonalAverageSentinel
+            ? null
+            : name;
       });
     }
   }
@@ -227,9 +230,7 @@ class _ProfileFormState extends ConsumerState<ProfileForm> {
           employmentStatus: _employmentStatus,
           maritalStatus: _maritalStatus,
           numberOfChildren: int.parse(_childrenController.text.trim()),
-          grossAnnualIncome: parseChfToCentimes(
-            _grossIncomeController.text,
-          )!,
+          grossAnnualIncome: parseChfToCentimes(_grossIncomeController.text)!,
           netAnnualIncome: parseChfToCentimes(_netIncomeController.text),
         ),
       ]);
@@ -519,7 +520,9 @@ class _Pillar2Section extends ConsumerWidget {
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(
               l10n.docDelete,
-              style: TextStyle(color: Theme.of(dialogContext).colorScheme.error),
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
             ),
           ),
         ],
@@ -694,7 +697,9 @@ class _Pillar3aSection extends ConsumerWidget {
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(
               l10n.docDelete,
-              style: TextStyle(color: Theme.of(dialogContext).colorScheme.error),
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
             ),
           ),
         ],

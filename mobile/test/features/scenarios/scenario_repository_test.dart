@@ -26,7 +26,12 @@ const _catchupJson = <String, dynamic>{
   'maxPerYear': 725800,
   'eligibleYears': 1,
   'yearDetails': [
-    {'year': 2025, 'maxContribution': 725800, 'actualContribution': 0, 'gap': 725800},
+    {
+      'year': 2025,
+      'maxContribution': 725800,
+      'actualContribution': 0,
+      'gap': 725800,
+    },
   ],
   'totalCatchupPotential': 725800,
   'currentYearGap': 725800,

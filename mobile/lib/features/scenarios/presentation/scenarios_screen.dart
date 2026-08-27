@@ -25,9 +25,7 @@ class ScenariosScreen extends ConsumerWidget {
     final premium = ref.watch(premiumActiveProvider);
 
     void open(String route, {required bool isPremiumScenario}) {
-      context.push(
-        isPremiumScenario && !premium ? Routes.paywall : route,
-      );
+      context.push(isPremiumScenario && !premium ? Routes.paywall : route);
     }
 
     return Scaffold(
@@ -46,8 +44,7 @@ class ScenariosScreen extends ConsumerWidget {
             title: l10n.coupleScenarioTitle,
             subtitle: l10n.coupleScenarioSubtitle,
             locked: !premium,
-            onTap: () =>
-                open(Routes.scenarioCouple, isPremiumScenario: true),
+            onTap: () => open(Routes.scenarioCouple, isPremiumScenario: true),
           ),
           const SizedBox(height: 8),
           _ScenarioCard(
@@ -65,10 +62,8 @@ class ScenariosScreen extends ConsumerWidget {
             title: l10n.scenarioPropertyTitle,
             subtitle: l10n.scenarioPropertySubtitle,
             locked: !premium,
-            onTap: () => open(
-              Routes.scenarioPropertyPurchase,
-              isPremiumScenario: true,
-            ),
+            onTap: () =>
+                open(Routes.scenarioPropertyPurchase, isPremiumScenario: true),
           ),
           const SizedBox(height: 8),
           _ScenarioCard(

@@ -255,11 +255,10 @@ List<(CantonRegion, List<SwissCanton>)> groupedSwissCantons(
       (
         region,
         swissCantons.where((c) => c.region == region).toList()..sort(
-            (a, b) =>
-                a.localizedName(languageCode).compareTo(
-                  b.localizedName(languageCode),
-                ),
-          ),
+          (a, b) => a
+              .localizedName(languageCode)
+              .compareTo(b.localizedName(languageCode)),
+        ),
       ),
   ];
 }

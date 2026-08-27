@@ -43,7 +43,10 @@ void main() {
 
     // Unset → the key is absent (backend applies the 6.8% legal minimum,
     // guaranteed on the mandatory part only — practitioner review 08.2026).
-    expect(buildCoupleSpousePayload(input).containsKey('conversionRate'), isFalse);
+    expect(
+      buildCoupleSpousePayload(input).containsKey('conversionRate'),
+      isFalse,
+    );
   });
 
   test('without 3a: balance and 3a contribution are zero', () {

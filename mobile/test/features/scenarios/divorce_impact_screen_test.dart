@@ -79,9 +79,7 @@ void main() {
     );
   }
 
-  testWidgets('prefill: current LPP capital on the user side', (
-    tester,
-  ) async {
+  testWidgets('prefill: current LPP capital on the user side', (tester) async {
     await pumpScreen(
       tester,
       prefill: const ScenarioPrefill(
@@ -158,19 +156,18 @@ void main() {
     expect(find.text("+CHF 1'227.78/an"), findsOneWidget); // pension gain
   });
 
-  testWidgets(
-    'validation: empty current spouse capital → error, no call',
-    (tester) async {
-      await pumpScreen(tester);
+  testWidgets('validation: empty current spouse capital → error, no call', (
+    tester,
+  ) async {
+    await pumpScreen(tester);
 
-      await tester.tap(find.text('Calculer'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Calculer'));
+    await tester.pumpAndSettle();
 
-      // Required fields empty (my current capital + the spouse's).
-      expect(find.text('Champ requis'), findsWidgets);
-      expect(repo.calls, 0);
-    },
-  );
+    // Required fields empty (my current capital + the spouse's).
+    expect(find.text('Champ requis'), findsWidgets);
+    expect(repo.calls, 0);
+  });
 
   testWidgets('network error: inline card + retry', (tester) async {
     repo.failOnce = true;
@@ -189,100 +186,92 @@ void main() {
     expect(repo.calls, 2);
   });
 
-  testWidgets(
-    'cross-validation: capital at marriage > current capital blocks '
-    'submission (per spouse)',
-    (tester) async {
-      await pumpScreen(tester);
+  testWidgets('cross-validation: capital at marriage > current capital blocks '
+      'submission (per spouse)', (tester) async {
+    await pumpScreen(tester);
 
-      // Inversion on the user's side: marriage 200'000 > current 150'000.
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital au mariage').first,
-        '200000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital actuel').first,
-        '150000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital au mariage').last,
-        '30000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital actuel').last,
-        '150000',
-      );
+    // Inversion on the user's side: marriage 200'000 > current 150'000.
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital au mariage').first,
+      '200000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital actuel').first,
+      '150000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital au mariage').last,
+      '30000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital actuel').last,
+      '150000',
+    );
 
-      await tester.tap(find.text('Calculer'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Calculer'));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.text(
-          'Le capital au mariage ne peut pas dépasser le capital actuel',
-        ),
-        findsOneWidget,
-      );
-      expect(repo.calls, 0);
+    expect(
+      find.text('Le capital au mariage ne peut pas dépasser le capital actuel'),
+      findsOneWidget,
+    );
+    expect(repo.calls, 0);
 
-      // Inversion on the spouse's side (the user's figures are consistent).
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital au mariage').first,
-        '50000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital actuel').first,
-        '200000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital au mariage').last,
-        '300000',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Capital actuel').last,
-        '150000',
-      );
+    // Inversion on the spouse's side (the user's figures are consistent).
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital au mariage').first,
+      '50000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital actuel').first,
+      '200000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital au mariage').last,
+      '300000',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Capital actuel').last,
+      '150000',
+    );
 
-      await tester.tap(find.text('Calculer'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Calculer'));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.text(
-          'Le capital au mariage ne peut pas dépasser le capital actuel',
-        ),
-        findsOneWidget,
-      );
-      expect(repo.calls, 0);
-    },
-  );
+    expect(
+      find.text('Le capital au mariage ne peut pas dépasser le capital actuel'),
+      findsOneWidget,
+    );
+    expect(repo.calls, 0);
+  });
 
-  testWidgets(
-    'zero impact: LPP pension and AVS lines hidden (like iOS)',
-    (tester) async {
-      repo.divorceResult = const DivorceImpactResultDto(
-        myAccumulatedDuringMarriage: 15000000,
-        spouseAccumulatedDuringMarriage: 15000000,
-        totalMarriageCapital: 30000000,
-        transferAmount: 0,
-        capitalAfterDivorce: 20000000,
-        projectedCapitalWithMarriage: 41851576,
-        projectedCapitalAfterDivorce: 41851576,
-        annualPensionWithMarriage: 2511095,
-        annualPensionAfterDivorce: 2511095,
-        annualPensionDifference: 0,
-        estimatedAvsImpact: 0,
-      );
-      await pumpScreen(tester);
-      await fillForm(tester);
+  testWidgets('zero impact: LPP pension and AVS lines hidden (like iOS)', (
+    tester,
+  ) async {
+    repo.divorceResult = const DivorceImpactResultDto(
+      myAccumulatedDuringMarriage: 15000000,
+      spouseAccumulatedDuringMarriage: 15000000,
+      totalMarriageCapital: 30000000,
+      transferAmount: 0,
+      capitalAfterDivorce: 20000000,
+      projectedCapitalWithMarriage: 41851576,
+      projectedCapitalAfterDivorce: 41851576,
+      annualPensionWithMarriage: 2511095,
+      annualPensionAfterDivorce: 2511095,
+      annualPensionDifference: 0,
+      estimatedAvsImpact: 0,
+    );
+    await pumpScreen(tester);
+    await fillForm(tester);
 
-      await tester.tap(find.text('Calculer'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Calculer'));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Résultat du partage'), findsOneWidget);
-      // Neither a green "-CHF 0.00/an", nor a zero AVS line.
-      expect(find.text('Impact sur la rente annuelle'), findsNothing);
-      expect(find.text('Impact estimé sur la rente AVS'), findsNothing);
-      // The split lines remain displayed.
-      expect(find.text("CHF 300'000.00"), findsOneWidget);
-    },
-  );
+    expect(find.text('Résultat du partage'), findsOneWidget);
+    // Neither a green "-CHF 0.00/an", nor a zero AVS line.
+    expect(find.text('Impact sur la rente annuelle'), findsNothing);
+    expect(find.text('Impact estimé sur la rente AVS'), findsNothing);
+    // The split lines remain displayed.
+    expect(find.text("CHF 300'000.00"), findsOneWidget);
+  });
 }

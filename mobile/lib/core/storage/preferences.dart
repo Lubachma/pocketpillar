@@ -25,8 +25,7 @@ class PreferencesRepository {
   static const String _keyAnnualRemindersEnabled = 'annualRemindersEnabled';
 
   /// Pre-login onboarding already shown (default: false).
-  bool get hasSeenOnboarding =>
-      _prefs.getBool(_keyHasSeenOnboarding) ?? false;
+  bool get hasSeenOnboarding => _prefs.getBool(_keyHasSeenOnboarding) ?? false;
 
   Future<void> setHasSeenOnboarding() =>
       _prefs.setBool(_keyHasSeenOnboarding, true);
@@ -57,8 +56,7 @@ class PreferencesRepository {
 
   /// Year-end checklist key — same format as the iOS app
   /// (`checklist.<year>.completed`).
-  static String _keyChecklistCompleted(int year) =>
-      'checklist.$year.completed';
+  static String _keyChecklistCompleted(int year) => 'checklist.$year.completed';
 
   /// Ids of checked items for the given year (empty by default).
   List<String> getCompletedChecklistItems(int year) =>

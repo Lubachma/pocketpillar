@@ -56,9 +56,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('prefill: LPP capital and age from the profile', (
-    tester,
-  ) async {
+  testWidgets('prefill: LPP capital and age from the profile', (tester) async {
     await pumpScreen(
       tester,
       prefill: const ScenarioPrefill(
@@ -72,7 +70,9 @@ void main() {
     expect(find.text('40'), findsWidgets); // age (slider value)
   });
 
-  testWidgets('calculation: impact displayed, payload in centimes', (tester) async {
+  testWidgets('calculation: impact displayed, payload in centimes', (
+    tester,
+  ) async {
     await pumpScreen(
       tester,
       prefill: const ScenarioPrefill(
@@ -113,9 +113,7 @@ void main() {
     expect(payload['retirementAge'], 65);
   });
 
-  testWidgets('validation: empty withdrawal → error, no call', (
-    tester,
-  ) async {
+  testWidgets('validation: empty withdrawal → error, no call', (tester) async {
     await pumpScreen(
       tester,
       prefill: const ScenarioPrefill(pillar2Capital: 20000000),

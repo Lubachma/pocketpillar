@@ -107,11 +107,7 @@ class _WizardBody extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({
-    required this.message,
-    required this.onRetry,
-    this.onBack,
-  });
+  const _ErrorBody({required this.message, required this.onRetry, this.onBack});
 
   final String message;
   final VoidCallback onRetry;

@@ -30,10 +30,9 @@ class NativeTextRecognitionService implements TextRecognitionService {
 
   @override
   Future<String> recognizeText(String imagePath) async {
-    final text = await _channel.invokeMethod<String>(
-      'recognizeText',
-      {'imagePath': imagePath},
-    );
+    final text = await _channel.invokeMethod<String>('recognizeText', {
+      'imagePath': imagePath,
+    });
     return text ?? '';
   }
 }

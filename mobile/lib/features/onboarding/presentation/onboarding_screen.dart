@@ -379,11 +379,7 @@ class _ReadyPage extends StatelessWidget {
     return _OnboardingPage(
       content: Column(
         children: [
-          Icon(
-            Icons.auto_awesome,
-            size: 72,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(Icons.auto_awesome, size: 72, color: theme.colorScheme.primary),
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

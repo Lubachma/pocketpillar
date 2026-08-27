@@ -275,7 +275,10 @@ class _DocumentsList extends StatelessWidget {
     final theme = Theme.of(context);
     final grouped = <String, List<DocumentDto>>{
       for (final type in documentTypes)
-        type: [for (final doc in documents) if (doc.type == type) doc],
+        type: [
+          for (final doc in documents)
+            if (doc.type == type) doc,
+        ],
     };
     final presentTypes = [
       for (final type in documentTypes)
@@ -347,7 +350,9 @@ class _DocumentTile extends StatelessWidget {
     final locale = Localizations.localeOf(context).languageCode;
     final subtitle = StringBuffer(document.formattedSize);
     if (document.year != null) subtitle.write(' · ${document.year}');
-    subtitle.write(' · ${DateFormat.yMMMd(locale).format(document.uploadedAt)}');
+    subtitle.write(
+      ' · ${DateFormat.yMMMd(locale).format(document.uploadedAt)}',
+    );
 
     return Dismissible(
       key: ValueKey(document.id),

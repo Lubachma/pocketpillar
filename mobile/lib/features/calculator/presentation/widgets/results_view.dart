@@ -274,10 +274,7 @@ class _PillarsCard extends StatelessWidget {
         'pillar_3a',
       ),
     ];
-    final maxValue = pillars.fold<int>(
-      1,
-      (max, p) => p.$2 > max ? p.$2 : max,
-    );
+    final maxValue = pillars.fold<int>(1, (max, p) => p.$2 > max ? p.$2 : max);
 
     return AppCard(
       child: Column(

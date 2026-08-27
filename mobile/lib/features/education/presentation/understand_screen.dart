@@ -36,9 +36,9 @@ class UnderstandScreen extends StatelessWidget {
       if (!launched) throw StateError('launchUrl returned false');
     } on Object {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorUnknown)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(context.l10n.errorUnknown)));
       }
     }
   }
@@ -77,10 +77,7 @@ class UnderstandScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          Text(
-            l10n.understandPillarsTitle,
-            style: theme.textTheme.titleMedium,
-          ),
+          Text(l10n.understandPillarsTitle, style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           _PillarTile(
             icon: Icons.people,

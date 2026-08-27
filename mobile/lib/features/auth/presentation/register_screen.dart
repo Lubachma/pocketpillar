@@ -65,9 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     } on EmailConfirmationRequiredException {
       _setInfo(l10n.authCheckEmail);
     } on Object catch (e) {
-      _setError(
-        authErrorMessage(l10n, e, authFailure: l10n.authSignUpFailed),
-      );
+      _setError(authErrorMessage(l10n, e, authFailure: l10n.authSignUpFailed));
     } finally {
       ref.read(registrationInProgressProvider.notifier).state = false;
       if (mounted) setState(() => _isLoading = false);

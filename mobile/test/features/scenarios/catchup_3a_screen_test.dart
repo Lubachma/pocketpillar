@@ -69,9 +69,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('prefill: income from profile, employed status', (
-    tester,
-  ) async {
+  testWidgets('prefill: income from profile, employed status', (tester) async {
     await pumpScreen(
       tester,
       prefill: const ScenarioPrefill(
@@ -222,10 +220,8 @@ void main() {
         ),
         GoRoute(
           path: Routes.paywall,
-          builder: (_, _) => Scaffold(
-            appBar: AppBar(),
-            body: const Text('ROUTE paywall'),
-          ),
+          builder: (_, _) =>
+              Scaffold(appBar: AppBar(), body: const Text('ROUTE paywall')),
         ),
       ],
     );
@@ -295,9 +291,7 @@ void main() {
   });
 
   testWidgets('prefill error: non-blocking banner, form usable '
-      'with defaults, retry reloads', (
-    tester,
-  ) async {
+      'with defaults, retry reloads', (tester) async {
     await pumpScreen(tester, failPrefillOnce: true);
 
     // Banner displayed, form present (no error screen).

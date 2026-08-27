@@ -51,10 +51,8 @@ class LppGapResultDto {
         coordinatedSalary: (json['coordinatedSalary'] as num).toInt(),
         bvgMinContribution: (json['bvgMinContribution'] as num).toInt(),
         contributionGap: (json['contributionGap'] as num).toInt(),
-        projectedBvgMinCapital: (json['projectedBvgMinCapital'] as num)
-            .toInt(),
-        projectedActualCapital: (json['projectedActualCapital'] as num)
-            .toInt(),
+        projectedBvgMinCapital: (json['projectedBvgMinCapital'] as num).toInt(),
+        projectedActualCapital: (json['projectedActualCapital'] as num).toInt(),
         capitalGap: (json['capitalGap'] as num).toInt(),
         projectedMinAnnualPension: (json['projectedMinAnnualPension'] as num)
             .toInt(),
@@ -198,27 +196,24 @@ class RetirementResultDto {
   /// the request carried no canton.
   final int? pillar3aNetLumpSum;
 
-  factory RetirementResultDto.fromJson(Map<String, dynamic> json) =>
-      RetirementResultDto(
-        yearsToRetirement: (json['yearsToRetirement'] as num).toInt(),
-        projectedPillar2Capital: (json['projectedPillar2Capital'] as num)
-            .toInt(),
-        projectedPillar3aBalance: (json['projectedPillar3aBalance'] as num)
-            .toInt(),
-        annualPillar2Pension: (json['annualPillar2Pension'] as num).toInt(),
-        estimatedAnnualAvsPension: (json['estimatedAnnualAvsPension'] as num)
-            .toInt(),
-        pillar3aAsLumpSum: (json['pillar3aAsLumpSum'] as num).toInt(),
-        totalAnnualRetirementIncome:
-            (json['totalAnnualRetirementIncome'] as num).toInt(),
-        replacementRate: (json['replacementRate'] as num).toDouble(),
-        yearByYearProjection: [
-          for (final item
-              in json['yearByYearProjection'] as List<dynamic>? ?? [])
-            YearProjectionDto.fromJson(item as Map<String, dynamic>),
-        ],
-        pillar3aWithdrawalTax: (json['pillar3aWithdrawalTax'] as num?)
-            ?.toInt(),
-        pillar3aNetLumpSum: (json['pillar3aNetLumpSum'] as num?)?.toInt(),
-      );
+  factory RetirementResultDto.fromJson(
+    Map<String, dynamic> json,
+  ) => RetirementResultDto(
+    yearsToRetirement: (json['yearsToRetirement'] as num).toInt(),
+    projectedPillar2Capital: (json['projectedPillar2Capital'] as num).toInt(),
+    projectedPillar3aBalance: (json['projectedPillar3aBalance'] as num).toInt(),
+    annualPillar2Pension: (json['annualPillar2Pension'] as num).toInt(),
+    estimatedAnnualAvsPension: (json['estimatedAnnualAvsPension'] as num)
+        .toInt(),
+    pillar3aAsLumpSum: (json['pillar3aAsLumpSum'] as num).toInt(),
+    totalAnnualRetirementIncome: (json['totalAnnualRetirementIncome'] as num)
+        .toInt(),
+    replacementRate: (json['replacementRate'] as num).toDouble(),
+    yearByYearProjection: [
+      for (final item in json['yearByYearProjection'] as List<dynamic>? ?? [])
+        YearProjectionDto.fromJson(item as Map<String, dynamic>),
+    ],
+    pillar3aWithdrawalTax: (json['pillar3aWithdrawalTax'] as num?)?.toInt(),
+    pillar3aNetLumpSum: (json['pillar3aNetLumpSum'] as num?)?.toInt(),
+  );
 }

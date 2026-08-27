@@ -79,49 +79,51 @@ void main() {
 
   /// Canned profile aggregate (I9: the repository no longer fetches these
   /// endpoints, it composes from the shared aggregate).
-  ProfileAggregate aggregate({int? birthYear = 1991, bool withProfile = true}) =>
-      ProfileAggregate(
-        base: ProfileBaseData(
-          userId: 'u-1',
-          email: 'user@example.ch',
-          canton: 'VD',
-          birthYear: birthYear,
-          replacementRateGoal: 70,
-          loadedAt: DateTime(2026, 8, 5),
-          profile: withProfile
-              ? const FinancialProfileDto(
-                  id: 'fp-1',
-                  employmentStatus: 'EMPLOYED',
-                  maritalStatus: 'SINGLE',
-                  numberOfChildren: 0,
-                  grossAnnualIncome: 8500000,
-                )
-              : null,
-        ),
-        pillar2Accounts: const [
-          Pillar2AccountDto(
-            id: 'p2-1',
-            currentCapital: 1500000,
-            annualBvgContribution: 400000,
-            isVestedBenefits: false,
-          ),
-          Pillar2AccountDto(
-            id: 'p2-2',
-            currentCapital: 500000,
-            annualBvgContribution: 100000,
-            isVestedBenefits: false,
-          ),
-        ],
-        pillar3aAccounts: const [
-          Pillar3aAccountDto(
-            id: 'p3-1',
-            providerName: 'VIAC',
-            accountType: 'BANK',
-            currentBalance: 1000000,
-            annualContribution: 700000,
-          ),
-        ],
-      );
+  ProfileAggregate aggregate({
+    int? birthYear = 1991,
+    bool withProfile = true,
+  }) => ProfileAggregate(
+    base: ProfileBaseData(
+      userId: 'u-1',
+      email: 'user@example.ch',
+      canton: 'VD',
+      birthYear: birthYear,
+      replacementRateGoal: 70,
+      loadedAt: DateTime(2026, 8, 5),
+      profile: withProfile
+          ? const FinancialProfileDto(
+              id: 'fp-1',
+              employmentStatus: 'EMPLOYED',
+              maritalStatus: 'SINGLE',
+              numberOfChildren: 0,
+              grossAnnualIncome: 8500000,
+            )
+          : null,
+    ),
+    pillar2Accounts: const [
+      Pillar2AccountDto(
+        id: 'p2-1',
+        currentCapital: 1500000,
+        annualBvgContribution: 400000,
+        isVestedBenefits: false,
+      ),
+      Pillar2AccountDto(
+        id: 'p2-2',
+        currentCapital: 500000,
+        annualBvgContribution: 100000,
+        isVestedBenefits: false,
+      ),
+    ],
+    pillar3aAccounts: const [
+      Pillar3aAccountDto(
+        id: 'p3-1',
+        providerName: 'VIAC',
+        accountType: 'BANK',
+        currentBalance: 1000000,
+        annualContribution: 700000,
+      ),
+    ],
+  );
 
   group('loadFrom', () {
     test('full aggregate: DTOs mapped and projection requested', () async {
@@ -157,16 +159,18 @@ void main() {
       expect(body.containsKey('estimatedAvsPension'), isFalse);
     });
 
-    test('aggregate without profile (initial 404) → empty state, no projection',
-        () async {
-      final data = await repository.loadFrom(aggregate(withProfile: false));
+    test(
+      'aggregate without profile (initial 404) → empty state, no projection',
+      () async {
+        final data = await repository.loadFrom(aggregate(withProfile: false));
 
-      expect(data.hasProfile, isFalse);
-      expect(data.profile, isNull);
-      expect(data.projection, isNull);
-      // The calculator isn't called unnecessarily.
-      expect(api.lastPost, isNull);
-    });
+        expect(data.hasProfile, isFalse);
+        expect(data.profile, isNull);
+        expect(data.projection, isNull);
+        // The calculator isn't called unnecessarily.
+        expect(api.lastPost, isNull);
+      },
+    );
 
     test('birthYear missing → no call to the calculator', () async {
       final data = await repository.loadFrom(aggregate(birthYear: null));

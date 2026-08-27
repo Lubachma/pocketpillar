@@ -306,10 +306,7 @@ void main() {
 
     // Base fixture: partner retires first (full pension), then both.
     expect(find.text('Chronologie des retraites'), findsOneWidget);
-    expect(
-      find.text('Votre partenaire prend sa retraite'),
-      findsOneWidget,
-    );
+    expect(find.text('Votre partenaire prend sa retraite'), findsOneWidget);
     expect(find.text('Les deux rentes courent'), findsOneWidget);
     expect(find.text('Vous 60 ans · Partenaire 65 ans'), findsOneWidget);
     // No cap in the base fixture → no badges at all.

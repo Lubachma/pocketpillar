@@ -6,10 +6,7 @@ void main() {
   group('EducationalTips (iOS parity)', () {
     test('12 tips, unique ids', () {
       expect(EducationalTips.all, hasLength(12));
-      expect(
-        EducationalTips.all.map((t) => t.id).toSet(),
-        hasLength(12),
-      );
+      expect(EducationalTips.all.map((t) => t.id).toSet(), hasLength(12));
     });
 
     test('rotation by day of the year (1-based, iOS parity)', () {
@@ -41,10 +38,7 @@ void main() {
     });
 
     test("'max 3a' relevant only with a 3a account", () {
-      expect(
-        YearEndChecklist.applicableItems(hasPillar3a: true),
-        hasLength(6),
-      );
+      expect(YearEndChecklist.applicableItems(hasPillar3a: true), hasLength(6));
       final sans3a = YearEndChecklist.applicableItems(hasPillar3a: false);
       expect(sans3a, hasLength(5));
       expect(sans3a.any((item) => item.id == 'max_3a'), isFalse);

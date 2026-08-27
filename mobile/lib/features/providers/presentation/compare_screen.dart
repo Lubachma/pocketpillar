@@ -27,9 +27,7 @@ class CompareScreen extends StatelessWidget {
       double.infinity,
       (min, p) => p.allInFeePercent < min ? p.allInFeePercent : min,
     );
-    final best = products.reduce(
-      (a, b) => a.score >= b.score ? a : b,
-    );
+    final best = products.reduce((a, b) => a.score >= b.score ? a : b);
     final hasReturns = products.any((p) => p.avgReturn3y != null);
 
     return Scaffold(
@@ -89,9 +87,7 @@ class CompareScreen extends StatelessWidget {
                         products.fold<double>(
                           0.01,
                           (max, p) =>
-                              p.allInFeePercent > max
-                                  ? p.allInFeePercent
-                                  : max,
+                              p.allInFeePercent > max ? p.allInFeePercent : max,
                         ),
                     color: product.allInFeePercent == lowestFee
                         ? colors.positive
@@ -113,18 +109,14 @@ class CompareScreen extends StatelessWidget {
                     if (product.avgReturn3y != null)
                       ComparisonBarRow(
                         label: product.providerName,
-                        value: formatPercent(
-                          product.avgReturn3y!,
-                          decimals: 1,
-                        ),
+                        value: formatPercent(product.avgReturn3y!, decimals: 1),
                         fraction:
                             product.avgReturn3y!.abs() /
                             products.fold<double>(
                               0.01,
-                              (max, p) =>
-                                  (p.avgReturn3y?.abs() ?? 0) > max
-                                      ? p.avgReturn3y!.abs()
-                                      : max,
+                              (max, p) => (p.avgReturn3y?.abs() ?? 0) > max
+                                  ? p.avgReturn3y!.abs()
+                                  : max,
                             ),
                         color: product.avgReturn3y! >= 0
                             ? colors.positive
@@ -205,10 +197,7 @@ class CompareScreen extends StatelessWidget {
                     for (final product in products)
                       product.avgReturn3y != null
                           ? Text(
-                              formatPercent(
-                                product.avgReturn3y!,
-                                decimals: 1,
-                              ),
+                              formatPercent(product.avgReturn3y!, decimals: 1),
                               style: _cellStyle(
                                 context,
                                 product.avgReturn3y! >= 0
@@ -220,9 +209,7 @@ class CompareScreen extends StatelessWidget {
                               '—',
                               style: _cellStyle(
                                 context,
-                                Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                             ),
                   ],
@@ -277,12 +264,9 @@ class CompareScreen extends StatelessWidget {
                       ),
                       Text(
                         '${best.providerName} — ${best.productName}',
-                        style: Theme.of(context).textTheme.bodySmall
-                            ?.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -295,10 +279,9 @@ class CompareScreen extends StatelessWidget {
     );
   }
 
-  TextStyle? _cellStyle(BuildContext context, [Color? color]) =>
-      Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: color);
+  TextStyle? _cellStyle(BuildContext context, [Color? color]) => Theme.of(
+    context,
+  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: color);
 }
 
 /// Titled section with icon (fees, returns, allocation).
@@ -358,10 +341,7 @@ class _CompareTableRow extends StatelessWidget {
               ),
             ),
           ),
-          for (final cell in cells)
-            Expanded(
-              child: Center(child: cell),
-            ),
+          for (final cell in cells) Expanded(child: Center(child: cell)),
         ],
       ),
     );

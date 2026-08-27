@@ -34,7 +34,13 @@ void main() {
       ..documents = [
         _doc('d1', 'SALARY_SLIP', 'fiche-salaire.pdf', year: 2025),
         _doc('d2', 'OTHER', 'note-diverse.pdf', sizeBytes: 4096),
-        _doc('d3', 'BVG_STATEMENT', 'certificat-lpp.pdf', year: 2024, sizeBytes: 3072),
+        _doc(
+          'd3',
+          'BVG_STATEMENT',
+          'certificat-lpp.pdf',
+          year: 2024,
+          sizeBytes: 3072,
+        ),
       ];
   });
 
@@ -126,9 +132,7 @@ void main() {
     expect(find.text('note-diverse.pdf'), findsOneWidget);
   });
 
-  testWidgets('deletion cancelled: no call, document kept', (
-    tester,
-  ) async {
+  testWidgets('deletion cancelled: no call, document kept', (tester) async {
     await pumpScreen(tester);
 
     await tester.fling(
@@ -172,15 +176,16 @@ void main() {
     expect(find.text('Impossible d\'ouvrir le document'), findsOneWidget);
   });
 
-  testWidgets('404 deletion: snackbar + list resynced', (
-    tester,
-  ) async {
+  testWidgets('404 deletion: snackbar + list resynced', (tester) async {
     await pumpScreen(tester);
 
     // Simulated desync: the document no longer exists server-side
     // (review 3.8 #2) — the DELETE fails with 404, the re-list succeeds
     // without the document.
-    repo.documents = [for (final d in repo.documents) if (d.id != 'd1') d];
+    repo.documents = [
+      for (final d in repo.documents)
+        if (d.id != 'd1') d,
+    ];
     repo.deleteError = const ApiException(
       'Document introuvable',
       statusCode: 404,

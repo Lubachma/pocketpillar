@@ -69,10 +69,11 @@ Future<void> main() async {
         // 3a context for reminders (batch 7): injected here because the
         // data lives in the financial profile feature, unknown to core.
         pillar3aReminderContextLoaderProvider.overrideWith(
-          (ref) => () => loadPillar3aReminderContext(
-            auth: ref.read(authRepositoryProvider),
-            profiles: ref.read(financialProfileRepositoryProvider),
-          ),
+          (ref) =>
+              () => loadPillar3aReminderContext(
+                auth: ref.read(authRepositoryProvider),
+                profiles: ref.read(financialProfileRepositoryProvider),
+              ),
         ),
       ],
       child: const PocketPillarApp(),

@@ -42,21 +42,23 @@ class ProductFeeDto {
 
   final String? notes;
 
-  factory ProductFeeDto.fromJson(Map<String, dynamic> json) =>
-      ProductFeeDto(
-        terPercent: (json['terPercent'] as num).toDouble(),
-        custodyFeePercent: (json['custodyFeePercent'] as num?)?.toDouble(),
-        allInFeePercent: (json['allInFeePercent'] as num).toDouble(),
-        entryFeePercent: (json['entryFeePercent'] as num? ?? 0).toDouble(),
-        exitFeePercent: (json['exitFeePercent'] as num? ?? 0).toDouble(),
-        notes: json['notes'] as String?,
-      );
+  factory ProductFeeDto.fromJson(Map<String, dynamic> json) => ProductFeeDto(
+    terPercent: (json['terPercent'] as num).toDouble(),
+    custodyFeePercent: (json['custodyFeePercent'] as num?)?.toDouble(),
+    allInFeePercent: (json['allInFeePercent'] as num).toDouble(),
+    entryFeePercent: (json['entryFeePercent'] as num? ?? 0).toDouble(),
+    exitFeePercent: (json['exitFeePercent'] as num? ?? 0).toDouble(),
+    notes: json['notes'] as String?,
+  );
 }
 
 /// One year of performance (`Pillar3aPerformance`), exposed only by
 /// `GET /providers/:slug` (sorted by descending year by the backend).
 class ProductPerformanceDto {
-  const ProductPerformanceDto({required this.year, required this.returnPercent});
+  const ProductPerformanceDto({
+    required this.year,
+    required this.returnPercent,
+  });
 
   final int year;
 

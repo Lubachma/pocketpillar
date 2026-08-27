@@ -91,7 +91,10 @@ class _LoadingView extends StatelessWidget {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: const [
-        SizedBox(height: 420, child: Center(child: CircularProgressIndicator())),
+        SizedBox(
+          height: 420,
+          child: Center(child: CircularProgressIndicator()),
+        ),
       ],
     );
   }

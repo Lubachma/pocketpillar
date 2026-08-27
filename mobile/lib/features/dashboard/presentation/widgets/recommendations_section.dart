@@ -49,8 +49,9 @@ class RecommendationsSection extends ConsumerWidget {
                   )
                 : Column(
                     children: [
-                      for (final recommendation
-                          in result.recommendations.take(3))
+                      for (final recommendation in result.recommendations.take(
+                        3,
+                      ))
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: _RecommendationCard(
@@ -81,8 +82,7 @@ class RecommendationsSection extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 TextButton(
-                  onPressed: () =>
-                      ref.invalidate(recommendationsProvider),
+                  onPressed: () => ref.invalidate(recommendationsProvider),
                   child: Text(l10n.commonRetry),
                 ),
               ],
@@ -129,10 +129,7 @@ class _RecommendationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  recommendation.title,
-                  style: theme.textTheme.titleSmall,
-                ),
+                Text(recommendation.title, style: theme.textTheme.titleSmall),
                 const SizedBox(height: 4),
                 Text(
                   recommendation.description,
@@ -161,12 +158,12 @@ class _RecommendationCard extends StatelessWidget {
   }
 
   /// iOS color parity: HIGH red, MEDIUM orange, LOW accent.
-  Color _priorityColor(BuildContext context) => switch (recommendation
-      .priority) {
-    'HIGH' => context.appColors.negative,
-    'MEDIUM' => context.appColors.warning,
-    _ => Theme.of(context).colorScheme.primary,
-  };
+  Color _priorityColor(BuildContext context) =>
+      switch (recommendation.priority) {
+        'HIGH' => context.appColors.negative,
+        'MEDIUM' => context.appColors.warning,
+        _ => Theme.of(context).colorScheme.primary,
+      };
 
   /// iOS icon parity (SF Symbols → Material).
   IconData _typeIcon() => switch (recommendation.type) {

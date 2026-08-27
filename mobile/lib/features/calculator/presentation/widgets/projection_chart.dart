@@ -40,9 +40,7 @@ class ProjectionBarChart extends StatelessWidget {
                       children: [
                         Container(
                           height:
-                              _chartHeight *
-                              point.pillar3aBalance /
-                              maxCapital,
+                              _chartHeight * point.pillar3aBalance / maxCapital,
                           decoration: BoxDecoration(
                             color: colors.pillar3a,
                             borderRadius: const BorderRadius.vertical(
@@ -52,9 +50,7 @@ class ProjectionBarChart extends StatelessWidget {
                         ),
                         Container(
                           height:
-                              _chartHeight *
-                              point.pillar2Capital /
-                              maxCapital,
+                              _chartHeight * point.pillar2Capital / maxCapital,
                           color: colors.pillar2,
                         ),
                       ],

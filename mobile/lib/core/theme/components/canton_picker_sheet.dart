@@ -52,8 +52,9 @@ class _CantonPickerSheetState extends State<CantonPickerSheet> {
             cantons
                 .where(
                   (c) =>
-                      _normalize(c.localizedName(languageCode))
-                          .contains(query) ||
+                      _normalize(
+                        c.localizedName(languageCode),
+                      ).contains(query) ||
                       c.code.toLowerCase().contains(query),
                 )
                 .toList(),
@@ -84,12 +85,9 @@ class _CantonPickerSheetState extends State<CantonPickerSheet> {
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                       child: Text(
                         cantonRegionName(region, languageCode),
-                        style: Theme.of(context).textTheme.labelLarge
-                            ?.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                     for (final canton in cantons)

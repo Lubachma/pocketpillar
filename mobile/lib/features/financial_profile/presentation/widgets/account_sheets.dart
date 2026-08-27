@@ -153,13 +153,15 @@ class _Pillar2AccountSheetState extends ConsumerState<Pillar2AccountSheet> {
   /// True if an advanced field is non-empty but invalid (e.g. negative).
   /// A collapsed ExpansionTile removes its FormFields from the tree:
   /// [_formKey]'s inline validation then no longer covers them.
-  bool _advancedInvalid() => [
-    _insuredSalaryController.text,
-    _coordinationDeductionController.text,
-    _supraContributionController.text,
-  ].any(
-    (text) => validateMoneyField(context.l10n, text, required: false) != null,
-  );
+  bool _advancedInvalid() =>
+      [
+        _insuredSalaryController.text,
+        _coordinationDeductionController.text,
+        _supraContributionController.text,
+      ].any(
+        (text) =>
+            validateMoneyField(context.l10n, text, required: false) != null,
+      );
 
   /// OCR scan of an LPP statement (on-device): the proposed values
   /// fill the fields **without validating the sheet** — the user
@@ -220,9 +222,7 @@ class _Pillar2AccountSheetState extends ConsumerState<Pillar2AccountSheet> {
             : _providerController.text.trim(),
         currentCapital: parseChfToCentimes(_capitalController.text)!,
         conversionRate: tryParsePercentField(_conversionRateController.text),
-        annualBvgContribution: tryParseMoneyField(
-          _contributionController.text,
-        ),
+        annualBvgContribution: tryParseMoneyField(_contributionController.text),
         insuredSalary: tryParseMoneyField(_insuredSalaryController.text),
         coordinationDeduction: tryParseMoneyField(
           _coordinationDeductionController.text,
@@ -458,9 +458,7 @@ class _Pillar3aAccountSheetState extends State<Pillar3aAccountSheet> {
         providerName: _providerController.text.trim(),
         accountType: _accountType,
         currentBalance: parseChfToCentimes(_balanceController.text)!,
-        annualContribution: tryParseMoneyField(
-          _contributionController.text,
-        ),
+        annualContribution: tryParseMoneyField(_contributionController.text),
         interestRateOrReturn: tryParsePercentField(_rateController.text),
       ),
     );

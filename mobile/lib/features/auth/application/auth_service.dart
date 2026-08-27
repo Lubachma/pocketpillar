@@ -97,8 +97,10 @@ class AuthService {
 }
 
 final authServiceProvider = Provider<AuthService>(
-  (ref) =>
-      AuthService(ref.watch(authRepositoryProvider), ref.watch(apiClientProvider)),
+  (ref) => AuthService(
+    ref.watch(authRepositoryProvider),
+    ref.watch(apiClientProvider),
+  ),
 );
 
 /// True during the whole registration flow (Supabase `signUp` +

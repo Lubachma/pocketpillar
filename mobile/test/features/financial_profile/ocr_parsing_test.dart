@@ -49,7 +49,8 @@ Canton de Vaud — Période du 01.01.2025 au 31.12.2025
     });
 
     test('monthly and annual amount → the larger one (annual) is kept', () {
-      const text = "Salaire brut mensuel 7'916.66\nSalaire brut annuel 95'000.-";
+      const text =
+          "Salaire brut mensuel 7'916.66\nSalaire brut annuel 95'000.-";
       expect(parseSalaryCertificateScan(text).grossAnnualIncome, 9500000);
     });
 
@@ -97,8 +98,7 @@ Canton de Vaud — Période du 01.01.2025 au 31.12.2025
     });
 
     test('monthly line ignored, annual line kept', () {
-      const text =
-          "Bruttolohn monatlich 6'500.–\nJahresbruttolohn 78'000.–";
+      const text = "Bruttolohn monatlich 6'500.–\nJahresbruttolohn 78'000.–";
       expect(parseSalaryCertificateScan(text).grossAnnualIncome, 7800000);
     });
   });

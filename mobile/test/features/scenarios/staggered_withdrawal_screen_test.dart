@@ -149,7 +149,9 @@ void main() {
     expect(payload['canton'], 'VD');
   });
 
-  testWidgets('no profile: defaults VD / 40 years old / SINGLE', (tester) async {
+  testWidgets('no profile: defaults VD / 40 years old / SINGLE', (
+    tester,
+  ) async {
     await pumpScreen(tester);
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Solde total 3a'),
@@ -165,9 +167,7 @@ void main() {
     expect(payload['maritalStatus'], 'SINGLE');
   });
 
-  testWidgets('validation: empty 3a balance → error, no call', (
-    tester,
-  ) async {
+  testWidgets('validation: empty 3a balance → error, no call', (tester) async {
     await pumpScreen(tester);
 
     await tester.tap(find.text('Calculer'));
@@ -197,9 +197,7 @@ void main() {
   });
 
   testWidgets('402 (subscription expired on the backend): paywall open, '
-      'no error card, input preserved (contract §11)', (
-    tester,
-  ) async {
+      'no error card, input preserved (contract §11)', (tester) async {
     repo.error = const PremiumRequiredException('Abonnement requis');
     tester.view.physicalSize = const Size(800, 5000);
     tester.view.devicePixelRatio = 1.0;
@@ -214,10 +212,8 @@ void main() {
         ),
         GoRoute(
           path: Routes.paywall,
-          builder: (_, _) => Scaffold(
-            appBar: AppBar(),
-            body: const Text('ROUTE paywall'),
-          ),
+          builder: (_, _) =>
+              Scaffold(appBar: AppBar(), body: const Text('ROUTE paywall')),
         ),
       ],
     );

@@ -36,10 +36,9 @@ class ProvidersScreen extends ConsumerWidget {
     final scored = ref.watch(scoredProductsProvider(riskLevel));
 
     final error = catalogue.error ?? scored.error;
-    final data =
-        catalogue.hasValue && scored.hasValue
-            ? (providers: catalogue.value!, scored: scored.value!)
-            : null;
+    final data = catalogue.hasValue && scored.hasValue
+        ? (providers: catalogue.value!, scored: scored.value!)
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -78,10 +77,7 @@ class ProvidersScreen extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(ref, riskLevel),
         child: data != null
-            ? _ProvidersContent(
-                providers: data.providers,
-                scored: data.scored,
-              )
+            ? _ProvidersContent(providers: data.providers, scored: data.scored)
             : error != null
             ? _ProvidersError(error: error, riskLevel: riskLevel)
             : const _ProvidersLoading(),
@@ -194,14 +190,8 @@ class _ProvidersContent extends ConsumerWidget {
         AppCard(
           padding: EdgeInsets.zero,
           child: ListTile(
-            leading: Icon(
-              Icons.auto_awesome,
-              color: theme.colorScheme.primary,
-            ),
-            title: Text(
-              l10n.bestmatchTitle,
-              style: theme.textTheme.titleSmall,
-            ),
+            leading: Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+            title: Text(l10n.bestmatchTitle, style: theme.textTheme.titleSmall),
             subtitle: Text(l10n.bestmatchSubtitle),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.providerBestMatch),
@@ -284,8 +274,7 @@ class _ProvidersContent extends ConsumerWidget {
                           )
                         : null,
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () =>
-                        context.push('/providers/${provider.slug}'),
+                    onTap: () => context.push('/providers/${provider.slug}'),
                   ),
               ],
             ),
@@ -401,10 +390,7 @@ class _ScoredProductTile extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.providerName,
-                    style: theme.textTheme.titleSmall,
-                  ),
+                  Text(product.providerName, style: theme.textTheme.titleSmall),
                   Text(
                     product.productName,
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -437,11 +423,7 @@ class _ScoredProductTile extends ConsumerWidget {
                               : theme.colorScheme.error,
                         ),
                       if (product.sustainableEsg)
-                        Icon(
-                          Icons.eco,
-                          size: 16,
-                          color: Colors.green.shade600,
-                        ),
+                        Icon(Icons.eco, size: 16, color: Colors.green.shade600),
                     ],
                   ),
                 ],

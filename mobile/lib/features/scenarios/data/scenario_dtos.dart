@@ -228,21 +228,20 @@ class PropertyPurchaseResultDto {
   /// Monthly pension loss, in centimes.
   final int monthlyPensionLoss;
 
-  factory PropertyPurchaseResultDto.fromJson(Map<String, dynamic> json) =>
-      PropertyPurchaseResultDto(
-        maxWithdrawal: (json['maxWithdrawal'] as num).toInt(),
-        effectiveWithdrawal: (json['effectiveWithdrawal'] as num).toInt(),
-        capitalAtRetirementWithout:
-            (json['capitalAtRetirementWithout'] as num).toInt(),
-        capitalAtRetirementWith: (json['capitalAtRetirementWith'] as num)
-            .toInt(),
-        capitalLostAtRetirement: (json['capitalLostAtRetirement'] as num)
-            .toInt(),
-        annualPensionWithout: (json['annualPensionWithout'] as num).toInt(),
-        annualPensionWith: (json['annualPensionWith'] as num).toInt(),
-        annualPensionLoss: (json['annualPensionLoss'] as num).toInt(),
-        monthlyPensionLoss: (json['monthlyPensionLoss'] as num).toInt(),
-      );
+  factory PropertyPurchaseResultDto.fromJson(
+    Map<String, dynamic> json,
+  ) => PropertyPurchaseResultDto(
+    maxWithdrawal: (json['maxWithdrawal'] as num).toInt(),
+    effectiveWithdrawal: (json['effectiveWithdrawal'] as num).toInt(),
+    capitalAtRetirementWithout: (json['capitalAtRetirementWithout'] as num)
+        .toInt(),
+    capitalAtRetirementWith: (json['capitalAtRetirementWith'] as num).toInt(),
+    capitalLostAtRetirement: (json['capitalLostAtRetirement'] as num).toInt(),
+    annualPensionWithout: (json['annualPensionWithout'] as num).toInt(),
+    annualPensionWith: (json['annualPensionWith'] as num).toInt(),
+    annualPensionLoss: (json['annualPensionLoss'] as num).toInt(),
+    monthlyPensionLoss: (json['monthlyPensionLoss'] as num).toInt(),
+  );
 }
 
 /// Response from `POST /calculator/divorce-impact`.

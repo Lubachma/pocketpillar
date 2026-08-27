@@ -21,8 +21,7 @@ abstract final class Routes {
   static const String scenarioCatchup3a = '/scenarios/catchup-3a';
   static const String scenarioStaggeredWithdrawal =
       '/scenarios/staggered-withdrawal';
-  static const String scenarioPropertyPurchase =
-      '/scenarios/property-purchase';
+  static const String scenarioPropertyPurchase = '/scenarios/property-purchase';
   static const String scenarioDivorceImpact = '/scenarios/divorce-impact';
 
   static const String providers = '/providers';

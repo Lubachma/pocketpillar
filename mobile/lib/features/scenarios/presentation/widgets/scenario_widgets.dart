@@ -47,9 +47,7 @@ class ScenarioMetricRow extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Flexible(
-                child: Text(label, style: theme.textTheme.bodyMedium),
-              ),
+              Flexible(child: Text(label, style: theme.textTheme.bodyMedium)),
               ?trailing,
             ],
           ),
@@ -109,11 +107,7 @@ class ScenarioInfoCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: color ?? theme.colorScheme.primary,
-          ),
+          Icon(icon, size: 20, color: color ?? theme.colorScheme.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -233,9 +227,7 @@ class ScenarioSliderRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text(label, style: theme.textTheme.bodyMedium),
-            ),
+            Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
             Text(
               value,
               style: theme.textTheme.bodyMedium?.copyWith(

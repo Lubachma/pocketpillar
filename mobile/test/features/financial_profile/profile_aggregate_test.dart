@@ -31,8 +31,7 @@ void main() {
     expect(repository.fetchPillar3aCalls, 1);
   });
 
-  test('derived views (base, accounts) share the same load',
-      () async {
+  test('derived views (base, accounts) share the same load', () async {
     final base = await container.read(profileBaseProvider.future);
     final pillar2 = await container.read(pillar2AccountsProvider.future);
     final pillar3a = await container.read(pillar3aAccountsProvider.future);
@@ -45,30 +44,36 @@ void main() {
     expect(repository.fetchPillar3aCalls, 1);
   });
 
-  test('calculator opened after the dashboard: prefilled without refetch',
-      () async {
-    // The dashboard (or any other consumer) has already loaded the aggregate.
-    await container.read(profileAggregateProvider.future);
-    expect(repository.loadBaseCalls, 1);
+  test(
+    'calculator opened after the dashboard: prefilled without refetch',
+    () async {
+      // The dashboard (or any other consumer) has already loaded the aggregate.
+      await container.read(profileAggregateProvider.future);
+      expect(repository.loadBaseCalls, 1);
 
-    // Opening the guided flow: prefill consumes the aggregate.
-    final sub = container.listen(guidedCalculatorControllerProvider, (_, _) {});
-    addTearDown(sub.close);
-    while (container.read(guidedCalculatorControllerProvider).prefillLoading) {
-      await Future<void>.delayed(Duration.zero);
-    }
+      // Opening the guided flow: prefill consumes the aggregate.
+      final sub = container.listen(
+        guidedCalculatorControllerProvider,
+        (_, _) {},
+      );
+      addTearDown(sub.close);
+      while (container
+          .read(guidedCalculatorControllerProvider)
+          .prefillLoading) {
+        await Future<void>.delayed(Duration.zero);
+      }
 
-    final state = container.read(guidedCalculatorControllerProvider);
-    expect(state.prefillError, isNull);
-    expect(state.canton, 'VD'); // prefilled from the aggregate
-    // No new network call.
-    expect(repository.loadBaseCalls, 1);
-    expect(repository.fetchPillar2Calls, 1);
-    expect(repository.fetchPillar3aCalls, 1);
-  });
+      final state = container.read(guidedCalculatorControllerProvider);
+      expect(state.prefillError, isNull);
+      expect(state.canton, 'VD'); // prefilled from the aggregate
+      // No new network call.
+      expect(repository.loadBaseCalls, 1);
+      expect(repository.fetchPillar2Calls, 1);
+      expect(repository.fetchPillar3aCalls, 1);
+    },
+  );
 
-  test('invalidation (profile save, logout) → reload',
-      () async {
+  test('invalidation (profile save, logout) → reload', () async {
     await container.read(profileAggregateProvider.future);
 
     container.invalidate(profileAggregateProvider);

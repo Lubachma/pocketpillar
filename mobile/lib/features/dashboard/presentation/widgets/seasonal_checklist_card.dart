@@ -34,9 +34,7 @@ class SeasonalChecklistCard extends ConsumerWidget {
         .where((item) => completed.contains(item.id))
         .length;
     final remaining = applicable.length - doneCount;
-    final progress = applicable.isEmpty
-        ? 0.0
-        : doneCount / applicable.length;
+    final progress = applicable.isEmpty ? 0.0 : doneCount / applicable.length;
 
     return AppCard(
       padding: EdgeInsets.zero,

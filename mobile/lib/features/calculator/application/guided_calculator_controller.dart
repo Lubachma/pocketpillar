@@ -203,10 +203,7 @@ class GuidedCalculatorController
       );
     } on Object catch (e) {
       if (_disposed()) return;
-      state = state.copyWith(
-        prefillLoading: false,
-        prefillError: () => e,
-      );
+      state = state.copyWith(prefillLoading: false, prefillError: () => e);
     }
   }
 
@@ -242,9 +239,7 @@ class GuidedCalculatorController
   }
 
   void updateIncome(int grossAnnualIncomeCentimes) {
-    state = state.copyWith(
-      grossAnnualIncome: () => grossAnnualIncomeCentimes,
-    );
+    state = state.copyWith(grossAnnualIncome: () => grossAnnualIncomeCentimes);
   }
 
   void updatePillar2({required int capital, required int contribution}) {
@@ -292,16 +287,10 @@ class GuidedCalculatorController
           .read(calculatorRepositoryProvider)
           .calculateAll(input);
       if (_disposed()) return;
-      state = state.copyWith(
-        calculating: false,
-        results: () => results,
-      );
+      state = state.copyWith(calculating: false, results: () => results);
     } on Object catch (e) {
       if (_disposed()) return;
-      state = state.copyWith(
-        calculating: false,
-        calculationError: () => e,
-      );
+      state = state.copyWith(calculating: false, calculationError: () => e);
     }
   }
 
