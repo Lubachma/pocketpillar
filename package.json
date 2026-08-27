@@ -42,7 +42,7 @@
     "@supabase/supabase-js": "^2.99.2",
     "dotenv": "^17.3.1",
     "fastify": "^5.8.2",
-    "fastify-plugin": "^5.1.0",
+    "fastify-plugin": "^6.0.0",
     "ioredis": "^5.10.0",
     "pg": "^8.20.0",
     "pino": "^10.3.1",
