@@ -54,6 +54,11 @@ cross-cutting rules and pitfalls** to know before any integration.
 - 429: rate-limit exceeded (native English message kept, e.g.
   `"Rate limit exceeded, retry in 1 minute"`).
 - 500: `{ error: "Une erreur interne est survenue" }` — details never leak.
+- 503: the auth service (Supabase) is unreachable, rate-limited upstream
+  or 5xx — the TOKEN was never judged. Carries `Retry-After: 30`
+  (seconds). **Clients must retry later, never sign out**: only a 401
+  means the session is dead (the app signs out exclusively on 401; a
+  503 surfaces as a plain retryable error). Added 2026-08-27.
 
 The client must parse **only** this format. (Old native format
 `{ statusCode, error, message }`: removed by the global `setErrorHandler`.)

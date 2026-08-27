@@ -113,16 +113,18 @@ async function writeInvalidMarker(request: FastifyRequest, key: string): Promise
 
 export type AuthFailure = 'missing_header' | 'invalid_token' | 'user_not_found' | 'unavailable';
 
-/** True when a Supabase Auth error says nothing about the TOKEN — network
- * failures and 5xx are availability problems. supabase-js RETURNS them
- * (AuthRetryableFetchError, status 0/5xx) instead of throwing, and an
- * error without a status is indistinguishable from an outage: caching any
- * of these as "invalid" logged every valid user out for 30 s per flap
- * (review 08.2026). Real token rejections are AuthApiError with a 4xx. */
+/** True when a Supabase Auth error says nothing about the TOKEN. Only an
+ * explicit rejection (400/401/403/404) may 401 and poison the negative
+ * cache; everything else — no status, 0, timeouts, 429 (per-IP rate
+ * limit: one backend egress IP serves ALL users, a burst would
+ * mass-revoke valid tokens), 5xx — is the service, not the token.
+ * supabase-js RETURNS these (AuthRetryableFetchError, status 0/5xx)
+ * instead of throwing (review 08.2026; whitelist inverted for 429). */
 function isAvailabilityError(error: { name?: string; status?: number }): boolean {
   if (error.name === 'AuthRetryableFetchError') return true;
   const status = error.status;
-  return status === undefined || status === 0 || status >= 500;
+  const definitiveRejection = status === 400 || status === 401 || status === 403 || status === 404;
+  return !definitiveRejection;
 }
 
 /**
@@ -189,8 +191,12 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
   if ('failure' in auth) {
     if (auth.failure === 'unavailable') {
       // Not the caller's fault and not a dead session: the client should
-      // retry, not sign out.
-      return reply.status(503).send({ error: t(request.locale, 'auth.unavailable') });
+      // retry, not sign out. Retry-After matches the outage horizon we
+      // can reason about (the negative-cache TTL).
+      return reply
+        .status(503)
+        .header('Retry-After', String(JWT_INVALID_CACHE_TTL_SECONDS))
+        .send({ error: t(request.locale, 'auth.unavailable') });
     }
     const key =
       auth.failure === 'missing_header'

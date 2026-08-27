@@ -41,8 +41,13 @@ function createReply() {
   const reply = {
     statusCode: 200,
     payload: undefined as unknown,
+    headers: {} as Record<string, string>,
     status(code: number) {
       reply.statusCode = code;
+      return reply;
+    },
+    header(name: string, value: string) {
+      reply.headers[name] = value;
       return reply;
     },
     send(payload?: unknown) {
@@ -50,7 +55,11 @@ function createReply() {
       return reply;
     },
   };
-  return reply as unknown as FastifyReply & { statusCode: number; payload: unknown };
+  return reply as unknown as FastifyReply & {
+    statusCode: number;
+    payload: unknown;
+    headers: Record<string, string>;
+  };
 }
 
 interface SetupOptions {
@@ -218,6 +227,32 @@ describe('authenticate — JWT Redis cache', () => {
 
     // Supabase back up: the SAME token authenticates again immediately
     // (fresh setup — the point is that NO negative marker was written).
+    mockValidToken();
+    const second = setup();
+    await authenticate(second.request, second.reply);
+    expect(second.reply.statusCode).toBe(200);
+  });
+
+  it('a 429 from Supabase Auth → 503 + Retry-After, valid tokens are NOT revoked', async () => {
+    // Supabase rate-limits getUser PER IP — and one backend egress IP
+    // serves every user. Classifying a burst 429 as "invalid token"
+    // would mass-revoke valid sessions for 30 s (follow-up review).
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: Object.assign(new Error('over_request_rate_limit'), {
+        name: 'AuthApiError',
+        status: 429,
+      }),
+    });
+    const { request, reply, redis } = setup();
+
+    await authenticate(request, reply);
+
+    expect(reply.statusCode).toBe(503);
+    expect(reply.headers['Retry-After']).toBe('30');
+    expect(redis.set).not.toHaveBeenCalled();
+
+    // Burst over: the SAME token authenticates immediately.
     mockValidToken();
     const second = setup();
     await authenticate(second.request, second.reply);
