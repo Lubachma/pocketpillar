@@ -40,7 +40,7 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 
 - **Projection retraite complète** — AVS + LPP + pilier 3a, taux de remplacement, projection année par année, export PDF.
 - **Économies fiscales 3a** — barèmes fédéraux, cantonaux et communaux réels pour les 26 cantons.
-- **Scénarios de vie** — simulation couple, retrait échelonné, achat immobilier (EPL), impact divorce, rachat rétroactif 3a (réforme suisse — lacunes dès 2025).
+- **Scénarios de vie** — simulation couple avec chronologie datée des retraites (rente pleine jusqu'à la seconde retraite, puis plafond AVS), retrait échelonné, achat immobilier (EPL), impact divorce, rachat rétroactif 3a (réforme suisse — lacunes dès 2025).
 - **Moteur de recommandations** — règles côté serveur, priorisées par impact annuel estimé.
 - **Comparaison de prestataires** — frais, performance, ESG, meilleur choix scoré côté serveur.
 - **Coffre-fort documents** — stockage privé (chiffré au repos), liens de téléchargement signés (5 minutes).
@@ -84,15 +84,15 @@ Référence API : [docs/api-contract.md](docs/api-contract.md) (en anglais)
 
 ## Qualité
 
-- **399 tests backend** (Vitest) — fonctions de calcul pures, testées contre les valeurs d'ancrage officielles.
-- **515 tests Flutter** (unitaires + widget) et parcours E2E mockés ; `flutter analyze` à **0 issue**.
+- **411 tests backend** (Vitest) — fonctions de calcul pures, testées contre les valeurs d'ancrage officielles.
+- **521 tests Flutter** (unitaires + widget) et parcours E2E mockés ; `flutter analyze` à **0 issue**.
 - CI à chaque push/PR vers `main` (typecheck, lint, format, tests avec seuils de couverture, build APK debug).
 - Smoke test en conditions réelles contre n'importe quel déploiement : `scripts/smoke-api.sh <base-url>` (7 étapes, auto-nettoyant).
 - La démo publique est réinitialisée chaque nuit par une tâche planifiée qui rejoue la vraie API de bout en bout.
 
 ## Démarrage rapide
 
-Prérequis : Node.js ≥ 20, Docker (PostgreSQL + Redis), Flutter 3.44+.
+Prérequis : Node.js ≥ 22, Docker (PostgreSQL + Redis), Flutter 3.44+.
 Les cibles `make` supposent macOS ; les commandes `npm`/`flutter` brutes fonctionnent partout.
 
 ### Backend

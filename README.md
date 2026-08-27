@@ -40,7 +40,7 @@ Trilingual (French · German · English) — even server-computed labels follow 
 
 - **Full retirement projection** — AHV/AVS + occupational pension (BVG/LPP) + pillar 3a, replacement rate, year-by-year projection, PDF export.
 - **3a tax savings** — real federal, cantonal, and communal tax rates for all 26 cantons.
-- **Life scenarios** — couple simulation, staggered withdrawal, home purchase (EPL), divorce impact, retroactive 3a catch-up (Swiss reform — contribution gaps from 2025 onward).
+- **Life scenarios** — couple simulation with a dated retirement timeline (full pension until the second retirement, then the AVS couple cap), staggered withdrawal, home purchase (EPL), divorce impact, retroactive 3a catch-up (Swiss reform — contribution gaps from 2025 onward).
 - **Recommendations engine** — server-side rules, prioritized by estimated annual impact.
 - **Provider comparison** — fees, performance, ESG, server-scored best match.
 - **Document vault** — private storage (encrypted at rest), 5-minute signed download links.
@@ -84,15 +84,15 @@ API reference: [docs/api-contract.md](docs/api-contract.md)
 
 ## Quality
 
-- **399 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
-- **515 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
+- **411 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
+- **521 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
 - CI on every push/PR to `main` (typecheck, lint, format, tests with coverage thresholds, debug APK build).
 - Real-conditions smoke script against any deployment: `scripts/smoke-api.sh <base-url>` (7 steps, self-cleaning).
 - The public demo is reset every night by a scheduled job that replays the real API end to end.
 
 ## Getting started
 
-Prerequisites: Node.js ≥ 20, Docker (PostgreSQL + Redis), Flutter 3.44+.
+Prerequisites: Node.js ≥ 22, Docker (PostgreSQL + Redis), Flutter 3.44+.
 The `make` convenience targets assume macOS; the plain `npm`/`flutter` commands work anywhere.
 
 ### Backend

@@ -1,6 +1,6 @@
 {
   "name": "pocketpillar-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PocketPillar — Swiss pension planning API (2nd/3rd pillar), anchored to official FTA tax data",
   "type": "module",
   "main": "dist/server.js",
@@ -26,7 +26,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "license": "PolyForm-Noncommercial-1.0.0",
   "dependencies": {

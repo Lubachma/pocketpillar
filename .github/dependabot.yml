@@ -25,9 +25,9 @@ updates:
       # freezed 4 requires Dart >=3.13; we pin Flutter 3.44 / Dart 3.12.
       # Lift when the Flutter pin moves (revisit at the next Flutter bump).
       - dependency-name: freezed
-        versions: ['>=4']
+        versions: ['>=4.0.0']
       - dependency-name: freezed_annotation
-        versions: ['>=4']
+        versions: ['>=4.0.0']
 
   - package-ecosystem: github-actions
     directory: /
