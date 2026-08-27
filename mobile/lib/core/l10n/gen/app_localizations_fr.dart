@@ -184,6 +184,69 @@ class AppLocalizationsFr extends AppLocalizations {
       'Checklist de fin d\'année (15 décembre) et versement 3a (1er novembre), à 10 h';
 
   @override
+  String get settingsSectionLearn => 'Comprendre';
+
+  @override
+  String get settingsUnderstandTitle => 'Comprendre ma prévoyance';
+
+  @override
+  String get settingsUnderstandSubtitle =>
+      'Les 3 piliers et nos calculs, expliqués simplement';
+
+  @override
+  String get understandIntro =>
+      'La prévoyance suisse repose sur 3 piliers : l\'AVS de l\'État, la caisse de pension de votre employeur et votre épargne personnelle 3a. Touchez un pilier pour comprendre son rôle.';
+
+  @override
+  String get understandPillarsTitle => 'Les 3 piliers';
+
+  @override
+  String get understandCalcTitle => 'Comment calculons-nous ?';
+
+  @override
+  String get understandCalcIntro =>
+      'Chaque chiffre de l\'app vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels, jamais de moyennes inventées.';
+
+  @override
+  String get understandCalcAvsTitle => 'Rente AVS';
+
+  @override
+  String get understandCalcAvsBody =>
+      'Estimée à partir de votre revenu et de vos années de cotisation projetées jusqu\'à la retraite (échelle 44 simplifiée). Dès 2026, la 13e rente est incluse (13 mensualités par an). Votre rente réelle dépendra de votre parcours exact — demandez un extrait de compte AVS pour le connaître.';
+
+  @override
+  String get understandCalcLppTitle => 'Capital et rente LPP';
+
+  @override
+  String get understandCalcLppBody =>
+      'Votre capital actuel grandit chaque année avec vos cotisations (parts employé + employeur) et l\'intérêt minimal légal de 1.25 %. À la retraite : rente = capital × taux de conversion. 6.8 % est le minimum légal sur la part obligatoire — saisissez le taux de votre certificat pour un résultat plus fidèle.';
+
+  @override
+  String get understandCalc3aTitle => 'Épargne 3a';
+
+  @override
+  String get understandCalc3aBody =>
+      'Votre solde actuel est projeté avec vos versements annuels et le rendement choisi. À la retraite, le 3a se retire en capital (pas en rente) — il est donc affiché à part, avec l\'impôt de retrait estimé.';
+
+  @override
+  String get understandCalcTaxTitle => 'Impôts';
+
+  @override
+  String get understandCalcTaxBody =>
+      'Économies 3a, comparaison mariage/concubinage, impôt au retrait des capitaux : tout est calculé avec les barèmes officiels 2026 de la Confédération, de votre canton et de votre commune — vérifiés contre le calculateur officiel de l\'AFC. Votre revenu brut sert de base (vos déductions personnelles ne sont pas connues) : les montants sont des estimations.';
+
+  @override
+  String get understandCalcLimitsTitle => 'Ce que nous ne modélisons pas';
+
+  @override
+  String get understandCalcLimitsBody =>
+      'Les parcours particuliers : divorce et splitting AVS, bonifications pour tâches éducatives, arrivée en Suisse en cours de carrière, invalidité, taux de caisse sur la part surobligatoire. PocketPillar est un outil d\'estimation et d\'information — pas un conseil. Pour une décision importante, parlez-en à un professionnel.';
+
+  @override
+  String get understandMethodologyLink =>
+      'Méthodologie complète et sources (publiées sur GitHub)';
+
+  @override
   String get settingsNotificationsDenied =>
       'Notifications refusées — activez-les dans les réglages système pour recevoir les rappels';
 
@@ -994,6 +1057,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resultsYearsToRetirement => 'Années jusqu\'à la retraite';
 
   @override
+  String get resultsHowCalculated => 'Comment ces chiffres sont-ils calculés ?';
+
+  @override
   String get resultsTaxSavings => 'Économies fiscales';
 
   @override
@@ -1315,6 +1381,36 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get helpEffectiveReturnWhere =>
       'Utilisez le calculateur fiscal de PocketPillar pour voir votre rendement effectif selon votre canton.';
+
+  @override
+  String get helpAnnualContributionTitle => 'Cotisation annuelle LPP';
+
+  @override
+  String get helpAnnualContributionExplanation =>
+      'C\'est le montant épargné chaque année dans votre caisse de pension : votre part ET celle de votre employeur (il paie au moins autant que vous). Ce n\'est donc pas seulement la retenue visible sur votre fiche de salaire.';
+
+  @override
+  String get helpAnnualContributionWhy =>
+      'La projection ajoute cette épargne chaque année jusqu\'à la retraite, avec l\'intérêt minimal légal de 1.25 %. Si vous n\'indiquez que votre moitié, votre capital projeté sera fortement sous-estimé.';
+
+  @override
+  String get helpAnnualContributionWhere =>
+      'Votre certificat de prévoyance annuel, rubrique « cotisations d\'épargne » — additionnez les parts employé et employeur (les primes de risque n\'en font pas partie).';
+
+  @override
+  String get helpWithdrawalTaxTitle => 'Impôt au retrait du capital';
+
+  @override
+  String get helpWithdrawalTaxExplanation =>
+      'Un capital de prévoyance retiré (3a ou caisse de pension) est imposé une seule fois, séparément de vos autres revenus et à taux réduit.';
+
+  @override
+  String get helpWithdrawalTaxWhy =>
+      'Cet impôt réduit le montant réellement disponible — nous affichons donc le capital brut et le net estimé. Étaler les retraits sur plusieurs années fiscales le réduit souvent (voir « Retrait échelonné »).';
+
+  @override
+  String get helpWithdrawalTaxWhere =>
+      'Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l\'année du retrait.';
 
   @override
   String get tipMax3a2026Title => 'Maximum 3a 2026';
@@ -1975,7 +2071,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get generalSimulationDisclaimer =>
-      'Simulation indicative basée sur des barèmes simplifiés. PocketPillar fournit de l\'information, pas du conseil en placement (LSFin).';
+      'Simulation indicative : barèmes officiels 2026, calculée sur le revenu brut (sans vos déductions individuelles). PocketPillar fournit de l\'information, pas du conseil en placement (LSFin).';
 
   @override
   String get pdfDisclaimer =>

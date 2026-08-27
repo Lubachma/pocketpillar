@@ -182,6 +182,69 @@ class AppLocalizationsEn extends AppLocalizations {
       'Year-end checklist (December 15) and 3a contribution (November 1), at 10 a.m.';
 
   @override
+  String get settingsSectionLearn => 'Learn';
+
+  @override
+  String get settingsUnderstandTitle => 'Understand your pension';
+
+  @override
+  String get settingsUnderstandSubtitle =>
+      'The 3 pillars and how we calculate, in plain words';
+
+  @override
+  String get understandIntro =>
+      'Swiss retirement planning rests on 3 pillars: the state AHV, your employer\'s pension fund and your personal 3a savings. Tap a pillar to understand its role.';
+
+  @override
+  String get understandPillarsTitle => 'The 3 pillars';
+
+  @override
+  String get understandCalcTitle => 'How do we calculate?';
+
+  @override
+  String get understandCalcIntro =>
+      'Every number in the app comes from one of the rules below — 2026 legal parameters and official schedules, never made-up averages.';
+
+  @override
+  String get understandCalcAvsTitle => 'AHV pension';
+
+  @override
+  String get understandCalcAvsBody =>
+      'Estimated from your income and your contribution years projected to retirement (simplified scale 44). From 2026 the 13th pension is included (13 monthly payments per year). Your real pension depends on your exact record — order an AHV account statement to know it.';
+
+  @override
+  String get understandCalcLppTitle => 'BVG capital and pension';
+
+  @override
+  String get understandCalcLppBody =>
+      'Your current capital grows every year with your savings contributions (employee + employer shares) and the 1.25% legal minimum interest. At retirement: pension = capital × conversion rate. 6.8% is the legal minimum on the mandatory part — enter your certificate\'s rate for a closer result.';
+
+  @override
+  String get understandCalc3aTitle => '3a savings';
+
+  @override
+  String get understandCalc3aBody =>
+      'Your current balance is projected with your yearly contributions and the return you chose. At retirement, 3a money is withdrawn as capital (not as a pension) — so it is shown separately, with the estimated withdrawal tax.';
+
+  @override
+  String get understandCalcTaxTitle => 'Taxes';
+
+  @override
+  String get understandCalcTaxBody =>
+      '3a tax savings, married-vs-cohabitation comparison, capital withdrawal tax: everything is computed with the official 2026 federal, cantonal and communal schedules — verified against the FTA\'s official calculator. Your gross income is the base (your personal deductions aren\'t known): amounts are estimates.';
+
+  @override
+  String get understandCalcLimitsTitle => 'What we don\'t model';
+
+  @override
+  String get understandCalcLimitsBody =>
+      'Particular paths: divorce and AHV splitting, child-raising credits, moving to Switzerland mid-career, disability, fund rates on the supra-mandatory part. PocketPillar is an estimation and information tool — not advice. For important decisions, talk to a professional.';
+
+  @override
+  String get understandMethodologyLink =>
+      'Full methodology and sources (published on GitHub)';
+
+  @override
   String get settingsNotificationsDenied =>
       'Notifications denied — enable them in the system settings to receive reminders';
 
@@ -991,6 +1054,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resultsYearsToRetirement => 'Years to retirement';
 
   @override
+  String get resultsHowCalculated => 'How are these numbers calculated?';
+
+  @override
   String get resultsTaxSavings => 'Tax savings';
 
   @override
@@ -1312,6 +1378,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get helpEffectiveReturnWhere =>
       'Use PocketPillar\'s tax calculator to see your effective return based on your canton.';
+
+  @override
+  String get helpAnnualContributionTitle => 'Annual BVG contribution';
+
+  @override
+  String get helpAnnualContributionExplanation =>
+      'This is the amount saved into your pension fund each year: your share AND your employer\'s (they pay at least as much as you). So it is not just the deduction you see on your payslip.';
+
+  @override
+  String get helpAnnualContributionWhy =>
+      'The projection adds these savings every year until retirement, compounded at the 1.25% legal minimum interest. Entering only your own half strongly understates your projected capital.';
+
+  @override
+  String get helpAnnualContributionWhere =>
+      'Your annual pension certificate, under “savings contributions” — add up the employee and employer shares (risk premiums don\'t count).';
+
+  @override
+  String get helpWithdrawalTaxTitle => 'Capital withdrawal tax';
+
+  @override
+  String get helpWithdrawalTaxExplanation =>
+      'Pension capital you withdraw (3a or pension fund) is taxed once, separately from your other income and at a reduced rate.';
+
+  @override
+  String get helpWithdrawalTaxWhy =>
+      'This tax reduces what you actually receive — that\'s why we show both the gross capital and the estimated net. Spreading withdrawals over several tax years often lowers it (see “Staggered withdrawal”).';
+
+  @override
+  String get helpWithdrawalTaxWhere =>
+      'Estimated with your canton\'s and municipality\'s official 2026 schedules. The exact amount depends on your situation in the withdrawal year.';
 
   @override
   String get tipMax3a2026Title => '3a maximum 2026';
@@ -1970,7 +2066,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get generalSimulationDisclaimer =>
-      'Indicative simulation based on simplified rates. PocketPillar provides information, not investment advice.';
+      'Indicative simulation: official 2026 schedules, computed on gross income (without your individual deductions). PocketPillar provides information, not investment advice.';
 
   @override
   String get pdfDisclaimer =>

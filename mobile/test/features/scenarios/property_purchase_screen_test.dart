@@ -98,9 +98,9 @@ void main() {
     // LSFin disclaimer displayed with the results.
     expect(
       find.text(
-        'Simulation indicative basée sur des barèmes simplifiés. '
-        "PocketPillar fournit de l'information, pas du conseil en "
-        'placement (LSFin).',
+        'Simulation indicative : barèmes officiels 2026, calculée sur le '
+        'revenu brut (sans vos déductions individuelles). PocketPillar '
+        "fournit de l'information, pas du conseil en placement (LSFin).",
       ),
       findsOneWidget,
     );

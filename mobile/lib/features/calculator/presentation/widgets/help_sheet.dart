@@ -75,6 +75,23 @@ HelpContent? helpContentFor(AppLocalizations l10n, String termId) {
       why: l10n.helpBvgCapitalWhy,
       whereToFind: l10n.helpBvgCapitalWhere,
     ),
+    // Practitioner review 08.2026: an expert had to ask what "annual
+    // contribution" meant (employee+employer? projected?) — a beginner
+    // has no chance without this sheet.
+    'annual_contribution' => HelpContent(
+      icon: Icons.savings,
+      title: l10n.helpAnnualContributionTitle,
+      explanation: l10n.helpAnnualContributionExplanation,
+      why: l10n.helpAnnualContributionWhy,
+      whereToFind: l10n.helpAnnualContributionWhere,
+    ),
+    'withdrawal_tax' => HelpContent(
+      icon: Icons.receipt_long,
+      title: l10n.helpWithdrawalTaxTitle,
+      explanation: l10n.helpWithdrawalTaxExplanation,
+      why: l10n.helpWithdrawalTaxWhy,
+      whereToFind: l10n.helpWithdrawalTaxWhere,
+    ),
     'replacement_rate' => HelpContent(
       icon: Icons.speed,
       title: l10n.helpReplacementRateTitle,

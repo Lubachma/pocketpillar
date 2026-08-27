@@ -107,6 +107,9 @@ void main() {
     expect(find.text('Notifications'), findsOneWidget);
     expect(find.text('À propos'), findsOneWidget);
     expect(find.text('Compte'), findsOneWidget);
+    // Pedagogy section (practitioner review 08.2026).
+    expect(find.text('Comprendre'), findsOneWidget);
+    expect(find.text('Comprendre ma prévoyance'), findsOneWidget);
 
     // Key content.
     expect(find.text('Profil financier'), findsOneWidget);
@@ -118,6 +121,16 @@ void main() {
     expect(find.text('Politique de confidentialité'), findsOneWidget);
     expect(find.text('Se déconnecter'), findsOneWidget);
     expect(find.text('Supprimer le compte'), findsOneWidget);
+  });
+
+  testWidgets('Understand tile opens the pedagogy screen', (tester) async {
+    await pumpSettings(tester);
+
+    await tester.tap(find.text('Comprendre ma prévoyance'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Comment calculons-nous ?'), findsOneWidget);
+    expect(find.text('Ce que nous ne modélisons pas'), findsOneWidget);
   });
 
   testWidgets('language: selection persisted', (tester) async {

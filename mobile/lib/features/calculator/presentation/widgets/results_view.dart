@@ -62,6 +62,15 @@ class ResultsView extends StatelessWidget {
           text: l10n.generalSimulationDisclaimer,
           color: context.appColors.warning,
         ),
+        // Beginner path to the methodology (practitioner review 08.2026):
+        // the numbers gain trust only if the "how" is one tap away.
+        Center(
+          child: TextButton.icon(
+            onPressed: () => context.push(Routes.understand),
+            icon: const Icon(Icons.school_outlined, size: 18),
+            label: Text(l10n.resultsHowCalculated),
+          ),
+        ),
       ],
     );
   }
@@ -167,6 +176,7 @@ class _PillarBar extends StatelessWidget {
     required this.value,
     required this.fraction,
     required this.color,
+    this.helpTermId,
   });
 
   final String label;
@@ -174,10 +184,13 @@ class _PillarBar extends StatelessWidget {
   final double fraction;
   final Color color;
 
+  /// Glossary term opened on tap (bar rows double as pedagogy).
+  final String? helpTermId;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
+    final row = Row(
       children: [
         SizedBox(
           width: 96,
@@ -205,7 +218,24 @@ class _PillarBar extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        if (helpTermId != null) ...[
+          const SizedBox(width: 6),
+          Icon(
+            Icons.info_outline,
+            size: 14,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ],
       ],
+    );
+    if (helpTermId == null) return row;
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
+      onTap: () => HelpSheet.show(context, helpTermId!),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: row,
+      ),
     );
   }
 }
@@ -221,10 +251,28 @@ class _PillarsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = context.appColors;
 
+    // Each bar opens its pillar's glossary sheet — the base pedagogy
+    // (pillar_1_avs/pillar_2_bvg/pillar_3a) was written but unreachable
+    // before the practitioner review (08.2026).
     final pillars = [
-      (l10n.pdfPillar1, retirement.estimatedAnnualAvsPension, colors.pillar1),
-      (l10n.pdfPillar2, retirement.annualPillar2Pension, colors.pillar2),
-      (l10n.pdfPillar3a, retirement.projectedPillar3aBalance, colors.pillar3a),
+      (
+        l10n.pdfPillar1,
+        retirement.estimatedAnnualAvsPension,
+        colors.pillar1,
+        'pillar_1_avs',
+      ),
+      (
+        l10n.pdfPillar2,
+        retirement.annualPillar2Pension,
+        colors.pillar2,
+        'pillar_2_bvg',
+      ),
+      (
+        l10n.pdfPillar3a,
+        retirement.projectedPillar3aBalance,
+        colors.pillar3a,
+        'pillar_3a',
+      ),
     ];
     final maxValue = pillars.fold<int>(
       1,
@@ -235,14 +283,25 @@ class _PillarsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.resultsYourPillars, style: theme.textTheme.titleMedium),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.resultsYourPillars,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+              const HelpButton(termId: 'pillar_system'),
+            ],
+          ),
           const SizedBox(height: 12),
-          for (final (label, value, color) in pillars) ...[
+          for (final (label, value, color, termId) in pillars) ...[
             _PillarBar(
               label: label,
               value: value,
               fraction: value / maxValue,
               color: color,
+              helpTermId: termId,
             ),
             const SizedBox(height: 8),
           ],
@@ -318,6 +377,7 @@ class _ProjectionCard extends StatelessWidget {
             _MetricRow(
               label: l10n.calculatorWithdrawalTax3a,
               value: '−${formatChf(retirement.pillar3aWithdrawalTax!)}',
+              helpTermId: 'withdrawal_tax',
             ),
           ],
           if (retirement.pillar3aNetLumpSum != null) ...[
@@ -477,6 +537,7 @@ class _LppGapCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _MetricRow(
+            helpTermId: 'conversion_rate',
             label: l10n.calculatorProjectedPension,
             value: formatChf(lppGap.projectedActualAnnualPension),
           ),

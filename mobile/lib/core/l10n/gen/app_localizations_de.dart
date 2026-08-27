@@ -184,6 +184,69 @@ class AppLocalizationsDe extends AppLocalizations {
       'Jahresend-Checkliste (15. Dezember) und 3a-Einzahlung (1. November), um 10 Uhr';
 
   @override
+  String get settingsSectionLearn => 'Verstehen';
+
+  @override
+  String get settingsUnderstandTitle => 'Meine Vorsorge verstehen';
+
+  @override
+  String get settingsUnderstandSubtitle =>
+      'Die 3 Säulen und unsere Berechnungen, einfach erklärt';
+
+  @override
+  String get understandIntro =>
+      'Die Schweizer Vorsorge ruht auf 3 Säulen: der staatlichen AHV, der Pensionskasse Ihres Arbeitgebers und Ihrem persönlichen 3a-Sparen. Tippen Sie auf eine Säule, um ihre Rolle zu verstehen.';
+
+  @override
+  String get understandPillarsTitle => 'Die 3 Säulen';
+
+  @override
+  String get understandCalcTitle => 'Wie rechnen wir?';
+
+  @override
+  String get understandCalcIntro =>
+      'Jede Zahl in der App stammt aus einer der folgenden Regeln — gesetzliche Parameter 2026 und offizielle Tarife, nie erfundene Durchschnitte.';
+
+  @override
+  String get understandCalcAvsTitle => 'AHV-Rente';
+
+  @override
+  String get understandCalcAvsBody =>
+      'Geschätzt aus Ihrem Einkommen und den bis zur Pensionierung projizierten Beitragsjahren (vereinfachte Skala 44). Ab 2026 ist die 13. Rente enthalten (13 Monatszahlungen pro Jahr). Ihre tatsächliche Rente hängt von Ihrem genauen Werdegang ab — bestellen Sie einen AHV-Kontoauszug, um ihn zu kennen.';
+
+  @override
+  String get understandCalcLppTitle => 'BVG-Kapital und -Rente';
+
+  @override
+  String get understandCalcLppBody =>
+      'Ihr aktuelles Kapital wächst jedes Jahr mit Ihren Sparbeiträgen (Arbeitnehmer- + Arbeitgeberanteil) und dem gesetzlichen Mindestzins von 1.25 %. Bei der Pensionierung gilt: Rente = Kapital × Umwandlungssatz. 6.8 % ist das gesetzliche Minimum auf dem obligatorischen Teil — erfassen Sie den Satz Ihres Ausweises für ein genaueres Ergebnis.';
+
+  @override
+  String get understandCalc3aTitle => '3a-Sparen';
+
+  @override
+  String get understandCalc3aBody =>
+      'Ihr aktueller Saldo wird mit Ihren jährlichen Einzahlungen und der gewählten Rendite projiziert. Bei der Pensionierung wird das 3a als Kapital bezogen (nicht als Rente) — es wird deshalb separat ausgewiesen, mit der geschätzten Bezugssteuer.';
+
+  @override
+  String get understandCalcTaxTitle => 'Steuern';
+
+  @override
+  String get understandCalcTaxBody =>
+      '3a-Steuerersparnis, Vergleich Ehe/Konkubinat, Steuer beim Kapitalbezug: alles wird mit den offiziellen Tarifen 2026 von Bund, Kanton und Gemeinde berechnet — geprüft gegen den offiziellen Rechner der ESTV. Basis ist Ihr Bruttoeinkommen (Ihre persönlichen Abzüge sind nicht bekannt): die Beträge sind Schätzungen.';
+
+  @override
+  String get understandCalcLimitsTitle => 'Was wir nicht abbilden';
+
+  @override
+  String get understandCalcLimitsBody =>
+      'Besondere Lebensläufe: Scheidung und AHV-Splitting, Erziehungsgutschriften, Zuzug in die Schweiz während der Karriere, Invalidität, Kassensätze auf dem überobligatorischen Teil. PocketPillar ist ein Schätz- und Informationstool — keine Beratung. Besprechen Sie wichtige Entscheide mit einer Fachperson.';
+
+  @override
+  String get understandMethodologyLink =>
+      'Vollständige Methodik und Quellen (auf GitHub veröffentlicht)';
+
+  @override
   String get settingsNotificationsDenied =>
       'Mitteilungen verweigert — aktivieren Sie sie in den Systemeinstellungen, um Erinnerungen zu erhalten';
 
@@ -994,6 +1057,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get resultsYearsToRetirement => 'Jahre bis zur Rente';
 
   @override
+  String get resultsHowCalculated => 'Wie werden diese Zahlen berechnet?';
+
+  @override
   String get resultsTaxSavings => 'Steuerersparnisse';
 
   @override
@@ -1316,6 +1382,36 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get helpEffectiveReturnWhere =>
       'Verwenden Sie den PocketPillar-Steuerrechner, um Ihre effektive Rendite je nach Kanton zu sehen.';
+
+  @override
+  String get helpAnnualContributionTitle => 'Jährlicher BVG-Beitrag';
+
+  @override
+  String get helpAnnualContributionExplanation =>
+      'Das ist der Betrag, der jedes Jahr in Ihrer Pensionskasse gespart wird: Ihr Anteil UND der Ihres Arbeitgebers (er zahlt mindestens gleich viel). Es ist also nicht nur der Abzug auf Ihrer Lohnabrechnung.';
+
+  @override
+  String get helpAnnualContributionWhy =>
+      'Die Projektion fügt dieses Sparen jedes Jahr bis zur Pensionierung hinzu, verzinst zum gesetzlichen Minimum von 1.25 %. Wer nur die eigene Hälfte angibt, unterschätzt das projizierte Kapital deutlich.';
+
+  @override
+  String get helpAnnualContributionWhere =>
+      'Ihr jährlicher Vorsorgeausweis, Rubrik «Sparbeiträge» — Arbeitnehmer- und Arbeitgeberanteil zusammenzählen (Risikoprämien gehören nicht dazu).';
+
+  @override
+  String get helpWithdrawalTaxTitle => 'Steuer beim Kapitalbezug';
+
+  @override
+  String get helpWithdrawalTaxExplanation =>
+      'Bezogenes Vorsorgekapital (3a oder Pensionskasse) wird einmalig besteuert — getrennt vom übrigen Einkommen und zu einem reduzierten Satz.';
+
+  @override
+  String get helpWithdrawalTaxWhy =>
+      'Diese Steuer verringert den tatsächlich verfügbaren Betrag — deshalb zeigen wir Brutto- und geschätztes Nettokapital. Bezüge über mehrere Steuerjahre zu staffeln senkt sie oft (siehe «Gestaffelter Bezug»).';
+
+  @override
+  String get helpWithdrawalTaxWhere =>
+      'Geschätzt mit den offiziellen Tarifen 2026 Ihres Kantons und Ihrer Gemeinde. Der genaue Betrag hängt von Ihrer Situation im Bezugsjahr ab.';
 
   @override
   String get tipMax3a2026Title => '3a-Maximum 2026';
@@ -1977,7 +2073,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get generalSimulationDisclaimer =>
-      'Unverbindliche Simulation auf Basis vereinfachter Tarife. PocketPillar liefert Informationen, keine Anlageberatung (FIDLEG).';
+      'Unverbindliche Simulation: offizielle Tarife 2026, berechnet auf dem Bruttoeinkommen (ohne Ihre individuellen Abzüge). PocketPillar liefert Informationen, keine Anlageberatung (FIDLEG).';
 
   @override
   String get pdfDisclaimer =>

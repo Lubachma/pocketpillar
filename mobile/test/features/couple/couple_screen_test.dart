@@ -291,4 +291,19 @@ void main() {
     expect(repo.calls, 2);
     expect(repo.lastMunicipality, isNull);
   });
+
+  testWidgets('annual-contribution help on both spouse cards '
+      '(practitioner review 08.2026)', (tester) async {
+    await pumpScreen(tester);
+
+    // One ⓘ per spouse card, on the LPP contribution field.
+    expect(find.byIcon(Icons.info_outline), findsNWidgets(2));
+
+    await tester.tap(find.byIcon(Icons.info_outline).first);
+    await tester.pumpAndSettle();
+
+    // The sheet spells out employee + employer shares and the projection.
+    expect(find.text('Cotisation annuelle LPP'), findsOneWidget);
+    expect(find.text("C'est quoi ?"), findsOneWidget);
+  });
 }

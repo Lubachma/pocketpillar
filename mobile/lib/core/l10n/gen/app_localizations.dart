@@ -424,6 +424,114 @@ abstract class AppLocalizations {
   /// **'Checklist de fin d\'année (15 décembre) et versement 3a (1er novembre), à 10 h'**
   String get settingsAnnualRemindersSubtitle;
 
+  /// No description provided for @settingsSectionLearn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comprendre'**
+  String get settingsSectionLearn;
+
+  /// No description provided for @settingsUnderstandTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comprendre ma prévoyance'**
+  String get settingsUnderstandTitle;
+
+  /// No description provided for @settingsUnderstandSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les 3 piliers et nos calculs, expliqués simplement'**
+  String get settingsUnderstandSubtitle;
+
+  /// No description provided for @understandIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'La prévoyance suisse repose sur 3 piliers : l\'AVS de l\'État, la caisse de pension de votre employeur et votre épargne personnelle 3a. Touchez un pilier pour comprendre son rôle.'**
+  String get understandIntro;
+
+  /// No description provided for @understandPillarsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les 3 piliers'**
+  String get understandPillarsTitle;
+
+  /// No description provided for @understandCalcTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment calculons-nous ?'**
+  String get understandCalcTitle;
+
+  /// No description provided for @understandCalcIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque chiffre de l\'app vient d\'une des règles ci-dessous — paramètres légaux 2026 et barèmes officiels, jamais de moyennes inventées.'**
+  String get understandCalcIntro;
+
+  /// No description provided for @understandCalcAvsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rente AVS'**
+  String get understandCalcAvsTitle;
+
+  /// No description provided for @understandCalcAvsBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimée à partir de votre revenu et de vos années de cotisation projetées jusqu\'à la retraite (échelle 44 simplifiée). Dès 2026, la 13e rente est incluse (13 mensualités par an). Votre rente réelle dépendra de votre parcours exact — demandez un extrait de compte AVS pour le connaître.'**
+  String get understandCalcAvsBody;
+
+  /// No description provided for @understandCalcLppTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Capital et rente LPP'**
+  String get understandCalcLppTitle;
+
+  /// No description provided for @understandCalcLppBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre capital actuel grandit chaque année avec vos cotisations (parts employé + employeur) et l\'intérêt minimal légal de 1.25 %. À la retraite : rente = capital × taux de conversion. 6.8 % est le minimum légal sur la part obligatoire — saisissez le taux de votre certificat pour un résultat plus fidèle.'**
+  String get understandCalcLppBody;
+
+  /// No description provided for @understandCalc3aTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Épargne 3a'**
+  String get understandCalc3aTitle;
+
+  /// No description provided for @understandCalc3aBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre solde actuel est projeté avec vos versements annuels et le rendement choisi. À la retraite, le 3a se retire en capital (pas en rente) — il est donc affiché à part, avec l\'impôt de retrait estimé.'**
+  String get understandCalc3aBody;
+
+  /// No description provided for @understandCalcTaxTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impôts'**
+  String get understandCalcTaxTitle;
+
+  /// No description provided for @understandCalcTaxBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Économies 3a, comparaison mariage/concubinage, impôt au retrait des capitaux : tout est calculé avec les barèmes officiels 2026 de la Confédération, de votre canton et de votre commune — vérifiés contre le calculateur officiel de l\'AFC. Votre revenu brut sert de base (vos déductions personnelles ne sont pas connues) : les montants sont des estimations.'**
+  String get understandCalcTaxBody;
+
+  /// No description provided for @understandCalcLimitsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que nous ne modélisons pas'**
+  String get understandCalcLimitsTitle;
+
+  /// No description provided for @understandCalcLimitsBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les parcours particuliers : divorce et splitting AVS, bonifications pour tâches éducatives, arrivée en Suisse en cours de carrière, invalidité, taux de caisse sur la part surobligatoire. PocketPillar est un outil d\'estimation et d\'information — pas un conseil. Pour une décision importante, parlez-en à un professionnel.'**
+  String get understandCalcLimitsBody;
+
+  /// No description provided for @understandMethodologyLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Méthodologie complète et sources (publiées sur GitHub)'**
+  String get understandMethodologyLink;
+
   /// No description provided for @settingsNotificationsDenied.
   ///
   /// In fr, this message translates to:
@@ -1942,6 +2050,12 @@ abstract class AppLocalizations {
   /// **'Années jusqu\'à la retraite'**
   String get resultsYearsToRetirement;
 
+  /// No description provided for @resultsHowCalculated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment ces chiffres sont-ils calculés ?'**
+  String get resultsHowCalculated;
+
   /// No description provided for @resultsTaxSavings.
   ///
   /// In fr, this message translates to:
@@ -2475,6 +2589,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Utilisez le calculateur fiscal de PocketPillar pour voir votre rendement effectif selon votre canton.'**
   String get helpEffectiveReturnWhere;
+
+  /// No description provided for @helpAnnualContributionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cotisation annuelle LPP'**
+  String get helpAnnualContributionTitle;
+
+  /// No description provided for @helpAnnualContributionExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est le montant épargné chaque année dans votre caisse de pension : votre part ET celle de votre employeur (il paie au moins autant que vous). Ce n\'est donc pas seulement la retenue visible sur votre fiche de salaire.'**
+  String get helpAnnualContributionExplanation;
+
+  /// No description provided for @helpAnnualContributionWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'La projection ajoute cette épargne chaque année jusqu\'à la retraite, avec l\'intérêt minimal légal de 1.25 %. Si vous n\'indiquez que votre moitié, votre capital projeté sera fortement sous-estimé.'**
+  String get helpAnnualContributionWhy;
+
+  /// No description provided for @helpAnnualContributionWhere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre certificat de prévoyance annuel, rubrique « cotisations d\'épargne » — additionnez les parts employé et employeur (les primes de risque n\'en font pas partie).'**
+  String get helpAnnualContributionWhere;
+
+  /// No description provided for @helpWithdrawalTaxTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impôt au retrait du capital'**
+  String get helpWithdrawalTaxTitle;
+
+  /// No description provided for @helpWithdrawalTaxExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un capital de prévoyance retiré (3a ou caisse de pension) est imposé une seule fois, séparément de vos autres revenus et à taux réduit.'**
+  String get helpWithdrawalTaxExplanation;
+
+  /// No description provided for @helpWithdrawalTaxWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet impôt réduit le montant réellement disponible — nous affichons donc le capital brut et le net estimé. Étaler les retraits sur plusieurs années fiscales le réduit souvent (voir « Retrait échelonné »).'**
+  String get helpWithdrawalTaxWhy;
+
+  /// No description provided for @helpWithdrawalTaxWhere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l\'année du retrait.'**
+  String get helpWithdrawalTaxWhere;
 
   /// No description provided for @tipMax3a2026Title.
   ///
@@ -3673,7 +3835,7 @@ abstract class AppLocalizations {
   /// No description provided for @generalSimulationDisclaimer.
   ///
   /// In fr, this message translates to:
-  /// **'Simulation indicative basée sur des barèmes simplifiés. PocketPillar fournit de l\'information, pas du conseil en placement (LSFin).'**
+  /// **'Simulation indicative : barèmes officiels 2026, calculée sur le revenu brut (sans vos déductions individuelles). PocketPillar fournit de l\'information, pas du conseil en placement (LSFin).'**
   String get generalSimulationDisclaimer;
 
   /// No description provided for @pdfDisclaimer.

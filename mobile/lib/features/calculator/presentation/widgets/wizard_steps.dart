@@ -485,15 +485,29 @@ class _Pillar2StepState extends ConsumerState<Pillar2Step> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                AppTextField(
-                  label: l10n.calculatorAnnualContribution,
-                  controller: _contributionController,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  validator: (value) =>
-                      validateChfField(l10n, value, required: false),
-                  onFieldSubmitted: (_) => _next(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: AppTextField(
+                        label: l10n.calculatorAnnualContribution,
+                        controller: _contributionController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        validator: (value) =>
+                            validateChfField(l10n, value, required: false),
+                        onFieldSubmitted: (_) => _next(),
+                      ),
+                    ),
+                    // Employee + employer savings shares, projected to
+                    // retirement — the sheet spells it out (practitioner
+                    // review 08.2026: even an expert had to ask).
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: HelpButton(termId: 'annual_contribution'),
+                    ),
+                  ],
                 ),
               ],
             ),

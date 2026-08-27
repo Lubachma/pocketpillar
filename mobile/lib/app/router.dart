@@ -27,6 +27,7 @@ import '../features/scenarios/presentation/divorce_impact_screen.dart';
 import '../features/scenarios/presentation/property_purchase_screen.dart';
 import '../features/scenarios/presentation/scenarios_screen.dart';
 import '../features/scenarios/presentation/staggered_withdrawal_screen.dart';
+import '../features/education/presentation/understand_screen.dart';
 import '../features/settings/presentation/privacy_policy_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import 'routes.dart';
@@ -139,6 +140,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.paywall,
         builder: (context, state) => const PaywallScreen(),
+      ),
+      // Pension pedagogy: full screen, over the tab shell (reachable
+      // from settings and the calculator results — protected by the
+      // default redirect).
+      GoRoute(
+        path: Routes.understand,
+        builder: (context, state) => const UnderstandScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

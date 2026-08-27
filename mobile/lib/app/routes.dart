@@ -45,6 +45,12 @@ abstract final class Routes {
   /// settings).
   static const String paywall = '/paywall';
 
+  /// "Understand your pension" — the 3 pillars and the calculation
+  /// method in plain words (practitioner review 08.2026). Full-screen
+  /// route outside the tab shell, pushed from settings and from the
+  /// calculator results footer.
+  static const String understand = '/understand';
+
   /// Routes reachable without a Supabase session.
   static const Set<String> public = {onboarding, login, register};
 }

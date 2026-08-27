@@ -222,6 +222,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.paywall),
           ),
+          // Pension pedagogy (practitioner review 08.2026): the 3 pillars
+          // and the calculation method, in plain words.
+          _SectionHeader(l10n.settingsSectionLearn),
+          ListTile(
+            leading: const Icon(Icons.school_outlined),
+            title: Text(l10n.settingsUnderstandTitle),
+            subtitle: Text(l10n.settingsUnderstandSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.understand),
+          ),
           _SectionHeader(l10n.settingsSectionLanguage),
           ListTile(
             leading: const Icon(Icons.language),

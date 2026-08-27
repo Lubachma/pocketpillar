@@ -459,6 +459,47 @@ void main() {
     expect(find.text('Où trouver cette info ?'), findsOneWidget);
   });
 
+  testWidgets('contextual help on the annual LPP contribution '
+      '(practitioner review 08.2026)', (tester) async {
+    await pumpCalculator(tester);
+
+    await tester.tap(find.text('Suivant')); // → income
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Revenu brut (CHF)'),
+      "95'000",
+    );
+    await tester.tap(find.text('Suivant')); // → 2nd pillar
+    await tester.pumpAndSettle();
+
+    // Two ⓘ on this step: BVG capital, then the annual contribution.
+    await tester.tap(find.byIcon(Icons.info_outline).last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Cotisation annuelle LPP'), findsOneWidget);
+    expect(find.text("C'est quoi ?"), findsOneWidget);
+  });
+
+  testWidgets('results pedagogy: tappable pillar bars + methodology link', (
+    tester,
+  ) async {
+    await pumpCalculator(tester);
+    await completeWizard(tester);
+
+    // Beginner path to the methodology under the disclaimer.
+    expect(
+      find.text('Comment ces chiffres sont-ils calculés ?'),
+      findsOneWidget,
+    );
+
+    // Each pillar bar opens its glossary sheet.
+    await tester.tap(find.text('Pilier 3a').first);
+    await tester.pumpAndSettle();
+    expect(find.text("C'est quoi ?"), findsOneWidget);
+    // Bar label + projection-chart legend + sheet header.
+    expect(find.text('Pilier 3a'), findsNWidgets(3));
+  });
+
   testWidgets('restart: back to the wizard, inputs kept', (tester) async {
     await pumpCalculator(tester);
 

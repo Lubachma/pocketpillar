@@ -10,6 +10,7 @@ import '../../../../core/theme/components/primary_button.dart';
 import '../../../../core/utils/currency.dart';
 import '../../../../core/utils/swiss_canton.dart';
 import '../../calculator/data/calculator_payloads.dart';
+import '../../calculator/presentation/widgets/help_sheet.dart';
 import '../../calculator/presentation/widgets/results_view.dart';
 import '../../calculator/presentation/widgets/wizard_steps.dart';
 import '../../financial_profile/application/financial_profile_providers.dart';
@@ -397,15 +398,28 @@ class _SpouseFormCard extends StatelessWidget {
             onFieldSubmitted: (_) => onSubmitted(),
           ),
           const SizedBox(height: 16),
-          AppTextField(
-            label: l10n.calculatorAnnualContribution,
-            controller: pillar2ContributionController,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ),
-            validator: (value) =>
-                validateChfField(l10n, value, required: false),
-            onFieldSubmitted: (_) => onSubmitted(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AppTextField(
+                  label: l10n.calculatorAnnualContribution,
+                  controller: pillar2ContributionController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  validator: (value) =>
+                      validateChfField(l10n, value, required: false),
+                  onFieldSubmitted: (_) => onSubmitted(),
+                ),
+              ),
+              // Employee + employer shares — the sheet spells it out
+              // (practitioner review 08.2026).
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: HelpButton(termId: 'annual_contribution'),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           // Optional — empty: the backend applies the 6.8% legal minimum,

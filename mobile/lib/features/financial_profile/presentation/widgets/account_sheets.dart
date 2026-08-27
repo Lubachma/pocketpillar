@@ -8,6 +8,7 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/components/app_text_field.dart';
 import '../../../../core/theme/components/primary_button.dart';
 import '../../../../core/utils/currency.dart';
+import '../../../calculator/presentation/widgets/help_sheet.dart';
 import '../../../premium/application/premium_providers.dart';
 import '../../data/financial_profile_dtos.dart';
 import '../profile_form_validators.dart';
@@ -282,26 +283,51 @@ class _Pillar2AccountSheetState extends ConsumerState<Pillar2AccountSheet> {
                   validateMoneyField(l10n, value, required: true),
             ),
             const SizedBox(height: 12),
-            AppTextField(
-              label: l10n.profileConversionRate,
-              controller: _conversionRateController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              textInputAction: TextInputAction.next,
-              validator: (value) =>
-                  validatePercentField(l10n, value, min: 0, max: 100),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: AppTextField(
+                    label: l10n.profileConversionRate,
+                    controller: _conversionRateController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    textInputAction: TextInputAction.next,
+                    validator: (value) =>
+                        validatePercentField(l10n, value, min: 0, max: 100),
+                  ),
+                ),
+                // 6.8% = legal minimum on the mandatory part only — the
+                // sheet explains where the certificate rate lives
+                // (practitioner review 08.2026).
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: HelpButton(termId: 'conversion_rate'),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
-            AppTextField(
-              label: l10n.profileAnnualContribution,
-              controller: _contributionController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              textInputAction: TextInputAction.next,
-              validator: (value) =>
-                  validateMoneyField(l10n, value, required: false),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: AppTextField(
+                    label: l10n.profileAnnualContribution,
+                    controller: _contributionController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    textInputAction: TextInputAction.next,
+                    validator: (value) =>
+                        validateMoneyField(l10n, value, required: false),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: HelpButton(termId: 'annual_contribution'),
+                ),
+              ],
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
