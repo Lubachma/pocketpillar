@@ -17,8 +17,10 @@ export default fp(async (fastify: FastifyInstance) => {
   fastify.setErrorHandler((error: FastifyError, request, reply) => {
     // Prisma P2023 ("inconsistent column data"): a malformed id in a
     // `where` — e.g. a non-UUID `:id` in the URL. Indistinguishable from a
-    // nonexistent resource: 404, never a 500 (review 08.2026).
+    // nonexistent resource: 404, never a 500 (review 08.2026). Logged
+    // anyway: the same code from CORRUPTED data must not vanish silently.
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2023') {
+      request.log.warn({ err: error, url: request.url }, 'P2023 mapped to 404');
       return reply.status(404).send({ error: t(request.locale, 'error.not_found') });
     }
 

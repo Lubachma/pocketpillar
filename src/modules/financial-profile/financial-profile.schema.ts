@@ -17,16 +17,20 @@ const moneyAmount = () => z.number().int().nonnegative().max(MAX_MONEY_CENTIMES)
 
 // Base shape WITHOUT defaults: .partial() over a schema that carries a .default()
 // would keep injecting that default on partial updates (silently resetting fields).
+// Bounded like every stored int: 20 is beyond any plausible household
+// and far under int4 (follow-up review — the field was unbounded).
+const numberOfChildren = () => z.number().int().min(0).max(20);
+
 const financialProfileFieldsSchema = z.object({
   employmentStatus: z.enum(employmentStatusValues),
   maritalStatus: z.enum(maritalStatusValues),
-  numberOfChildren: z.number().int().min(0),
+  numberOfChildren: numberOfChildren(),
   grossAnnualIncome: moneyAmount(),
   netAnnualIncome: moneyAmount().optional(),
 });
 
 export const createFinancialProfileSchema = financialProfileFieldsSchema.extend({
-  numberOfChildren: z.number().int().min(0).default(0),
+  numberOfChildren: numberOfChildren().default(0),
 });
 
 export const updateFinancialProfileSchema = financialProfileFieldsSchema.partial();

@@ -70,11 +70,12 @@ String? validateBirthYearField(AppLocalizations l10n, String? value) {
   return null;
 }
 
-/// Validates the number of children: integer ≥ 0 (required, default 0).
+/// Validates the number of children: integer 0–20 (required, default 0
+/// — same bound as the backend schema).
 String? validateChildrenField(AppLocalizations l10n, String? value) {
   final text = value?.trim() ?? '';
   final children = int.tryParse(text);
-  if (text.isEmpty || children == null || children < 0) {
+  if (text.isEmpty || children == null || children < 0 || children > 20) {
     return l10n.profileChildrenInvalid;
   }
   return null;

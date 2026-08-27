@@ -50,6 +50,13 @@ describe('createFinancialProfileSchema', () => {
     expect(
       createFinancialProfileSchema.safeParse({ ...validProfile, numberOfChildren: -1 }).success,
     ).toBe(false);
+    // Bounded above too (follow-up review): 20 passes, 21 does not.
+    expect(
+      createFinancialProfileSchema.safeParse({ ...validProfile, numberOfChildren: 20 }).success,
+    ).toBe(true);
+    expect(
+      createFinancialProfileSchema.safeParse({ ...validProfile, numberOfChildren: 21 }).success,
+    ).toBe(false);
     expect(
       createFinancialProfileSchema.safeParse({ ...validProfile, grossAnnualIncome: 0 }).success,
     ).toBe(true);

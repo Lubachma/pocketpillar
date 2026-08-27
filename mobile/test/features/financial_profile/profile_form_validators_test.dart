@@ -47,6 +47,16 @@ void main() {
     });
   });
 
+  group('validateChildrenField', () {
+    test('0–20 accepted, 21 and negatives rejected (backend bound)', () {
+      expect(validateChildrenField(l10n, '0'), isNull);
+      expect(validateChildrenField(l10n, '20'), isNull);
+      expect(validateChildrenField(l10n, '21'), isNotNull);
+      expect(validateChildrenField(l10n, '-1'), isNotNull);
+      expect(validateChildrenField(l10n, ''), isNotNull);
+    });
+  });
+
   group('validateMoneyField', () {
     test('backend upper bound (int4 max centimes = CHF 21 474 836.47)', () {
       expect(validateMoneyField(l10n, '21474836.47', required: true), isNull);
