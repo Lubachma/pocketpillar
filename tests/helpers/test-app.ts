@@ -12,6 +12,8 @@ import calculatorRoutes from '../../src/modules/calculator/calculator.routes.js'
 import documentRoutes from '../../src/modules/document/document.routes.js';
 import recommendationRoutes from '../../src/modules/recommendation/recommendation.routes.js';
 import subscriptionRoutes from '../../src/modules/subscription/subscription.routes.js';
+import financialProfileRoutes from '../../src/modules/financial-profile/financial-profile.routes.js';
+import providerRoutes from '../../src/modules/provider/provider.routes.js';
 
 /**
  * Test harness for HTTP contract tests: a real Fastify instance with the
@@ -36,6 +38,30 @@ export function createFakePrisma() {
     },
     document: {
       count: vi.fn().mockResolvedValue(0),
+    },
+    financialProfile: {
+      findUnique: vi.fn().mockResolvedValue(null),
+      upsert: vi.fn().mockResolvedValue(null),
+    },
+    pillar2Account: {
+      findMany: vi.fn().mockResolvedValue([]),
+      create: vi.fn().mockResolvedValue(null),
+      update: vi.fn().mockResolvedValue(null),
+      deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+    },
+    pillar3aAccount: {
+      findMany: vi.fn().mockResolvedValue([]),
+      create: vi.fn().mockResolvedValue(null),
+      update: vi.fn().mockResolvedValue(null),
+      deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+    },
+    taxSituation: {
+      findUnique: vi.fn().mockResolvedValue(null),
+      upsert: vi.fn().mockResolvedValue(null),
+    },
+    pillar3aProvider: {
+      findMany: vi.fn().mockResolvedValue([]),
+      findUnique: vi.fn().mockResolvedValue(null),
     },
   };
 }
@@ -87,6 +113,10 @@ export async function buildTestApp(fakes: TestAppFakes = {}): Promise<FastifyIns
   await app.register(documentRoutes);
   await app.register(recommendationRoutes);
   await app.register(subscriptionRoutes);
+  // Review 08.2026: these two core-domain modules (14 endpoints) were the
+  // only ones missing from the harness.
+  await app.register(financialProfileRoutes);
+  await app.register(providerRoutes);
 
   return app;
 }
