@@ -1,5 +1,18 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import Fastify, { type FastifyInstance } from 'fastify';
+
+// Importing src/app.js pulls src/config, which validates the environment
+// and exits the process when variables are missing (CI has no .env —
+// locally the root .env masked this). Same hoisted stub as
+// tests/integration/http-contract.test.ts.
+vi.hoisted(() => {
+  process.env.DATABASE_URL = 'postgresql://localhost:5432/test';
+  process.env.REDIS_URL = 'redis://localhost:6379';
+  process.env.SUPABASE_URL = 'https://test.supabase.co';
+  process.env.SUPABASE_ANON_KEY = 'anon-key';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key';
+});
+
 import { TRUST_PROXY } from '../src/app.js';
 
 /**
