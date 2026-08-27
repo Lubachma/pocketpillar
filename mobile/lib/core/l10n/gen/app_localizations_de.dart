@@ -212,21 +212,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get understandCalcAvsBody =>
-      'Geschätzt aus Ihrem Einkommen und den bis zur Pensionierung projizierten Beitragsjahren (vereinfachte Skala 44). Ab 2026 ist die 13. Rente enthalten (13 Monatszahlungen pro Jahr). Ihre tatsächliche Rente hängt von Ihrem genauen Werdegang ab — bestellen Sie einen AHV-Kontoauszug, um ihn zu kennen.';
+      'Geschätzt aus Ihrem Einkommen und den bis zur Pensionierung projizierten Beitragsjahren (vereinfachte Skala 44). Ab 2026 ist die 13. Rente enthalten (13 Monatszahlungen pro Jahr). Ihre tatsächliche Rente hängt von Ihrem genauen Werdegang ab — ein AHV-Kontoauszug schafft Gewissheit.';
 
   @override
   String get understandCalcLppTitle => 'BVG-Kapital und -Rente';
 
   @override
   String get understandCalcLppBody =>
-      'Ihr aktuelles Kapital wächst jedes Jahr mit Ihren Sparbeiträgen (Arbeitnehmer- + Arbeitgeberanteil) und dem gesetzlichen Mindestzins von 1.25 %. Bei der Pensionierung gilt: Rente = Kapital × Umwandlungssatz. 6.8 % ist das gesetzliche Minimum auf dem obligatorischen Teil — erfassen Sie den Satz Ihres Ausweises für ein genaueres Ergebnis.';
+      'Ihr aktuelles Kapital wächst jedes Jahr mit Ihren Sparbeiträgen (Arbeitnehmer- + Arbeitgeberanteil) und dem gesetzlichen Mindestzins von 1.25 %. Bei der Pensionierung gilt: Rente = Kapital × Umwandlungssatz. 6.8 % ist das gesetzliche Minimum auf dem obligatorischen Teil — erfassen Sie den Satz Ihres BVG-Ausweises für ein genaueres Ergebnis.';
 
   @override
   String get understandCalc3aTitle => '3a-Sparen';
 
   @override
   String get understandCalc3aBody =>
-      'Ihr aktueller Saldo wird mit Ihren jährlichen Einzahlungen und der gewählten Rendite projiziert. Bei der Pensionierung wird das 3a als Kapital bezogen (nicht als Rente) — es wird deshalb separat ausgewiesen, mit der geschätzten Bezugssteuer.';
+      'Ihr aktueller Saldo wird mit Ihren jährlichen Einzahlungen und der gewählten Rendite projiziert. Bei der Pensionierung wird das 3a-Guthaben als Kapital bezogen (nicht als Rente) — es wird deshalb separat ausgewiesen, mit der geschätzten Bezugssteuer.';
 
   @override
   String get understandCalcTaxTitle => 'Steuern';
@@ -467,7 +467,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calculatorWithdrawalTax3a => 'Steuer beim 3a-Bezug (geschätzt)';
 
   @override
-  String get calculatorNet3aAfterTax => '3a-Kapital netto nach Steuer';
+  String get calculatorNet3aAfterTax => '3a-Kapital nach Steuerabzug';
 
   @override
   String get calculatorAnnualRetirementIncome => 'Jährliches Renteneinkommen';
@@ -1396,7 +1396,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpAnnualContributionWhere =>
-      'Ihr jährlicher Vorsorgeausweis, Rubrik «Sparbeiträge» — Arbeitnehmer- und Arbeitgeberanteil zusammenzählen (Risikoprämien gehören nicht dazu).';
+      'Ihr jährlicher BVG-Ausweis, Rubrik «Sparbeiträge» — Arbeitnehmer- und Arbeitgeberanteil zusammenzählen (Risikoprämien gehören nicht dazu).';
 
   @override
   String get helpWithdrawalTaxTitle => 'Steuer beim Kapitalbezug';
@@ -1407,7 +1407,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpWithdrawalTaxWhy =>
-      'Diese Steuer verringert den tatsächlich verfügbaren Betrag — deshalb zeigen wir Brutto- und geschätztes Nettokapital. Bezüge über mehrere Steuerjahre zu staffeln senkt sie oft (siehe «Gestaffelter Bezug»).';
+      'Diese Steuer verringert den tatsächlich verfügbaren Betrag — deshalb zeigen wir Brutto- und geschätztes Nettokapital. Wer Bezüge über mehrere Steuerjahre staffelt, senkt sie oft (siehe «Gestaffelter Bezug»).';
 
   @override
   String get helpWithdrawalTaxWhere =>
@@ -1418,7 +1418,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpPensionScoreExplanation =>
-      'Eine Note von 100, die Ihre Vorsorgesituation zusammenfasst: Ersatzquote (40 P.), 3a-Sparen (30 P.) und verbleibende Zeit zum Handeln (30 P.).';
+      'Eine Punktzahl bis 100, die Ihre Vorsorgesituation zusammenfasst: Ersatzquote (40 P.), 3a-Sparen (30 P.) und verbleibende Zeit zum Handeln (30 P.).';
 
   @override
   String get helpPensionScoreWhy =>
@@ -2273,7 +2273,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get coupleConversionRateHint =>
-      '6.8 % = gesetzliches Minimum, garantiert nur auf dem obligatorischen Teil. Ihre Kasse wendet oft einen tieferen Gesamtsatz an — siehe Ihren BVG-Ausweis.';
+      '6.8 % = gesetzliches Minimum, garantiert nur auf dem obligatorischen Teil. Ihre Kasse wendet oft einen tieferen Gesamtsatz an — siehe BVG-Ausweis.';
 
   @override
   String get coupleWithdrawalTotalTax => 'Gesamtsteuer des Plans';
