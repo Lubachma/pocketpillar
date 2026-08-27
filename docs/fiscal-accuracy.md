@@ -179,11 +179,18 @@ non-blocking; the app words all results as estimates:
   representable through the projected contribution years — the estimate
   assumes an uninterrupted career from age 20.
 - **Pension-score benchmarks**: the age-bracket "averages" shown next to
-  the /100 score are indicative orders of magnitude (no official source
-  publishes 3a balances or replacement rates at this granularity) — the
-  in-app help sheet says so; anchoring the BVG-capital column on the
-  Swisscanto pension-fund study is on the roadmap. The score itself and
-  every projected amount follow the legal parameters above.
+  the /100 score are indicative orders of magnitude — a dedicated source
+  hunt (August 2026) confirmed that no citable per-age-bracket balance
+  statistics exist in Switzerland (the Swisscanto study surveys funds,
+  not balances per insured — verified in its 2024 and 2025 editions; the
+  FSO publishes age classes as headcounts only, and states itself that
+  no central 3a database exists). Official reference points used as
+  sanity bounds: ~CHF 123,700 average vested capital per active insured,
+  all ages (FSO pension-fund statistics 2023) and the FSO new-pensions
+  statistics at-retirement medians (2nd pillar CHF 122,917 in 2023;
+  3a CHF 45,869 in 2022). The in-app help sheet labels the comparison
+  as indicative. The score itself and every projected amount follow the
+  legal parameters above.
 - **Inflation/indexation**: projections are in constant nominal francs.
 
 ## Annual update process

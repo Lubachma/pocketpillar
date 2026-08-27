@@ -21,12 +21,19 @@ import type { Locale } from '../../lib/i18n/index.js';
 
 /**
  * Age-bracket benchmarks — INDICATIVE orders of magnitude carried over
- * from the iOS app (`Benchmarks.swift`), NOT official statistics: no
- * public source publishes 3a balances or replacement rates per age
- * bracket at this granularity. The app's help sheet says so explicitly
- * (practitioner-review follow-up, 08.2026); anchoring the BVG capital
- * column on the Swisscanto pension-fund study is on the roadmap. Kept
- * stable across releases so score comparisons stay meaningful.
+ * from the iOS app (`Benchmarks.swift`), NOT official statistics. A
+ * source hunt (08.2026, PDFs read, not snippets) confirmed that NO
+ * citable per-age-bracket averages exist in Switzerland: the Swisscanto
+ * pension-fund study surveys FUNDS (returns/coverage), never balances
+ * per insured (verified in the 2024 and 2025 editions); the BFS
+ * Pensionskassenstatistik publishes age classes as headcounts only.
+ * The only official anchors, kept as sanity bounds for these curves:
+ * ~CHF 123'700 average vested capital per ACTIVE insured, all ages
+ * (BFS PK-Statistik 2023: 586'089 MCHF / 4'736'943 insured), and the
+ * at-retirement capital medians of the BFS Neurentenstatistik (2023:
+ * median CHF 122'917, mean 250'884). The app's help sheet labels the
+ * comparison as indicative. Kept stable across releases so score
+ * comparisons stay meaningful.
  */
 export interface AgeBracketBenchmark {
   minAge: number;
