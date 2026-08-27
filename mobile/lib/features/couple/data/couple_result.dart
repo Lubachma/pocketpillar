@@ -127,18 +127,17 @@ class CoupleWithdrawalPlanDto {
   /// Savings from staggering vs a simultaneous withdrawal, in centimes.
   final int taxSavingsVsSimultaneous;
 
-  factory CoupleWithdrawalPlanDto.fromJson(Map<String, dynamic> json) =>
-      CoupleWithdrawalPlanDto(
-        steps: [
-          for (final item in json['steps'] as List<dynamic>? ?? [])
-            CoupleWithdrawalStepDto.fromJson(item as Map<String, dynamic>),
-        ],
-        totalEstimatedTax: (json['totalEstimatedTax'] as num).toInt(),
-        simultaneousEstimatedTax:
-            (json['simultaneousEstimatedTax'] as num).toInt(),
-        taxSavingsVsSimultaneous:
-            (json['taxSavingsVsSimultaneous'] as num).toInt(),
-      );
+  factory CoupleWithdrawalPlanDto.fromJson(
+    Map<String, dynamic> json,
+  ) => CoupleWithdrawalPlanDto(
+    steps: [
+      for (final item in json['steps'] as List<dynamic>? ?? [])
+        CoupleWithdrawalStepDto.fromJson(item as Map<String, dynamic>),
+    ],
+    totalEstimatedTax: (json['totalEstimatedTax'] as num).toInt(),
+    simultaneousEstimatedTax: (json['simultaneousEstimatedTax'] as num).toInt(),
+    taxSavingsVsSimultaneous: (json['taxSavingsVsSimultaneous'] as num).toInt(),
+  );
 }
 
 /// Per-spouse income AFTER the couple AVS cap — the cap reduction is
@@ -244,10 +243,10 @@ class CoupleResult {
     combinedAvsAnnual: (json['combinedAvsAnnual'] as num).toInt(),
     avsCapApplied: json['avsCapApplied'] as bool,
     avsCapAnnual: (json['avsCapAnnual'] as num).toInt(),
-    combinedTotalAnnualIncome:
-        (json['combinedTotalAnnualIncome'] as num).toInt(),
-    combinedReplacementRate:
-        (json['combinedReplacementRate'] as num).toDouble(),
+    combinedTotalAnnualIncome: (json['combinedTotalAnnualIncome'] as num)
+        .toInt(),
+    combinedReplacementRate: (json['combinedReplacementRate'] as num)
+        .toDouble(),
     taxEstimate: CoupleTaxEstimateDto.fromJson(
       json['taxEstimate'] as Map<String, dynamic>,
     ),
