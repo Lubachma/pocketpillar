@@ -21,13 +21,24 @@ import authRoutes from './modules/auth/auth.routes.js';
 import documentRoutes from './modules/document/document.routes.js';
 import subscriptionRoutes from './modules/subscription/subscription.routes.js';
 
+/**
+ * Trust X-Forwarded-* only when the IMMEDIATE peer is the platform's
+ * private network (Fly proxy: 172.16/12 et al. via `uniquelocal`, which
+ * also covers Fly's fdaa::/8 unique-local IPv6) or loopback (local dev).
+ *
+ * Deliberately NOT a hop count: on fastify ≤5.11 `trustProxy: 1` let any
+ * DIRECT client spoof req.ip past the rate limiter (the first hop was
+ * trusted regardless of who it was), and fastify 5.12 made numeric trust
+ * fail closed for that exact reason (every request would then share the
+ * load balancer's IP — one abuser could rate-limit everyone).
+ * Locked by `tests/app.trust-proxy.test.ts`.
+ */
+export const TRUST_PROXY = ['loopback', 'linklocal', 'uniquelocal'];
+
 export async function createApp() {
   const app = Fastify({
     logger: loggerConfig,
-    // Exactly one trusted proxy hop (the managed LB/ingress in front of the
-    // app). `true` would trust X-Forwarded-For at any depth and let clients
-    // spoof req.ip straight past the rate limiter.
-    trustProxy: 1,
+    trustProxy: TRUST_PROXY,
     bodyLimit: 65_536, // 64KB
   });
 
