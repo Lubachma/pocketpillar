@@ -114,6 +114,11 @@ void main() {
               const Scaffold(body: Center(child: Text('Paramètres'))),
         ),
         GoRoute(
+          path: Routes.understand,
+          builder: (_, _) =>
+              const Scaffold(body: Center(child: Text('Comprendre (stub)'))),
+        ),
+        GoRoute(
           path: Routes.settingsProfile,
           builder: (_, _) =>
               const Scaffold(body: Center(child: Text('Profil financier'))),
@@ -336,5 +341,75 @@ void main() {
     expect(find.text('Santé prévoyance'), findsNothing);
     expect(find.text('Votre projection retraite'), findsOneWidget);
     expect(find.text('Reco A'), findsOneWidget);
+  });
+
+  testWidgets('help bubbles: the score card explains itself', (tester) async {
+    repository.data = _fullData();
+    repository.recommendations = _recommendations(1);
+    repository.score = const PensionScoreDto(
+      score: 87,
+      breakdown: [
+        ScoreBreakdownItemDto(
+          criterion: 'REPLACEMENT_RATE',
+          label: 'Taux de remplacement',
+          points: 32,
+          maxPoints: 40,
+        ),
+        ScoreBreakdownItemDto(
+          criterion: 'PILLAR_3A',
+          label: 'Épargne 3a',
+          points: 30,
+          maxPoints: 30,
+        ),
+        ScoreBreakdownItemDto(
+          criterion: 'AGE_AWARENESS',
+          label: 'Horizon retraite',
+          points: 25,
+          maxPoints: 30,
+        ),
+      ],
+      benchmark: ScoreBenchmarkDto(
+        bracketMinAge: 35,
+        bracketMaxAge: 39,
+        averagePillar3aBalance: 4800000,
+        averageReplacementRate: 58,
+        averageBvgCapital: 12000000,
+        userPillar3aBalance: 4800000,
+        userReplacementRate: 65,
+        userBvgCapital: 12000000,
+      ),
+    );
+    await pumpDashboard(tester);
+
+    await tester.tap(find.byTooltip('Score de prévoyance'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Score de prévoyance'), findsOneWidget);
+    expect(find.text("C'est quoi ?"), findsOneWidget);
+  });
+
+  testWidgets('help bubbles: tapping a pillar mini card opens its sheet', (
+    tester,
+  ) async {
+    repository.data = _fullData();
+    repository.recommendations = _recommendations(1);
+    await pumpDashboard(tester);
+
+    await tester.tap(find.text('1er pilier'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AVS (1er pilier)'), findsOneWidget);
+    expect(find.text("C'est quoi ?"), findsOneWidget);
+  });
+
+  testWidgets('AppBar shortcut opens the pedagogy hub', (tester) async {
+    repository.data = _fullData();
+    repository.recommendations = _recommendations(1);
+    await pumpDashboard(tester);
+
+    await tester.tap(find.byTooltip('Comprendre ma prévoyance'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Comprendre (stub)'), findsOneWidget);
   });
 }

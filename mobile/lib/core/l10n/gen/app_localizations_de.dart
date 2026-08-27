@@ -1414,6 +1414,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Geschätzt mit den offiziellen Tarifen 2026 Ihres Kantons und Ihrer Gemeinde. Der genaue Betrag hängt von Ihrer Situation im Bezugsjahr ab.';
 
   @override
+  String get helpPensionScoreTitle => 'Vorsorge-Score';
+
+  @override
+  String get helpPensionScoreExplanation =>
+      'Eine Note von 100, die Ihre Vorsorgesituation zusammenfasst: Ersatzquote (40 P.), 3a-Sparen (30 P.) und verbleibende Zeit zum Handeln (30 P.).';
+
+  @override
+  String get helpPensionScoreWhy =>
+      'Er zeigt auf einen Blick, wo Sie stehen und was am stärksten wiegt. Der Vergleich zeigt den Durchschnitt Ihrer Altersgruppe — ein Anhaltspunkt, kein Ziel.';
+
+  @override
+  String get helpPensionScoreWhere =>
+      'Von PocketPillar aus Ihrem Profil berechnet; er aktualisiert sich, sobald Sie Ihre Daten ändern.';
+
+  @override
   String get tipMax3a2026Title => '3a-Maximum 2026';
 
   @override

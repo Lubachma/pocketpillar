@@ -23,6 +23,7 @@ class ScenarioMetricRow extends StatelessWidget {
     required this.value,
     this.valueColor,
     this.suffix,
+    this.trailing,
     super.key,
   });
 
@@ -33,6 +34,10 @@ class ScenarioMetricRow extends StatelessWidget {
   /// Detail shown below the value (e.g. "You receive").
   final String? suffix;
 
+  /// Small widget after the label — typically a `HelpButton` bubble
+  /// (practitioner review 08.2026: explanations one tap away).
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -40,7 +45,14 @@ class ScenarioMetricRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(label, style: theme.textTheme.bodyMedium),
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(label, style: theme.textTheme.bodyMedium),
+              ),
+              ?trailing,
+            ],
+          ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,

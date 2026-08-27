@@ -1410,6 +1410,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Estimated with your canton\'s and municipality\'s official 2026 schedules. The exact amount depends on your situation in the withdrawal year.';
 
   @override
+  String get helpPensionScoreTitle => 'Pension score';
+
+  @override
+  String get helpPensionScoreExplanation =>
+      'A mark out of 100 summarising your retirement readiness: replacement rate (40 pts), 3a savings (30 pts) and time left to act (30 pts).';
+
+  @override
+  String get helpPensionScoreWhy =>
+      'It shows at a glance where you stand and what weighs most. The comparison shows your age bracket\'s average — a reference point, not a target.';
+
+  @override
+  String get helpPensionScoreWhere =>
+      'Computed by PocketPillar from your profile; it updates as soon as you change your data.';
+
+  @override
   String get tipMax3a2026Title => '3a maximum 2026';
 
   @override

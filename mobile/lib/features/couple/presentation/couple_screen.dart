@@ -524,6 +524,7 @@ class _CombinedSummaryCard extends StatelessWidget {
             value: '${rate.toStringAsFixed(0)} %',
             // Same scale as the guided calculator (`rateColor`).
             valueColor: rateColor(colors, rate),
+            trailing: const HelpButton(termId: 'replacement_rate'),
           ),
           if (result.avsCapApplied) ...[
             const SizedBox(height: 12),
@@ -886,7 +887,14 @@ class _WithdrawalPlanCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScenarioSectionTitle(l10n.coupleWithdrawalTitle),
+          Row(
+            children: [
+              Expanded(
+                child: ScenarioSectionTitle(l10n.coupleWithdrawalTitle),
+              ),
+              const HelpButton(termId: 'withdrawal_tax'),
+            ],
+          ),
           const SizedBox(height: 12),
           if (plan.steps.isEmpty)
             Text(

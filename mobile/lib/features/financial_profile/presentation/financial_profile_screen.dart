@@ -19,6 +19,7 @@ import '../../premium/application/premium_providers.dart';
 import '../application/financial_profile_providers.dart';
 import '../data/financial_profile_dtos.dart';
 import '../data/financial_profile_repository.dart';
+import '../../calculator/presentation/widgets/help_sheet.dart';
 import 'profile_form_validators.dart';
 import 'widgets/account_sheets.dart';
 import 'widgets/municipality_picker_sheet.dart';
@@ -557,9 +558,16 @@ class _Pillar2Section extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.profileSectionPillar2,
-            style: Theme.of(context).textTheme.titleMedium,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.profileSectionPillar2,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              const HelpButton(termId: 'pillar_2_bvg'),
+            ],
           ),
           if (list != null)
             list.isEmpty
@@ -725,9 +733,16 @@ class _Pillar3aSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.profileSectionPillar3a,
-            style: Theme.of(context).textTheme.titleMedium,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.profileSectionPillar3a,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              const HelpButton(termId: 'pillar_3a'),
+            ],
           ),
           if (list != null)
             list.isEmpty

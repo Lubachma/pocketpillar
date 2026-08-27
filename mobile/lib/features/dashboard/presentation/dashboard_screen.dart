@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../app/routes.dart';
 import '../../../core/api/api_exceptions.dart';
 import '../../../core/l10n/gen/app_localizations.dart';
 import '../../../core/l10n/l10n.dart';
@@ -43,7 +45,18 @@ class DashboardScreen extends ConsumerWidget {
     final data = dashboard.valueOrNull;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.dashboardTitle)),
+      appBar: AppBar(
+        title: Text(l10n.dashboardTitle),
+        actions: [
+          // Lambda users won't dig into settings for theory — the
+          // pedagogy hub is one tap from the first screen they see.
+          IconButton(
+            icon: const Icon(Icons.school_outlined),
+            tooltip: l10n.settingsUnderstandTitle,
+            onPressed: () => context.push(Routes.understand),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(ref),
         child: data != null

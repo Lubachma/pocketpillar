@@ -451,6 +451,10 @@
   "helpWithdrawalTaxExplanation": "Un capital de prévoyance retiré (3a ou caisse de pension) est imposé une seule fois, séparément de vos autres revenus et à taux réduit.",
   "helpWithdrawalTaxWhy": "Cet impôt réduit le montant réellement disponible — nous affichons donc le capital brut et le net estimé. Étaler les retraits sur plusieurs années fiscales le réduit souvent (voir « Retrait échelonné »).",
   "helpWithdrawalTaxWhere": "Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l'année du retrait.",
+  "helpPensionScoreTitle": "Score de prévoyance",
+  "helpPensionScoreExplanation": "Une note sur 100 qui résume votre préparation à la retraite : taux de remplacement (40 pts), épargne 3a (30 pts) et temps restant pour agir (30 pts).",
+  "helpPensionScoreWhy": "Il montre d'un coup d'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d'âge — un repère, pas un objectif.",
+  "helpPensionScoreWhere": "Calculé par PocketPillar à partir de votre profil ; il se met à jour dès que vous modifiez vos données.",
 
   "tipMax3a2026Title": "Maximum 3a 2026",
   "tipMax3a2026Body": "Le montant maximum 3a pour 2026 est de CHF 7'258. Versez-le avant le 31 décembre pour économiser sur vos impôts !",

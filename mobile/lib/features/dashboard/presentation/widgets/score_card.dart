@@ -7,6 +7,7 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/components/app_card.dart';
 import '../../../../core/theme/components/score_badge.dart';
+import '../../../calculator/presentation/widgets/help_sheet.dart';
 import '../../../../core/utils/currency.dart';
 import '../../application/dashboard_providers.dart';
 import '../../data/dashboard_dtos.dart';
@@ -92,7 +93,17 @@ class _ScoreCardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.dashboardScoreLabel, style: theme.textTheme.titleMedium),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.dashboardScoreLabel,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+              const HelpButton(termId: 'pension_score'),
+            ],
+          ),
           const SizedBox(height: 12),
           Row(
             children: [

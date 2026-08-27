@@ -92,6 +92,13 @@ HelpContent? helpContentFor(AppLocalizations l10n, String termId) {
       why: l10n.helpWithdrawalTaxWhy,
       whereToFind: l10n.helpWithdrawalTaxWhere,
     ),
+    'pension_score' => HelpContent(
+      icon: Icons.favorite_outline,
+      title: l10n.helpPensionScoreTitle,
+      explanation: l10n.helpPensionScoreExplanation,
+      why: l10n.helpPensionScoreWhy,
+      whereToFind: l10n.helpPensionScoreWhere,
+    ),
     'replacement_rate' => HelpContent(
       icon: Icons.speed,
       title: l10n.helpReplacementRateTitle,

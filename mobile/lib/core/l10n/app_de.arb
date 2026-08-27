@@ -435,6 +435,10 @@
   "helpWithdrawalTaxExplanation": "Bezogenes Vorsorgekapital (3a oder Pensionskasse) wird einmalig besteuert — getrennt vom übrigen Einkommen und zu einem reduzierten Satz.",
   "helpWithdrawalTaxWhy": "Diese Steuer verringert den tatsächlich verfügbaren Betrag — deshalb zeigen wir Brutto- und geschätztes Nettokapital. Bezüge über mehrere Steuerjahre zu staffeln senkt sie oft (siehe «Gestaffelter Bezug»).",
   "helpWithdrawalTaxWhere": "Geschätzt mit den offiziellen Tarifen 2026 Ihres Kantons und Ihrer Gemeinde. Der genaue Betrag hängt von Ihrer Situation im Bezugsjahr ab.",
+  "helpPensionScoreTitle": "Vorsorge-Score",
+  "helpPensionScoreExplanation": "Eine Note von 100, die Ihre Vorsorgesituation zusammenfasst: Ersatzquote (40 P.), 3a-Sparen (30 P.) und verbleibende Zeit zum Handeln (30 P.).",
+  "helpPensionScoreWhy": "Er zeigt auf einen Blick, wo Sie stehen und was am stärksten wiegt. Der Vergleich zeigt den Durchschnitt Ihrer Altersgruppe — ein Anhaltspunkt, kein Ziel.",
+  "helpPensionScoreWhere": "Von PocketPillar aus Ihrem Profil berechnet; er aktualisiert sich, sobald Sie Ihre Daten ändern.",
 
   "tipMax3a2026Title": "3a-Maximum 2026",
   "tipMax3a2026Body": "Der 3a-Maximalbetrag für 2026 beträgt CHF 7'258. Zahlen Sie ihn vor dem 31. Dezember ein, um Steuern zu sparen!",

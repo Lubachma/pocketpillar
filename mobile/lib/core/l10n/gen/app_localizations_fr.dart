@@ -1413,6 +1413,21 @@ class AppLocalizationsFr extends AppLocalizations {
       'Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l\'année du retrait.';
 
   @override
+  String get helpPensionScoreTitle => 'Score de prévoyance';
+
+  @override
+  String get helpPensionScoreExplanation =>
+      'Une note sur 100 qui résume votre préparation à la retraite : taux de remplacement (40 pts), épargne 3a (30 pts) et temps restant pour agir (30 pts).';
+
+  @override
+  String get helpPensionScoreWhy =>
+      'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d\'âge — un repère, pas un objectif.';
+
+  @override
+  String get helpPensionScoreWhere =>
+      'Calculé par PocketPillar à partir de votre profil ; il se met à jour dès que vous modifiez vos données.';
+
+  @override
   String get tipMax3a2026Title => 'Maximum 3a 2026';
 
   @override

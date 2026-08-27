@@ -2638,6 +2638,30 @@ abstract class AppLocalizations {
   /// **'Estimé avec les barèmes officiels 2026 de votre canton et de votre commune. Le montant exact dépend de votre situation l\'année du retrait.'**
   String get helpWithdrawalTaxWhere;
 
+  /// No description provided for @helpPensionScoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Score de prévoyance'**
+  String get helpPensionScoreTitle;
+
+  /// No description provided for @helpPensionScoreExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une note sur 100 qui résume votre préparation à la retraite : taux de remplacement (40 pts), épargne 3a (30 pts) et temps restant pour agir (30 pts).'**
+  String get helpPensionScoreExplanation;
+
+  /// No description provided for @helpPensionScoreWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il montre d\'un coup d\'œil où vous en êtes et ce qui pèse le plus. La comparaison affiche la moyenne de votre tranche d\'âge — un repère, pas un objectif.'**
+  String get helpPensionScoreWhy;
+
+  /// No description provided for @helpPensionScoreWhere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculé par PocketPillar à partir de votre profil ; il se met à jour dès que vous modifiez vos données.'**
+  String get helpPensionScoreWhere;
+
   /// No description provided for @tipMax3a2026Title.
   ///
   /// In fr, this message translates to:

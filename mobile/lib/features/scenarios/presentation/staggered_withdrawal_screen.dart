@@ -15,6 +15,7 @@ import '../application/scenario_prefill.dart';
 import '../data/scenario_dtos.dart';
 import '../data/scenario_payloads.dart';
 import '../data/scenario_repository.dart';
+import '../../calculator/presentation/widgets/help_sheet.dart';
 import 'widgets/scenario_widgets.dart';
 
 /// Staggered withdrawal fallback age when the birth year is unknown
@@ -269,7 +270,14 @@ class _WithdrawalResults extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScenarioSectionTitle(l10n.scenarioWithdrawalComparison),
+          Row(
+            children: [
+              Expanded(
+                child: ScenarioSectionTitle(l10n.scenarioWithdrawalComparison),
+              ),
+              const HelpButton(termId: 'withdrawal_tax'),
+            ],
+          ),
           const SizedBox(height: 12),
           for (final strategy in result.strategies) ...[
             _StrategyBar(

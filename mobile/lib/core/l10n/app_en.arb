@@ -435,6 +435,10 @@
   "helpWithdrawalTaxExplanation": "Pension capital you withdraw (3a or pension fund) is taxed once, separately from your other income and at a reduced rate.",
   "helpWithdrawalTaxWhy": "This tax reduces what you actually receive — that's why we show both the gross capital and the estimated net. Spreading withdrawals over several tax years often lowers it (see “Staggered withdrawal”).",
   "helpWithdrawalTaxWhere": "Estimated with your canton's and municipality's official 2026 schedules. The exact amount depends on your situation in the withdrawal year.",
+  "helpPensionScoreTitle": "Pension score",
+  "helpPensionScoreExplanation": "A mark out of 100 summarising your retirement readiness: replacement rate (40 pts), 3a savings (30 pts) and time left to act (30 pts).",
+  "helpPensionScoreWhy": "It shows at a glance where you stand and what weighs most. The comparison shows your age bracket's average — a reference point, not a target.",
+  "helpPensionScoreWhere": "Computed by PocketPillar from your profile; it updates as soon as you change your data.",
 
   "tipMax3a2026Title": "3a maximum 2026",
   "tipMax3a2026Body": "The 3a maximum for 2026 is CHF 7,258. Contribute before December 31 to save on your taxes!",

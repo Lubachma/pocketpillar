@@ -4,6 +4,7 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/components/app_card.dart';
 import '../../../../core/utils/currency.dart';
+import '../../../calculator/presentation/widgets/help_sheet.dart';
 import '../../data/dashboard_dtos.dart';
 
 /// Summary card: estimated replacement rate (retirement projection from
@@ -31,7 +32,17 @@ class SummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.dashboardSynthesisTitle, style: theme.textTheme.titleMedium),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.dashboardSynthesisTitle,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+              const HelpButton(termId: 'replacement_rate'),
+            ],
+          ),
           const SizedBox(height: 12),
           Center(
             child: Column(
