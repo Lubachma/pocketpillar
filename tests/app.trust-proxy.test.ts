@@ -50,6 +50,11 @@ describe('TRUST_PROXY policy', () => {
     expect(res.json()).toEqual({ ip: '203.0.113.7' });
   });
 
+  it('honours X-Forwarded-For from an IPv4-MAPPED private peer (::ffff:172.x — the form Node reports on Fly)', async () => {
+    const res = await inject('::ffff:172.19.0.5', '203.0.113.7');
+    expect(res.json()).toEqual({ ip: '203.0.113.7' });
+  });
+
   it('honours X-Forwarded-For from the private-network proxy (Fly fdaa:: IPv6)', async () => {
     const res = await inject('fdaa:0:1234::5', '203.0.113.7');
     expect(res.json()).toEqual({ ip: '203.0.113.7' });

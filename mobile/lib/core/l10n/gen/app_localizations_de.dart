@@ -240,7 +240,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get understandCalcLimitsBody =>
-      'Besondere Lebensläufe: Scheidung und AHV-Splitting, Erziehungsgutschriften, Zuzug in die Schweiz während der Karriere, Invalidität, Kassensätze auf dem überobligatorischen Teil. PocketPillar ist ein Schätz- und Informationstool — keine Beratung. Besprechen Sie wichtige Entscheide mit einer Fachperson.';
+      'Besondere Lebensläufe: Scheidung und AHV-Splitting, Erziehungsgutschriften, Zuzug in die Schweiz während der Karriere, Invalidität, AHV-Vorbezug (ab 63 möglich, mit Kürzung — wir nehmen die AHV ab dem gewählten Alter an), Kassensätze auf dem überobligatorischen Teil. PocketPillar ist ein Schätz- und Informationstool — keine Beratung. Besprechen Sie wichtige Entscheide mit einer Fachperson.';
 
   @override
   String get understandMethodologyLink =>
@@ -2300,7 +2300,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coupleTimelineFullBadge => 'Volle Rente';
 
   @override
-  String get coupleTimelineHouseholdMonthly => 'Paareinkommen/Monat';
+  String coupleTimelineHouseholdMonthly(String amount) {
+    return 'Paareinkommen/Monat: $amount';
+  }
 
   @override
   String get coupleWithdrawalTotalTax => 'Gesamtsteuer des Plans';

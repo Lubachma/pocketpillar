@@ -236,6 +236,11 @@ interface WithdrawalEvent {
 
 /**
  * Coordinated withdrawal plan between spouses (tax-year anti-collision) —
+ * KNOWN LIMIT (review 08.2026): the search optimizes tax years only and can
+ * schedule an LPP withdrawal before that spouse's retirement, where the
+ * capital is not legally available (only 3a can be drawn up to 5 years
+ * early); amounts are always the at-retirement projection. Documented in
+ * the contract; availability-constrained replanner on the roadmap. —
  * algorithm from the iOS `CoupleCalculator.optimizeWithdrawalSchedule`,
  * with a "push later" fallback when stepping back is impossible.
  * Pure function.
@@ -393,7 +398,11 @@ export function simulateCouple(input: CoupleSimulationInput): CoupleSimulationRe
 
   const combinedTotalAnnualIncome =
     combinedAvsAnnual + person1.annualPillar2Pension + person2.annualPillar2Pension;
-  // Timeline (practitioner review 08.2026): before the SECOND retirement
+  // Timeline (practitioner review 08.2026): before the SECOND retirement.
+  // Known limit: AVS is assumed drawn from each spouse's retirementAge —
+  // anticipation (≥63, reduced) and deferral are not modeled, so an early
+  // retirement (58-62) overstates the dated AVS share (documented in the
+  // contract and fiscal-accuracy).
   // the earlier-retired spouse draws a full pension — art. 35 LAVS caps
   // only once both pensions run. The cruising phase reuses the capped
   // shares computed above, so the timeline always reconciles with the

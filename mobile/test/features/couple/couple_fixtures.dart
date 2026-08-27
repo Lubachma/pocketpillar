@@ -231,6 +231,40 @@ Map<String, dynamic> coupleCappedResponseJson() => {
   'combinedReplacementRate': 49.53,
 };
 
+/// Married couple with an age gap AND the cap: phase 1 = full pension
+/// (green badge), phase 2 = capped cruising (warning badge) — the
+/// practitioner's own case, used to pin the badge logic.
+Map<String, dynamic> coupleCappedGapResponseJson() => {
+  ...coupleCappedResponseJson(),
+  'timeline': [
+    _timelinePhaseJson(
+      startYear: 2054,
+      endYear: 2056,
+      person1Age: 65,
+      person2Age: 63,
+      person1Retired: true,
+      person2Retired: false,
+      person1Avs: 2940000,
+      person2Avs: 0,
+      person1Lpp: 3000000,
+      person2Lpp: 0,
+    ),
+    _timelinePhaseJson(
+      startYear: 2056,
+      endYear: null,
+      person1Age: 67,
+      person2Age: 65,
+      person1Retired: true,
+      person2Retired: true,
+      person1Avs: 2205000,
+      person2Avs: 2205000,
+      person1Lpp: 3000000,
+      person2Lpp: 2000000,
+      avsCapApplied: true,
+    ),
+  ],
+};
+
 /// Variant with no capital at all (empty plan).
 Map<String, dynamic> coupleEmptyPlanResponseJson() => {
   ...coupleResponseJson(),

@@ -87,6 +87,12 @@ void main() {
     expect(capped.timeline.single.person1AvsAnnual, 2205000);
   });
 
+  test('tolerates a missing timeline (older backend → empty list)', () {
+    final json = coupleResponseJson()..remove('timeline');
+    final result = CoupleResult.fromJson(json);
+    expect(result.timeline, isEmpty);
+  });
+
   test('parses an empty plan (no capital)', () {
     final result = CoupleResult.fromJson(coupleEmptyPlanResponseJson());
 

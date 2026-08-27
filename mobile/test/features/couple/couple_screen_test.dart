@@ -317,6 +317,27 @@ void main() {
     expect(find.text('Rente pleine'), findsNothing);
   });
 
+  testWidgets('timeline badges: full pension on phase 1, cap on phase 2 '
+      "(the practitioner's own case)", (tester) async {
+    repo.result = CoupleResult.fromJson(coupleCappedGapResponseJson());
+    await pumpScreen(tester, prefill: _prefill);
+    // Partner income is required before the form submits.
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Revenu brut (CHF)').last,
+      '60000',
+    );
+    await tester.tap(find.text('Calculer la retraite du couple'));
+    await tester.pumpAndSettle();
+
+    // Phase 1: elder retired alone → the GREEN full-pension badge (this
+    // pins the showFullBadge condition — inverting it turns this red).
+    expect(find.text('Vous prenez votre retraite'), findsOneWidget);
+    expect(find.text('Rente pleine'), findsOneWidget);
+    // Phase 2: both retired → the warning cap badge, never both at once.
+    expect(find.text('Les deux rentes courent'), findsOneWidget);
+    expect(find.text('Plafond AVS appliqué'), findsOneWidget);
+  });
+
   testWidgets('timeline cap badge on the capped cruising phase', (
     tester,
   ) async {

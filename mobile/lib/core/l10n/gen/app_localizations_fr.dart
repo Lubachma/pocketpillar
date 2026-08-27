@@ -240,7 +240,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get understandCalcLimitsBody =>
-      'Les parcours particuliers : divorce et splitting AVS, bonifications pour tâches éducatives, arrivée en Suisse en cours de carrière, invalidité, taux de caisse sur la part surobligatoire. PocketPillar est un outil d\'estimation et d\'information — pas un conseil. Pour une décision importante, parlez-en à un professionnel.';
+      'Les parcours particuliers : divorce et splitting AVS, bonifications pour tâches éducatives, arrivée en Suisse en cours de carrière, invalidité, retraite anticipée de l\'AVS (possible dès 63 ans, avec réduction — nous supposons l\'AVS versée dès l\'âge choisi), taux de caisse sur la part surobligatoire. PocketPillar est un outil d\'estimation et d\'information — pas un conseil. Pour une décision importante, parlez-en à un professionnel.';
 
   @override
   String get understandMethodologyLink =>
@@ -2299,7 +2299,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get coupleTimelineFullBadge => 'Rente pleine';
 
   @override
-  String get coupleTimelineHouseholdMonthly => 'Revenu du couple/mois';
+  String coupleTimelineHouseholdMonthly(String amount) {
+    return 'Revenu du couple/mois : $amount';
+  }
 
   @override
   String get coupleWithdrawalTotalTax => 'Impôt total du plan';

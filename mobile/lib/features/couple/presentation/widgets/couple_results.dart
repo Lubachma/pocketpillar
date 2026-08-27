@@ -147,6 +147,9 @@ class _TimelineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Defensive: an older backend without `timeline` must not render a
+    // hollow title-only card (review 08.2026).
+    if (timeline.isEmpty) return const SizedBox.shrink();
     final l10n = context.l10n;
     final capComesLater = timeline.any((p) => p.avsCapApplied);
 
@@ -278,8 +281,9 @@ class _TimelinePhaseRow extends StatelessWidget {
                   ],
                   const SizedBox(height: 4),
                   Text(
-                    '${l10n.coupleTimelineHouseholdMonthly} : '
-                    '${formatChf(phase.combinedAnnual ~/ 12)}',
+                    l10n.coupleTimelineHouseholdMonthly(
+                      formatChf(phase.combinedAnnual ~/ 12),
+                    ),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),

@@ -1,6 +1,6 @@
 # API Contract — mobile client reference
 
-Date: 2026-08-05 (§10 revised 2026-08-06; §1 corrected 2026-08-26 — `POST /providers/best-match` is Premium-gated, not public, see §11) · Branch: `main` · Reference: (internal planning docs, private repo)
+Date: 2026-08-05 (§10 revised 2026-08-06; §1 corrected 2026-08-26; §7 revised 2026-08-27 — practitioner-review fields, couple `timeline`, modeling-limit notes) · Branch: `main` · Reference: (internal planning docs, private repo)
 
 This document is the contract the Flutter client must implement. It does not list
 every field of every route (Swagger available in dev at `/docs`) but **the
@@ -167,6 +167,10 @@ otherwise validation fails with 400.
   without `canton`, neither field is present. The pillar 2 stays
   annuitized in this endpoint (capital-withdrawal scenarios belong to
   staggered-withdrawal).
+  **Modeling assumption**: the AVS pension is assumed drawn from the
+  chosen `retirementAge` — anticipation (earliest 63, reduced, LAVS
+  art. 40) and deferral (up to 70, supplement) are NOT modeled; with
+  `retirementAge < 63` the AVS share is overstated for those years.
 - **lpp-gap**: coordinated salary = 0 below the LPP entry threshold
   (CHF 22'680); otherwise `gross − CHF 26'460` (fixed coordination
   deduction, 7/8 of the max AVS pension), bounded between CHF 3'780
@@ -199,7 +203,11 @@ otherwise validation fails with 400.
   defaults, same `retirementAge > currentAge` refinement, same dynamic
   scale-44 AVS default when `estimatedAvsPension` is omitted). Response:
   - `person1`/`person2`: full individual projections (shape of
-    **retirement** — pillar 3a excluded from income).
+    **retirement** — pillar 3a excluded from income). Since 2026-08-27
+    the handler propagates the COUPLE's `canton`/`municipality` and tax
+    status into each spouse projection (person-level values are ignored),
+    so the per-person `pillar3aWithdrawalTax` fields are present and
+    priced on the couple's schedule — consistent with `withdrawalPlan`.
   - `person1Income`/`person2Income` (practitioner review 08.2026): the
     **per-spouse display view** `{ avsAnnual, pillar2Annual, totalAnnual,
     replacementRate }` — AVS **after** the couple cap, allocated pro rata
@@ -217,8 +225,13 @@ otherwise validation fails with 400.
     earlier-retired spouse draws a FULL individual pension (LAVS art. 35
     caps only once both pensions run); the final phase is open-ended
     (`endYear: null`) and always equals the headline combined figures.
+    Same claiming-age assumption as **retirement** above: AVS is assumed
+    drawn from each spouse's `retirementAge` (no anticipation reduction
+    below 63, no deferral supplement).
   - Couple AVS 150% cap (`combinedAvsAnnualRaw`, `combinedAvsAnnual`,
-    `avsCapApplied`, `avsCapAnnual` = CHF 45'360 in 2026) applied **only**
+    `avsCapApplied`, `avsCapAnnual` — CHF 49'140 served from 2026, i.e.
+    the CHF 45'360 monthly-based cap ×13/12, see the 13th-pension note
+    above) applied **only**
     to `MARRIED`/`REGISTERED_PARTNERSHIP` (LAVS art. 35; unmarried
     cohabitants keep two full pensions). `combinedTotalAnnualIncome` = capped
     AVS + LPP pensions; `combinedReplacementRate` on the sum of gross incomes.
@@ -243,6 +256,14 @@ otherwise validation fails with 400.
     everything is withdrawn in the same year (jointly if married, per
     partner if unmarried cohabitants); `taxSavingsVsSimultaneous` = savings
     from staggering. Plan is empty if there is no capital.
+    **Known modeling limit** (review 08.2026): the anti-collision search
+    only optimizes TAX years — it may schedule an LPP capital withdrawal
+    in a year where that capital is not legally available yet (LPP
+    old-age capital falls due at retirement; only 3a can be drawn up to
+    5 years early), and the amount taxed is always the at-retirement
+    projection. Treat the plan as a tax-optimization sketch, not an
+    executable schedule; an availability-constrained replanner is on the
+    roadmap.
 - **3a-catchup**: `currentYear` defaults to the current year (dynamic).
   `maxPerYear` follows the effective OPP3 art. 7 cap (see the "Pillar 3a
   cap" point above) — it applies to the **current year's ordinary

@@ -238,7 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get understandCalcLimitsBody =>
-      'Particular paths: divorce and AHV splitting, child-raising credits, moving to Switzerland mid-career, disability, fund rates on the supra-mandatory part. PocketPillar is an estimation and information tool — not advice. For important decisions, talk to a professional.';
+      'Particular paths: divorce and AHV splitting, child-raising credits, moving to Switzerland mid-career, disability, early AHV claiming (possible from 63, with a reduction — we assume AHV paid from the chosen age), fund rates on the supra-mandatory part. PocketPillar is an estimation and information tool — not advice. For important decisions, talk to a professional.';
 
   @override
   String get understandMethodologyLink =>
@@ -2291,7 +2291,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coupleTimelineFullBadge => 'Full pension';
 
   @override
-  String get coupleTimelineHouseholdMonthly => 'Couple income/month';
+  String coupleTimelineHouseholdMonthly(String amount) {
+    return 'Couple income/month: $amount';
+  }
 
   @override
   String get coupleWithdrawalTotalTax => 'Total plan tax';

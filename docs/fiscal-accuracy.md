@@ -193,6 +193,19 @@ non-blocking; the app words all results as estimates:
   3a CHF 45,869 in 2022). The in-app help sheet labels the comparison
   as indicative. The score itself and every projected amount follow the
   legal parameters above.
+- **AVS claiming age**: the AVS pension is assumed drawn from the chosen
+  retirement age. Anticipation (earliest 63, with a reduction — LAVS
+  art. 40) and deferral (up to 70, with a supplement) are not modeled:
+  an early-retirement simulation (58–62) overstates the AVS share for
+  the years before 63. Flagged by the August 2026 adversarial review;
+  an explicit claiming-age model is on the roadmap.
+- **Couple withdrawal plan — tax years only**: the anti-collision
+  scheduler optimizes tax years without an availability constraint, so
+  it can place an LPP capital withdrawal before that spouse's
+  retirement, where the capital is not yet available (only 3a allows
+  early withdrawal, up to 5 years). The plan is a tax-optimization
+  sketch, not an executable schedule (also flagged August 2026;
+  replanner on the roadmap).
 - **Inflation/indexation**: projections are in constant nominal francs.
 
 ## Annual update process
