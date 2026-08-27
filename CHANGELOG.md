@@ -9,11 +9,13 @@ Fixes from an independent code review of the public repo — every claim
 was re-verified against the code before acting on it.
 
 ### Fixed
-- **Auth no longer converts a Supabase outage into 401s**: availability
-  errors (network failure, 5xx, `AuthRetryableFetchError`) now return
-  **503** with a retry message instead of caching the token as invalid
-  for 10 minutes — a transient outage could previously sign everyone
-  out until the negative cache expired.
+- **Auth no longer converts a Supabase outage into 401s**: only an
+  explicit token rejection (400/401/403/404) may 401 and enter the
+  30-second negative cache. Anything else — network failure, timeout,
+  **429** (Supabase rate-limits per IP, and one backend egress IP
+  serves every user), 5xx, `AuthRetryableFetchError` — returns **503**
+  with `Retry-After: 30` and a localized retry message; a transient
+  outage or burst could previously sign everyone out.
 - **Cross-account data leak in the app**: dashboard, recommendations,
   score and documents providers are invalidated on account change —
   user B logging in after user A in the same run no longer sees A's
@@ -23,7 +25,10 @@ was re-verified against the code before acting on it.
 - **Money bounds match the database**: Zod (and the app's inline
   validators) now cap amounts at int4 max centimes (CHF 21,474,836.47)
   instead of 10¹¹ — over-limit values were previously accepted by
-  validation and crashed at the driver with a 500.
+  validation and crashed at the driver with a 500. `numberOfChildren`
+  is bounded too (0–20, both stacks).
+- Malformed-id 404s (P2023) are logged server-side — the same Prisma
+  code coming from corrupted data must not vanish silently.
 - **Biometric lock arms at cold start**: with the toggle ON, killing
   and relaunching the app now locks it (it only armed on background
   return before). A fresh password login does not prompt.
@@ -38,7 +43,7 @@ was re-verified against the code before acting on it.
 
 ### Changed
 - Removed dead codegen dependencies (freezed, json_serializable,
-  build_runner) — nothing in the app used them.
+  json_annotation, build_runner) — nothing in the app used them.
 - HTTP contract tests for the financial-profile and provider routes
   (the two core modules the integration harness was missing).
 
