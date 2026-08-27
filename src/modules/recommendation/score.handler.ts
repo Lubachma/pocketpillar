@@ -31,12 +31,16 @@ export async function getScoreHandler(request: FastifyRequest, reply: FastifyRep
   }
 
   const currentAge = SWISS_PENSION.CURRENT_YEAR - user.birthYear;
+  // Users past the reference age: clamp so the projection never targets a
+  // PAST year (a negative horizon skipped the ×13/12 13th-pension
+  // annualization and reported yearsToRetirement < 0 — review 08.2026).
+  const retirementAge = Math.max(SWISS_PENSION.RETIREMENT_AGE_MEN, currentAge);
   const pillar2Capital = user.pillar2Accounts.reduce((sum, a) => sum + a.currentCapital, 0);
   const pillar3aBalance = user.pillar3aAccounts.reduce((sum, a) => sum + a.currentBalance, 0);
 
   const projection = calculateRetirementProjection({
     currentAge,
-    retirementAge: SWISS_PENSION.RETIREMENT_AGE_MEN,
+    retirementAge,
     grossAnnualIncome: user.financialProfile.grossAnnualIncome,
     currentPillar2Capital: pillar2Capital,
     annualPillar2Contribution: user.pillar2Accounts.reduce(

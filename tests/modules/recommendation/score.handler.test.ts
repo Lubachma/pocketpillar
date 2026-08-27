@@ -152,4 +152,26 @@ describe('getScoreHandler (GET /score)', () => {
       'Pensionshorizont',
     ]);
   });
+
+  it('clamps the projection for users past 65 (13th pension kept)', async () => {
+    // 68-year-old: the projection must not target a PAST year (negative
+    // horizon dropped the ×13/12 13th-pension annualization). Clamped to
+    // today: 0 growth years → LPP 12'000'000 × 6.8% = 816'000; AVS max
+    // ×13/12 = 3'276'000 → rate 4'092'000 / 9'500'000 = 43.07 %
+    // (it was 40.42 % — plain ×12 — before the clamp).
+    const reply = createReply();
+    await getScoreHandler(
+      createRequest({
+        ...fullProfile,
+        birthYear: SWISS_PENSION.CURRENT_YEAR - 68,
+      }),
+      reply,
+    );
+
+    expect(reply.statusCode).toBe(200);
+    const body = reply.payload as {
+      benchmark: { userReplacementRate: number };
+    };
+    expect(body.benchmark.userReplacementRate).toBe(43.07);
+  });
 });

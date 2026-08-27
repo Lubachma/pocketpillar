@@ -210,6 +210,44 @@ describe('coupleSimulationHandler', () => {
     expect(payload.withdrawalPlan.steps.length).toBeGreaterThan(0);
   });
 
+  it("propagates the couple's residence into each spouse projection (consistent 3a withdrawal tax)", async () => {
+    // Review 08.2026: a person-level canton used to price the per-person 3a
+    // withdrawal tax on the SINGLE schedule while the couple plan used the
+    // MARRIED one — two different taxes for the same withdrawal in one
+    // payload. The handler now overrides person-level residence with the
+    // couple's (ZH married anchor: CHF 500'000 → 31'576).
+    const reply = createReply();
+    const with3a = {
+      currentPillar3aBalance: 50_000_000,
+      annualPillar3aContribution: 0,
+      pillar3aReturnRate: 0,
+    };
+
+    await coupleSimulationHandler(
+      createRequest({
+        ...validCouple,
+        person1: { ...spouse, ...with3a },
+        // Person-level canton/maritalStatus must be IGNORED (couple wins).
+        person2: {
+          ...spouse,
+          ...with3a,
+          currentAge: 38,
+          canton: 'VD',
+          maritalStatus: 'SINGLE',
+        },
+      }),
+      reply,
+    );
+
+    expect(reply.statusCode).toBe(200);
+    const payload = reply.payload as {
+      person1: { pillar3aWithdrawalTax?: number };
+      person2: { pillar3aWithdrawalTax?: number };
+    };
+    expect(payload.person1.pillar3aWithdrawalTax).toBe(3_157_600);
+    expect(payload.person2.pillar3aWithdrawalTax).toBe(3_157_600);
+  });
+
   it('applies the 150% AVS cap for a married couple at the maximum', async () => {
     const reply = createReply();
 

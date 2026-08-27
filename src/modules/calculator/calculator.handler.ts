@@ -24,6 +24,7 @@ import { simulateCouple } from './couple-simulation.js';
 import { estimateAvsPension } from '../../lib/avs-pension-estimate.js';
 import { getMunicipalitiesForCanton } from '../../lib/constants/communal-multipliers.js';
 import type { z } from 'zod';
+import type { MaritalStatus } from '@prisma/client';
 
 export async function lppGapHandler(
   request: FastifyRequest<{ Body: unknown }>,
@@ -183,12 +184,24 @@ export async function coupleSimulationHandler(
     });
   }
 
+  // The couple's residence and tax status win over any person-level values:
+  // otherwise a person-level canton priced the per-person 3a withdrawal tax
+  // on the SINGLE schedule while the couple plan used the MARRIED one — two
+  // different taxes for the same withdrawal in one payload (review 08.2026).
+  const withdrawalStatus = parsed.data.maritalStatus === 'CONCUBINAGE' ? 'SINGLE' : 'MARRIED';
+  const withCoupleResidence = (person: RetirementProjectionData) => ({
+    ...withEstimatedAvsPension(person),
+    canton: parsed.data.canton,
+    maritalStatus: withdrawalStatus as MaritalStatus,
+    municipality: parsed.data.municipality,
+  });
+
   const result = simulateCouple({
     canton: parsed.data.canton,
     maritalStatus: parsed.data.maritalStatus,
     municipality: parsed.data.municipality,
-    person1: withEstimatedAvsPension(parsed.data.person1),
-    person2: withEstimatedAvsPension(parsed.data.person2),
+    person1: withCoupleResidence(parsed.data.person1),
+    person2: withCoupleResidence(parsed.data.person2),
   });
   return reply.send(result);
 }
