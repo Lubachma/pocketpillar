@@ -10,8 +10,7 @@ const maritalStatusValues = [
 ] as const;
 const pillar3aAccountTypeValues = ['BANK', 'INSURANCE'] as const;
 
-/** CHF 1 billion in centimes — upper bound rejecting absurd monetary inputs */
-const MAX_MONEY_CENTIMES = 100_000_000_000;
+import { MAX_MONEY_CENTIMES } from '../../lib/constants/limits.js';
 const moneyAmount = () => z.number().int().nonnegative().max(MAX_MONEY_CENTIMES);
 
 // ─── Financial Profile ────────────────────────

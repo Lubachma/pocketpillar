@@ -1,5 +1,11 @@
 import { z } from 'zod';
 import { SWISS_PENSION } from '../../lib/constants/swiss-pension.js';
+import { MAX_MONEY_CENTIMES } from '../../lib/constants/limits.js';
+
+// Monetary inputs share the persisted int4 bound (contract §1) — the pure
+// calculators don't hit Postgres, but one contract-wide rule beats two.
+const money = () => z.number().int().nonnegative().max(MAX_MONEY_CENTIMES);
+const positiveMoney = () => z.number().int().positive().max(MAX_MONEY_CENTIMES);
 
 const cantonValues = [
   'ZH',
@@ -44,11 +50,11 @@ const maritalStatusValues = [
 
 export const lppGapRequestSchema = z
   .object({
-    grossAnnualIncome: z.number().int().positive(),
+    grossAnnualIncome: positiveMoney(),
     age: z.number().int().min(25).max(70),
     retirementAge: z.number().int().min(58).max(70).default(65),
-    currentBvgCapital: z.number().int().nonnegative(),
-    actualAnnualContribution: z.number().int().nonnegative(),
+    currentBvgCapital: money(),
+    actualAnnualContribution: money(),
     conversionRate: z.number().min(0).max(100).default(6.8),
   })
   .refine((d) => d.retirementAge > d.age, {
@@ -57,8 +63,8 @@ export const lppGapRequestSchema = z
 
 export const taxSavingsRequestSchema = z.object({
   canton: z.enum(cantonValues),
-  taxableIncome: z.number().int().positive(),
-  contribution: z.number().int().positive(),
+  taxableIncome: positiveMoney(),
+  contribution: positiveMoney(),
   maritalStatus: z.enum(maritalStatusValues).default('SINGLE'),
   churchTax: z.boolean().default(false),
   hasSecondPillar: z.boolean().default(true),
@@ -70,9 +76,9 @@ export const taxSavingsRequestSchema = z.object({
 export const pillar3aCatchupRequestSchema = z.object({
   currentYear: z.number().int().default(SWISS_PENSION.CURRENT_YEAR),
   yearsSinceFirstEligible: z.number().int().min(0).max(10).default(1),
-  pastContributions: z.record(z.coerce.number(), z.number().int().nonnegative()).default({}),
+  pastContributions: z.record(z.coerce.number(), money()).default({}),
   hasSecondPillar: z.boolean().default(true),
-  taxableIncome: z.number().int().positive(),
+  taxableIncome: positiveMoney(),
   // Canton/marital status/municipality (optional): present → tax savings
   // calculated on the real FTA (Federal Tax Administration) 2026 brackets
   // (year by year); absent → flat historical estimate (marginal rate 25/30/35%).
@@ -85,10 +91,10 @@ export const propertyPurchaseRequestSchema = z
   .object({
     age: z.number().int().min(25).max(65),
     retirementAge: z.number().int().min(58).max(70).default(65),
-    currentBvgCapital: z.number().int().nonnegative(),
-    bvgCapitalAtAge50: z.number().int().nonnegative().optional(),
-    withdrawalAmount: z.number().int().positive(),
-    annualContribution: z.number().int().nonnegative(),
+    currentBvgCapital: money(),
+    bvgCapitalAtAge50: money().optional(),
+    withdrawalAmount: positiveMoney(),
+    annualContribution: money(),
     interestRate: z.number().min(0).max(20).default(1.25),
     conversionRate: z.number().min(0).max(100).default(6.8),
   })
@@ -100,12 +106,12 @@ export const divorceImpactRequestSchema = z
   .object({
     age: z.number().int().min(25).max(70),
     retirementAge: z.number().int().min(58).max(70).default(65),
-    bvgCapitalAtMarriage: z.number().int().nonnegative(),
-    bvgCapitalNow: z.number().int().nonnegative(),
-    spouseBvgCapitalAtMarriage: z.number().int().nonnegative(),
-    spouseBvgCapitalNow: z.number().int().nonnegative(),
+    bvgCapitalAtMarriage: money(),
+    bvgCapitalNow: money(),
+    spouseBvgCapitalAtMarriage: money(),
+    spouseBvgCapitalNow: money(),
     yearsMarried: z.number().int().min(0).max(50),
-    annualContribution: z.number().int().nonnegative(),
+    annualContribution: money(),
     interestRate: z.number().min(0).max(20).default(1.25),
     conversionRate: z.number().min(0).max(100).default(6.8),
   })
@@ -123,12 +129,12 @@ export const divorceImpactRequestSchema = z
 export const staggeredWithdrawalRequestSchema = z
   .object({
     canton: z.enum(cantonValues),
-    totalPillar3aBalance: z.number().int().nonnegative(),
+    totalPillar3aBalance: money(),
     numberOfAccounts: z.number().int().min(1).max(5).default(1),
     retirementAge: z.number().int().min(58).max(70).default(65),
     currentAge: z.number().int().min(25).max(70),
     maritalStatus: z.enum(['SINGLE', 'MARRIED']).default('SINGLE'),
-    pillar2AsCapital: z.number().int().nonnegative().default(0),
+    pillar2AsCapital: money().default(0),
     // Municipality of residence (optional) — see tax-savings.
     municipality: z.string().min(1).max(100).optional(),
   })
@@ -140,13 +146,13 @@ export const retirementProjectionRequestSchema = z
   .object({
     currentAge: z.number().int().min(18).max(70),
     retirementAge: z.number().int().min(58).max(70).default(65),
-    grossAnnualIncome: z.number().int().positive(),
-    currentPillar2Capital: z.number().int().nonnegative(),
-    annualPillar2Contribution: z.number().int().nonnegative(),
+    grossAnnualIncome: positiveMoney(),
+    currentPillar2Capital: money(),
+    annualPillar2Contribution: money(),
     pillar2InterestRate: z.number().min(0).max(20).default(1.25),
     conversionRate: z.number().min(0).max(100).default(6.8),
-    currentPillar3aBalance: z.number().int().nonnegative().default(0),
-    annualPillar3aContribution: z.number().int().nonnegative().default(0),
+    currentPillar3aBalance: money().default(0),
+    annualPillar3aContribution: money().default(0),
     pillar3aReturnRate: z
       .number()
       .min(-20)
@@ -154,7 +160,7 @@ export const retirementProjectionRequestSchema = z
       .default(SWISS_PENSION.PILLAR_3A_DEFAULT_RETURN_RATE),
     // No flat default: when the field is omitted, the handler estimates the
     // pension from income (simplified scale 44, `estimateAvsPension` — contract §7).
-    estimatedAvsPension: z.number().int().nonnegative().optional(),
+    estimatedAvsPension: money().optional(),
     // Canton/marital status/municipality (optional): present → the response
     // includes the estimated tax on the 3a lump-sum withdrawal (official FTA
     // 2026 tables — practitioner review 08.2026); absent → no tax fields.

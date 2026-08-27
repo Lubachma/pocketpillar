@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import Fastify, { type FastifyInstance } from 'fastify';
+import { Prisma } from '@prisma/client';
 import rateLimit from '@fastify/rate-limit';
 import i18nPlugin from '../../src/plugins/i18n.js';
 import errorHandlerPlugin from '../../src/plugins/error-handler.js';
@@ -18,6 +19,14 @@ describe('error-handler plugin', () => {
     await app.register(errorHandlerPlugin);
     app.get('/boom', async () => {
       throw new Error('sensitive internals');
+    });
+    app.get('/malformed-id', async () => {
+      // What Prisma throws when a `where: { id }` receives a non-UUID
+      // (e.g. GET/PATCH/DELETE /financial-profile/pillar2/not-a-uuid).
+      throw new Prisma.PrismaClientKnownRequestError('malformed UUID', {
+        code: 'P2023',
+        clientVersion: 'test',
+      });
     });
     // Rate limit scoped to this route only (encapsulated context) so the other
     // tests are not throttled.
@@ -56,6 +65,15 @@ describe('error-handler plugin', () => {
     });
     expect(en.statusCode).toBe(404);
     expect(en.json()).toEqual({ error: 'Resource not found' });
+  });
+
+  it('maps Prisma P2023 (malformed id in the URL) to 404, not 500', async () => {
+    // A non-UUID :id is indistinguishable from a nonexistent resource —
+    // it must read as 404, and never leak Prisma internals (review 08.2026).
+    const response = await app.inject({ method: 'GET', url: '/malformed-id' });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toEqual({ error: 'Ressource non trouvée' });
   });
 
   it('maps unexpected throws to 500 { error } without leaking internals', async () => {

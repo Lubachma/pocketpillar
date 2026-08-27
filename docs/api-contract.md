@@ -12,7 +12,10 @@ cross-cutting rules and pitfalls** to know before any integration.
 
 - **Monetary units: centimes everywhere.** All amounts (inputs AND outputs)
   are integers in CHF **centimes** (`CHF 95'000 = 9_500_000`). No field
-  is in CHF. Accepted upper bound: 10¹¹ centimes (CHF 1 billion).
+  is in CHF. Accepted upper bound: **2'147'483'647 centimes**
+  (CHF ~21.4M — the Postgres int4 maximum; the previous 10¹¹ bound let
+  larger amounts through validation and then fail as a 500 on persisted
+  fields — corrected 2026-08-27).
 - **Rates**: numbers in percent (`6.0` = 6%), not expressed in centimes.
 - **Dates**: ISO 8601 UTC (`createdAt`, `uploadedAt`, …).
 - **i18n**: error messages are localized via `Accept-Language`

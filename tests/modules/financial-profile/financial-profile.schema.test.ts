@@ -62,18 +62,19 @@ describe('createFinancialProfileSchema', () => {
     ).toBe(false);
   });
 
-  it('bounds monetary amounts to CHF 1 billion (10^11 centimes)', () => {
-    // Upper bound rejecting absurd inputs (10^15 and the like used to pass).
+  it('bounds monetary amounts to the Postgres int4 maximum (2_147_483_647 centimes)', () => {
+    // The previous 10^11 bound passed Zod and then blew up as a Prisma 500
+    // (Int columns are int4) — review 08.2026.
     expect(
       createFinancialProfileSchema.safeParse({
         ...validProfile,
-        grossAnnualIncome: 100_000_000_000,
+        grossAnnualIncome: 2_147_483_647,
       }).success,
     ).toBe(true);
     expect(
       createFinancialProfileSchema.safeParse({
         ...validProfile,
-        grossAnnualIncome: 100_000_000_001,
+        grossAnnualIncome: 2_147_483_648,
       }).success,
     ).toBe(false);
     expect(
