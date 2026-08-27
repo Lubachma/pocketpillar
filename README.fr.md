@@ -32,6 +32,10 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 
 <sub>Captures en interface anglaise ; le compte démo est partagé et public — données fictives, réinitialisées chaque nuit.</sub>
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="280" alt="Tour du produit en 30 secondes : connexion, tableau de bord avec bulles d'aide, check-up guidé, résultats, scénarios, méthodologie intégrée, coffre à documents">
+</p>
+
 ## Ce que fait l'app
 
 - **Projection retraite complète** — AVS + LPP + pilier 3a, taux de remplacement, projection année par année, export PDF.

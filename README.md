@@ -32,6 +32,10 @@ Trilingual (French · German · English) — even server-computed labels follow 
 
 <sub>Screenshots show the English UI; the demo account is shared and public — fictional data, reset nightly.</sub>
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="280" alt="30-second product tour: login, dashboard with help bubbles, guided check-up, results, scenarios, in-app methodology, document vault">
+</p>
+
 ## What it does
 
 - **Full retirement projection** — AHV/AVS + occupational pension (BVG/LPP) + pillar 3a, replacement rate, year-by-year projection, PDF export.
