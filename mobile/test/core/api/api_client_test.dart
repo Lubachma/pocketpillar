@@ -41,10 +41,14 @@ ResponseBody _json(Object body, int statusCode) => ResponseBody.fromString(
 
 /// API client wired to instrumented fake callbacks.
 class _Harness {
-  _Harness({required Future<ResponseBody> Function(RequestOptions) handler}) {
+  _Harness({
+    required Future<ResponseBody> Function(RequestOptions) handler,
+    List<Duration> retryDelays = const [],
+  }) {
     adapter = _MockAdapter(handler);
     client = ApiClient(
       baseUrl: 'http://localhost:3000',
+      retryDelays: retryDelays,
       dio: Dio(BaseOptions(baseUrl: 'http://localhost:3000'))
         ..httpClientAdapter = adapter,
       getAccessToken: () => accessToken,
@@ -200,6 +204,89 @@ void main() {
         throwsA(isA<NetworkException>()),
       );
       expect(harness.refreshCalls, 0);
+    });
+  });
+
+  group('cold-start retry (scale-to-zero demo API)', () {
+    test('GET is replayed after transport errors, then succeeds', () async {
+      var calls = 0;
+      final harness = _Harness(
+        retryDelays: const [Duration.zero, Duration.zero],
+        handler: (options) async {
+          calls++;
+          if (calls < 3) {
+            throw DioException.connectionError(
+              requestOptions: options,
+              reason: 'connection refused (machine booting)',
+            );
+          }
+          return _json({'status': 'ok'}, 200);
+        },
+      );
+
+      final response = await harness.client.get<Map<String, dynamic>>(
+        '/health',
+      );
+
+      expect(response.data, {'status': 'ok'});
+      expect(calls, 3);
+    });
+
+    test('gives up after the configured retries', () async {
+      var calls = 0;
+      final harness = _Harness(
+        retryDelays: const [Duration.zero, Duration.zero],
+        handler: (options) async {
+          calls++;
+          throw DioException.connectionError(
+            requestOptions: options,
+            reason: 'still down',
+          );
+        },
+      );
+
+      await expectLater(
+        harness.client.get<void>('/health'),
+        throwsA(isA<NetworkException>()),
+      );
+      expect(calls, 3); // 1 original + 2 retries.
+    });
+
+    test('POST is never replayed (not idempotent)', () async {
+      var calls = 0;
+      final harness = _Harness(
+        retryDelays: const [Duration.zero, Duration.zero],
+        handler: (options) async {
+          calls++;
+          throw DioException.connectionError(
+            requestOptions: options,
+            reason: 'down',
+          );
+        },
+      );
+
+      await expectLater(
+        harness.client.post<void>('/documents', data: {'a': 1}),
+        throwsA(isA<NetworkException>()),
+      );
+      expect(calls, 1);
+    });
+
+    test('HTTP errors (5xx) are not replayed — only transport failures', () async {
+      var calls = 0;
+      final harness = _Harness(
+        retryDelays: const [Duration.zero, Duration.zero],
+        handler: (options) async {
+          calls++;
+          return _json({'error': 'boom'}, 500);
+        },
+      );
+
+      await expectLater(
+        harness.client.get<void>('/health'),
+        throwsA(isA<ApiException>()),
+      );
+      expect(calls, 1);
     });
   });
 }

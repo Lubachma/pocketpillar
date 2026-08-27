@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app.dart';
+import 'core/api/api_config.dart';
 import 'core/auth/auth_repository.dart';
 import 'core/auth/supabase_config.dart';
 import 'core/l10n/gen/app_localizations.dart';
@@ -17,6 +21,14 @@ import 'features/financial_profile/data/financial_profile_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Wake the scale-to-zero demo API while the user reads the first
+  // screen (fire-and-forget — outcome deliberately ignored; the
+  // cold-start retry interceptor covers whatever this misses).
+  unawaited(
+    Dio()
+        .get<void>('${ApiConfig.baseUrl}/health')
+        .then((_) {}, onError: (Object _) {}),
+  );
   // Without dart-defines, the app still starts (null client → /login).
   // Both initializations are independent → run in parallel (full
   // review 2026-08, startup minor).

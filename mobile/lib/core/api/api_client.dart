@@ -22,6 +22,10 @@ class ApiClient {
     required Future<String?> Function() refreshAccessToken,
     required Future<void> Function() onAuthExpired,
     required String Function() getLanguage,
+    List<Duration> retryDelays = const [
+      Duration(seconds: 2),
+      Duration(seconds: 4),
+    ],
     Dio? dio,
     // ignore: prefer_initializing_formals (public parameter, private field)
   }) : _refreshAccessToken = refreshAccessToken,
@@ -35,6 +39,12 @@ class ApiClient {
                headers: {'Accept': 'application/json'},
              ),
            ) {
+    // BEFORE the auth interceptor: dio's `handler.reject` stops the error
+    // chain, so the retry must see transport errors first (its replay then
+    // re-enters the full chain, auth headers included).
+    _dio.interceptors.add(
+      ColdStartRetryInterceptor(dio: _dio, delays: retryDelays),
+    );
     _dio.interceptors.add(
       _AuthInterceptor(
         dio: _dio,
@@ -95,6 +105,50 @@ class ApiClient {
 
   /// Exposed for special cases (multipart, download) — phase 3.
   Dio get raw => _dio;
+}
+
+/// Replays idempotent GETs that failed at the TRANSPORT level (no HTTP
+/// response received): the demo API scales to zero and needs a few seconds
+/// to boot, which used to surface as "network error" on the very first
+/// screen (cold-start follow-up of the practitioner review, 08.2026).
+/// HTTP errors (4xx/5xx) and non-GET methods are never replayed.
+class ColdStartRetryInterceptor extends Interceptor {
+  ColdStartRetryInterceptor({required this.dio, required this.delays});
+
+  final Dio dio;
+
+  /// One entry per replay (e.g. `[2s, 4s]` = up to two replays).
+  final List<Duration> delays;
+
+  static const _attemptKey = 'coldStartAttempt';
+
+  @override
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    final options = err.requestOptions;
+    final attempt = (options.extra[_attemptKey] as int?) ?? 0;
+    final retriable =
+        err.response == null &&
+        err.type != DioExceptionType.cancel &&
+        options.method.toUpperCase() == 'GET' &&
+        attempt < delays.length;
+    if (!retriable) return handler.next(err);
+
+    await Future<void>.delayed(delays[attempt]);
+    try {
+      // The replay re-enters the whole chain (fresh auth header); nested
+      // failures come back HERE with the incremented attempt counter.
+      final response = await dio.fetch<dynamic>(
+        options..extra[_attemptKey] = attempt + 1,
+      );
+      return handler.resolve(response);
+    } on DioException catch (retryError) {
+      // Already normalized by the inner chain (auth interceptor).
+      return handler.reject(retryError);
+    }
+  }
 }
 
 /// Authentication interceptor and error normalization.
