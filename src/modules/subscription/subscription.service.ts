@@ -108,6 +108,11 @@ export async function applyRevenueCatEvent(
   if (!userId) return 'unknown_user';
 
   const eventAt = event.eventTimestampMs != null ? new Date(event.eventTimestampMs) : new Date();
+  // KNOWN LIMIT (review 08.2026): this check-then-upsert is not atomic — two
+  // concurrent deliveries could let the older event win the upsert. The
+  // window is milliseconds, RevenueCat redelivers, and the next event
+  // self-corrects the row; an atomic conditional update needs a real
+  // transaction (the test fake-prisma has none) — accepted for now.
   const existing = await app.prisma.subscription.findUnique({ where: { userId } });
   if (existing && existing.lastEventAt.getTime() > eventAt.getTime()) return 'stale_ignored';
 
