@@ -401,6 +401,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calculatorProjectedPillar3a => 'Projiziertes 3a-Guthaben';
 
   @override
+  String get calculatorWithdrawalTax3a => 'Steuer beim 3a-Bezug (geschätzt)';
+
+  @override
+  String get calculatorNet3aAfterTax => '3a-Kapital netto nach Steuer';
+
+  @override
   String get calculatorAnnualRetirementIncome => 'Jährliches Renteneinkommen';
 
   @override
@@ -2066,7 +2072,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coupleBvg => 'BVG/Monat';
 
   @override
-  String get couplePillar3a => '3a-Kapital';
+  String get couplePillar3a => 'Projiziertes 3a-Kapital';
 
   @override
   String get coupleTotalMonthly => 'Total/Monat';
@@ -2083,6 +2089,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get coupleAvsCapWarning =>
       'Die AHV-Plafonierung für Ehepaare (150% des Einzelmaximums) gilt. Ihre kombinierte AHV-Rente wird gekürzt.';
+
+  @override
+  String get coupleAvsCapPhasing =>
+      'Die Plafonierung greift, sobald beide Renten laufen; solange nur ein Ehegatte pensioniert ist, bleibt dessen Rente ungekürzt.';
 
   @override
   String get coupleWithdrawalTitle => 'Optimaler Bezugsplan';
@@ -2145,7 +2155,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get coupleTaxDisclaimer =>
-      'Richtschätzung auf Basis der Bruttoeinkommen (vereinfachte Bundes-, Kantons- und Gemeindetarife).';
+      'Richtschätzung auf Basis der Bruttoeinkommen (offizielle Tarife 2026: direkte Bundessteuer, Kanton und Gemeinde).';
+
+  @override
+  String get coupleConversionRate => 'BVG-Umwandlungssatz (%)';
+
+  @override
+  String get coupleConversionRateHint =>
+      '6.8 % = gesetzliches Minimum, garantiert nur auf dem obligatorischen Teil. Ihre Kasse wendet oft einen tieferen Gesamtsatz an — siehe Ihren BVG-Ausweis.';
 
   @override
   String get coupleWithdrawalTotalTax => 'Gesamtsteuer des Plans';

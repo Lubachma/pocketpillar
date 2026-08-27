@@ -401,6 +401,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calculatorProjectedPillar3a => 'Capital 3a projeté';
 
   @override
+  String get calculatorWithdrawalTax3a => 'Impôt au retrait du 3a (estimé)';
+
+  @override
+  String get calculatorNet3aAfterTax => 'Capital 3a net après impôt';
+
+  @override
   String get calculatorAnnualRetirementIncome => 'Revenu annuel retraite';
 
   @override
@@ -2065,7 +2071,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get coupleBvg => 'LPP/mois';
 
   @override
-  String get couplePillar3a => 'Capital 3a';
+  String get couplePillar3a => 'Capital 3a projeté';
 
   @override
   String get coupleTotalMonthly => 'Total/mois';
@@ -2082,6 +2088,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get coupleAvsCapWarning =>
       'Le plafond AVS couple (150% du maximum individuel) s\'applique. Votre rente AVS combinée est réduite.';
+
+  @override
+  String get coupleAvsCapPhasing =>
+      'Le plafond s\'applique lorsque les deux rentes sont versées ; tant qu\'un seul conjoint est à la retraite, sa rente reste entière.';
 
   @override
   String get coupleWithdrawalTitle => 'Plan de retrait optimal';
@@ -2144,7 +2154,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get coupleTaxDisclaimer =>
-      'Estimation indicative calculée sur les revenus bruts (barèmes simplifiés fédéral, cantonal et communal).';
+      'Estimation indicative calculée sur les revenus bruts (barèmes officiels 2026 : IFD, cantonal et communal).';
+
+  @override
+  String get coupleConversionRate => 'Taux de conversion LPP (%)';
+
+  @override
+  String get coupleConversionRateHint =>
+      '6.8 % = minimum légal, garanti sur la seule part obligatoire. Votre caisse applique souvent un taux global plus bas — voir votre certificat LPP.';
 
   @override
   String get coupleWithdrawalTotalTax => 'Impôt total du plan';

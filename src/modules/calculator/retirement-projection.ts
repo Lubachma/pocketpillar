@@ -1,4 +1,5 @@
 import { SWISS_PENSION } from '../../lib/constants/swiss-pension.js';
+import { calculateWithdrawalTax } from './staggered-withdrawal.js';
 import type {
   RetirementProjectionInput,
   RetirementProjectionResult,
@@ -35,6 +36,9 @@ export function calculateRetirementProjection(
     annualPillar3aContribution,
     pillar3aReturnRate,
     estimatedAvsPension,
+    canton,
+    maritalStatus,
+    municipality,
   } = input;
 
   const yearsToRetirement = retirementAge - currentAge;
@@ -73,6 +77,24 @@ export function calculateRetirementProjection(
       ? Math.round((totalAnnualRetirementIncome / grossAnnualIncome) * 10000) / 100
       : 0;
 
+  // Estimated tax on the 3a lump-sum withdrawal (official FTA 2026 tables) —
+  // only when the canton is known. The pillar 2 is annuitized in this model,
+  // so its capital never leaves as a lump sum here (capital-withdrawal
+  // scenarios are the staggered-withdrawal module's job). Practitioner
+  // review 08.2026: gross capitals displayed without the withdrawal tax read
+  // as overstated.
+  let pillar3aWithdrawalTax: number | undefined;
+  let pillar3aNetLumpSum: number | undefined;
+  if (canton) {
+    pillar3aWithdrawalTax = calculateWithdrawalTax(
+      projectedPillar3aBalance,
+      canton,
+      maritalStatus ?? 'SINGLE',
+      municipality,
+    );
+    pillar3aNetLumpSum = projectedPillar3aBalance - pillar3aWithdrawalTax;
+  }
+
   return {
     yearsToRetirement,
     projectedPillar2Capital,
@@ -83,5 +105,7 @@ export function calculateRetirementProjection(
     totalAnnualRetirementIncome,
     replacementRate,
     yearByYearProjection,
+    pillar3aWithdrawalTax,
+    pillar3aNetLumpSum,
   };
 }

@@ -85,6 +85,52 @@ a mistake several calculators still make. Current parameters:
 it is **actually in force** — the FSIO December bulletin is authoritative,
 not press coverage of upcoming votes.
 
+## Practitioner review (August 2026)
+
+A working insurance/pension advisor reviewed the app against his
+professional reference material (year-by-year min/max social-insurance
+tables, the official FSIO "Amounts valid from 1 January 2026" leaflet,
+and real advisory-tool outputs) and tested the live demo hands-on.
+
+**Constants: full match.** Every statutory figure above matched his
+tables — AHV min/max and couple cap, BVG threshold/coordination/
+coordinated-salary bounds, 3a maxima, and the 1/5-rate rule for capital
+withdrawals (DBG/LIFD art. 38).
+
+**Findings from his live test — all fixed:**
+
+- **Retirement credits were frozen at the current age's rate** across the
+  whole LPP minimum projection (a 30-year-old was projected at 7 % for 35
+  years instead of 7→10→15→18 %), understating the legal-minimum capital
+  by up to ~1.8× for young profiles. The projection now steps through the
+  age brackets year by year (`lpp-gap.ts`).
+- **Couple display**: per-spouse AVS rows showed two uncapped pensions
+  next to a correctly capped total. The API now returns a per-spouse view
+  with the cap allocated pro rata (LAVS art. 35 al. 3 — two max pensions
+  → CHF 2,047.50/month each), and the app displays it.
+- **Conversion rate**: 6.8 % is the legal minimum on the **mandatory**
+  part only; funds usually convert supra-mandatory capital at ~5–6 %. The
+  certificate rate can now be entered per spouse, and the 6.8 % default
+  carries an explicit warning.
+- **Capital-withdrawal tax**: projected 3a capital is now shown with the
+  estimated withdrawal tax (official FTA 2026 tables) instead of gross
+  only; the couple withdrawal plan already priced it per step.
+- A stale UI label still said "simplified schedules" — the tax comparison
+  has used the official sampled FTA tables since the August 2026 audit.
+
+**Deliberate divergences from his tables** (kept, with reasons):
+
+- **3a maximum CHF 7,258**: his sheet derives 7,257.60 from the 8 %
+  formula; the official FSIO leaflet publishes **7,258**, which is what
+  the law applies (and what we use).
+- **Retirement credits total 500 %** over a 25→65 career (art. 16 BVG:
+  ten years per bracket); some practitioner tables count 55–65 as eleven
+  years (518 %). A dedicated test locks the 500 % sum.
+- **13th AHV pension**: absent from his year tables; we model it as
+  ×13/12 from 2026 — exactly the official leaflet's wording ("the 13th
+  pension equals one twelfth of the pensions actually paid in the year").
+  The AHV/AVS pension is annualized over **13** payments, IV/AI stays at 12.
+
 ## AHV/AVS pension estimation
 
 The default estimate projects contribution years **to retirement**
@@ -115,6 +161,23 @@ non-blocking; the app words all results as estimates:
 - **Divorce — AHV impact**: flat estimate (~2 % of the max pension per
   marriage year, split) — the real rule (income splitting + child-raising
   credits) requires both spouses' AHV statements.
+- **Child-raising / assistance credits and splitting**: the AHV estimate
+  works from income and projected contribution years only; child-raising
+  credits (BTE), assistance credits (BTA) and marital income splitting are
+  not modeled (the profile captures the number of children but does not
+  yet feed it into the AHV estimate).
+- **Single conversion rate on the full LPP capital**: the entered (or
+  default 6.8 %) rate converts the whole projected capital; the split
+  between mandatory (6.8 % guaranteed) and supra-mandatory capital
+  (fund-specific, usually lower) is not modeled — the UI says so and asks
+  for the certificate rate.
+- **Couple AVS cap is single-period**: the cap is applied to the cruising
+  state where both spouses draw their pension; with an age gap, the older
+  spouse actually receives a full pension until the younger retires (the
+  UI carries this caveat).
+- **Incomplete careers** (arrival in Switzerland, contribution gaps): only
+  representable through the projected contribution years — the estimate
+  assumes an uninterrupted career from age 20.
 - **Inflation/indexation**: projections are in constant nominal francs.
 
 ## Annual update process
@@ -126,7 +189,9 @@ maintainer):
    official sources (`regen-cantonal-tax-tables.mjs`,
    `regen-communal-multipliers.mjs`).
 2. Update legal constants (BVG/AHV/3a/IFD) from the FSIO December bulletin
-   and the ESTV circular; only rules in force.
+   and the ESTV circular; only rules in force. Cross-check against the
+   FSIO "Amounts valid from 1 January" leaflet and independent
+   practitioner tables (AHV figures change again in 2027).
 3. Run the anchor checks (`--check`) and the full test suite — the
    expected values in tests are the official figures.
 

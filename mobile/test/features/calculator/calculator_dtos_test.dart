@@ -130,6 +130,29 @@ void main() {
       expect(dto.yearByYearProjection, isEmpty);
       // Integer rate → double.
       expect(dto.replacementRate, 17.0);
+      // No canton in the request → no withdrawal tax fields.
+      expect(dto.pillar3aWithdrawalTax, isNull);
+      expect(dto.pillar3aNetLumpSum, isNull);
+    });
+
+    test('parses the 3a withdrawal tax estimate when present (canton sent — '
+        'practitioner review 08.2026)', () {
+      final dto = RetirementResultDto.fromJson(const {
+        'yearsToRetirement': 5,
+        'projectedPillar2Capital': 0,
+        'projectedPillar3aBalance': 50000000,
+        'annualPillar2Pension': 0,
+        'estimatedAnnualAvsPension': 2352000,
+        'pillar3aAsLumpSum': 50000000,
+        'totalAnnualRetirementIncome': 2352000,
+        'replacementRate': 30.0,
+        // ZH single anchor: CHF 500'000 → 35'068 (official FTA 2026 table).
+        'pillar3aWithdrawalTax': 3506800,
+        'pillar3aNetLumpSum': 46493200,
+      });
+
+      expect(dto.pillar3aWithdrawalTax, 3506800);
+      expect(dto.pillar3aNetLumpSum, 46493200);
     });
   });
 }

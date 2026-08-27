@@ -310,6 +310,23 @@ class _ProjectionCard extends StatelessWidget {
             label: l10n.calculatorProjectedPillar3a,
             value: formatChf(retirement.projectedPillar3aBalance),
           ),
+          // Withdrawal tax on the 3a lump sum (official FTA 2026 tables) —
+          // present when the backend knew the canton (practitioner review
+          // 08.2026: gross capitals without the exit tax read as overstated).
+          if (retirement.pillar3aWithdrawalTax != null) ...[
+            const SizedBox(height: 8),
+            _MetricRow(
+              label: l10n.calculatorWithdrawalTax3a,
+              value: '−${formatChf(retirement.pillar3aWithdrawalTax!)}',
+            ),
+          ],
+          if (retirement.pillar3aNetLumpSum != null) ...[
+            const SizedBox(height: 8),
+            _MetricRow(
+              label: l10n.calculatorNet3aAfterTax,
+              value: formatChf(retirement.pillar3aNetLumpSum!),
+            ),
+          ],
           const SizedBox(height: 8),
           _MetricRow(
             label: l10n.calculatorAnnualRetirementIncome,

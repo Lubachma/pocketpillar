@@ -19,6 +19,7 @@ class CoupleSpouseInput {
     required this.pillar2Contribution,
     required this.hasPillar3a,
     required this.pillar3aBalance,
+    this.conversionRate,
   });
 
   /// Age ([calculatorMinAge]–[calculatorMaxAge], wizard bounds).
@@ -37,6 +38,12 @@ class CoupleSpouseInput {
 
   /// Current 3a balance, in centimes (≥ 0, ignored if [hasPillar3a] is false).
   final int pillar3aBalance;
+
+  /// LPP conversion rate in percent (from the BVG certificate) — null: the
+  /// backend applies the 6.8% legal minimum, which is only guaranteed on the
+  /// mandatory part (practitioner review 08.2026: funds often apply a lower
+  /// blended rate on the full capital).
+  final double? conversionRate;
 }
 
 /// Per-spouse payload (inputs for a retirement projection).
@@ -44,9 +51,10 @@ class CoupleSpouseInput {
 /// Assumptions carried over from the guided flow (`buildCalculatorPayloads`):
 /// annual 3a contribution = applicable cap when a 3a is declared
 /// (7'258 with a 2nd pillar, otherwise min(36'288, 20% of gross income) —
-/// OPP3 art. 7, batch 12); `estimatedAvsPension`, interest rate,
-/// 3a return and conversion rate left at the backend's defaults
-/// (no business constant duplicated client-side).
+/// OPP3 art. 7, batch 12); `estimatedAvsPension`, interest rate and
+/// 3a return left at the backend's defaults (no business constant
+/// duplicated client-side). The conversion rate is forwarded when the user
+/// typed their certificate's rate, omitted otherwise.
 Map<String, dynamic> buildCoupleSpousePayload(CoupleSpouseInput input) {
   final hasSecondPillar =
       input.pillar2Capital > 0 || input.pillar2Contribution > 0;
@@ -66,6 +74,9 @@ Map<String, dynamic> buildCoupleSpousePayload(CoupleSpouseInput input) {
     'annualPillar2Contribution': input.pillar2Contribution,
     'currentPillar3aBalance': pillar3aBalance,
     'annualPillar3aContribution': pillar3aContribution,
+    // Certificate conversion rate — omitted when unknown (backend default
+    // 6.8% = legal minimum on the mandatory part).
+    'conversionRate': ?input.conversionRate,
   };
 }
 

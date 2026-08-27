@@ -158,6 +158,8 @@ class RetirementResultDto {
     required this.totalAnnualRetirementIncome,
     required this.replacementRate,
     required this.yearByYearProjection,
+    this.pillar3aWithdrawalTax,
+    this.pillar3aNetLumpSum,
   });
 
   final int yearsToRetirement;
@@ -188,6 +190,14 @@ class RetirementResultDto {
   /// `yearsToRetirement` ≥ 1 guaranteed by the schema).
   final List<YearProjectionDto> yearByYearProjection;
 
+  /// Estimated tax on the 3a lump-sum withdrawal (official FTA 2026 tables),
+  /// in centimes — null when the request carried no canton (contract §7).
+  final int? pillar3aWithdrawalTax;
+
+  /// `pillar3aAsLumpSum − pillar3aWithdrawalTax`, in centimes — null when
+  /// the request carried no canton.
+  final int? pillar3aNetLumpSum;
+
   factory RetirementResultDto.fromJson(Map<String, dynamic> json) =>
       RetirementResultDto(
         yearsToRetirement: (json['yearsToRetirement'] as num).toInt(),
@@ -207,5 +217,8 @@ class RetirementResultDto {
               in json['yearByYearProjection'] as List<dynamic>? ?? [])
             YearProjectionDto.fromJson(item as Map<String, dynamic>),
         ],
+        pillar3aWithdrawalTax: (json['pillar3aWithdrawalTax'] as num?)
+            ?.toInt(),
+        pillar3aNetLumpSum: (json['pillar3aNetLumpSum'] as num?)?.toInt(),
       );
 }

@@ -24,6 +24,17 @@ Map<String, dynamic> _retirementJson({
   'yearByYearProjection': <dynamic>[],
 };
 
+Map<String, dynamic> _personIncomeJson({
+  required int avsAnnual,
+  required int pillar2Annual,
+  required double replacementRate,
+}) => {
+  'avsAnnual': avsAnnual,
+  'pillar2Annual': pillar2Annual,
+  'totalAnnual': avsAnnual + pillar2Annual,
+  'replacementRate': replacementRate,
+};
+
 /// Base response: no AVS cap, 4 staggered withdrawals 2048–2051
 /// (fixed years — the plan comes from the server, not the client clock).
 Map<String, dynamic> coupleResponseJson() => {
@@ -38,6 +49,17 @@ Map<String, dynamic> coupleResponseJson() => {
     lppPension: 2000000,
     projectedPillar2: 33333333,
     projectedPillar3a: 5000000,
+    replacementRate: 58.0,
+  ),
+  // No cap → per-spouse income mirrors the raw projections.
+  'person1Income': _personIncomeJson(
+    avsAnnual: 2352000,
+    pillar2Annual: 3000000,
+    replacementRate: 63.0,
+  ),
+  'person2Income': _personIncomeJson(
+    avsAnnual: 1800000,
+    pillar2Annual: 2000000,
     replacementRate: 58.0,
   ),
   'combinedAvsAnnualRaw': 4152000,
@@ -115,6 +137,18 @@ Map<String, dynamic> coupleCappedResponseJson() => {
     projectedPillar2: 33333333,
     projectedPillar3a: 5000000,
     replacementRate: 58.0,
+  ),
+  // Cap allocated pro rata (equal pensions → CHF 22'050/year each);
+  // per-spouse totals sum back to combinedTotalAnnualIncome.
+  'person1Income': _personIncomeJson(
+    avsAnnual: 2205000,
+    pillar2Annual: 3000000,
+    replacementRate: 54.8,
+  ),
+  'person2Income': _personIncomeJson(
+    avsAnnual: 2205000,
+    pillar2Annual: 2000000,
+    replacementRate: 44.3,
   ),
   'combinedAvsAnnualRaw': 5880000,
   'combinedAvsAnnual': 4410000,

@@ -164,3 +164,52 @@ describe('avsAnnualPension — 13th AVS pension from 2026', () => {
     );
   });
 });
+
+describe('pillar 3a withdrawal tax estimate (practitioner review 08.2026)', () => {
+  // In this model the pillar 2 is annuitized (conversion rate) — only the 3a
+  // leaves as a lump sum, so the withdrawal tax estimate targets the 3a.
+  // Anchors from the official FTA 2026 tables (see staggered-withdrawal tests):
+  // ZH single CHF 500'000 → 35'068 (7.01%) · ZH married CHF 500'000 → 31'576.
+  const frozen3aInput = {
+    ...baseInput,
+    currentPillar3aBalance: 50_000_000,
+    annualPillar3aContribution: 0,
+    pillar3aReturnRate: 0,
+  };
+
+  it('estimates the 3a lump-sum tax when a canton is provided (ZH, single schedule)', () => {
+    const result = calculateRetirementProjection({
+      ...frozen3aInput,
+      canton: 'ZH',
+      maritalStatus: 'SINGLE',
+    });
+
+    expect(result.projectedPillar3aBalance).toBe(50_000_000);
+    expect(result.pillar3aWithdrawalTax).toBe(3_506_800);
+    expect(result.pillar3aNetLumpSum).toBe(50_000_000 - 3_506_800);
+  });
+
+  it('uses the married schedule for MARRIED (and REGISTERED_PARTNERSHIP)', () => {
+    const married = calculateRetirementProjection({
+      ...frozen3aInput,
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+    });
+    const partnership = calculateRetirementProjection({
+      ...frozen3aInput,
+      canton: 'ZH',
+      maritalStatus: 'REGISTERED_PARTNERSHIP',
+    });
+
+    expect(married.pillar3aWithdrawalTax).toBe(3_157_600);
+    expect(partnership.pillar3aWithdrawalTax).toBe(3_157_600);
+    expect(married.pillar3aNetLumpSum).toBe(50_000_000 - 3_157_600);
+  });
+
+  it('omits the estimate when no canton is provided (fields absent from the response)', () => {
+    const result = calculateRetirementProjection(frozen3aInput);
+
+    expect(result.pillar3aWithdrawalTax).toBeUndefined();
+    expect(result.pillar3aNetLumpSum).toBeUndefined();
+  });
+});

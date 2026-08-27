@@ -49,6 +49,26 @@ void main() {
     expect(result.combinedTotalAnnualIncome, 9410000);
   });
 
+  test('parses the per-spouse income view (capped values, practitioner '
+      'review 08.2026)', () {
+    final base = CoupleResult.fromJson(coupleResponseJson());
+    // No cap: the per-spouse view mirrors the raw projections.
+    expect(base.person1Income.avsAnnual, 2352000);
+    expect(base.person1Income.pillar2Annual, 3000000);
+    expect(base.person1Income.totalAnnual, 5352000);
+    expect(base.person1Income.replacementRate, 63.0);
+    expect(base.person2Income.totalAnnual, 3800000);
+
+    final capped = CoupleResult.fromJson(coupleCappedResponseJson());
+    // Cap allocated pro rata server-side; shares sum back to the cap.
+    expect(capped.person1Income.avsAnnual, 2205000);
+    expect(capped.person2Income.avsAnnual, 2205000);
+    expect(
+      capped.person1Income.totalAnnual + capped.person2Income.totalAnnual,
+      capped.combinedTotalAnnualIncome,
+    );
+  });
+
   test('parses an empty plan (no capital)', () {
     final result = CoupleResult.fromJson(coupleEmptyPlanResponseJson());
 

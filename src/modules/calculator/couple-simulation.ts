@@ -94,9 +94,26 @@ export interface CoupleWithdrawalPlan {
   taxSavingsVsSimultaneous: number; // centimes
 }
 
+export interface CouplePersonIncome {
+  /** This spouse's AVS pension after the couple cap, allocated pro rata to
+   * the two pensions (LAVS art. 35 al. 3) — equals the uncapped pension when
+   * the cap doesn't apply (centimes/year). */
+  avsAnnual: number;
+  pillar2Annual: number; // centimes/year
+  totalAnnual: number; // centimes/year — avsAnnual + pillar2Annual
+  /** vs this spouse's OWN gross income (%). */
+  replacementRate: number;
+}
+
 export interface CoupleSimulationResult {
   person1: RetirementProjectionResult;
   person2: RetirementProjectionResult;
+  /** Per-spouse income AFTER the couple cap — the practitioner review
+   * (08.2026) showed that two uncapped pensions displayed next to a capped
+   * total read as a bug. Use these for per-person display; `person1`/`person2`
+   * keep the raw individual projections. */
+  person1Income: CouplePersonIncome;
+  person2Income: CouplePersonIncome;
   /** Gross sum of both AVS pensions, before the cap (centimes/year). */
   combinedAvsAnnualRaw: number;
   /** Combined AVS pension after any couple cap (centimes/year). */
@@ -309,6 +326,33 @@ export function simulateCouple(input: CoupleSimulationInput): CoupleSimulationRe
   const avsCapApplied = jointlyTaxed && combinedAvsAnnualRaw > avsCapAnnual;
   const combinedAvsAnnual = avsCapApplied ? avsCapAnnual : combinedAvsAnnualRaw;
 
+  // Per-spouse AVS after the cap: the reduction is allocated pro rata to the
+  // two pensions (LAVS art. 35 al. 3); person2 takes the remainder so the two
+  // shares sum EXACTLY to the cap. Two max pensions → CHF 2'047.50/month each.
+  const person1AvsAfterCap = avsCapApplied
+    ? Math.round((avsCapAnnual * person1.estimatedAnnualAvsPension) / combinedAvsAnnualRaw)
+    : person1.estimatedAnnualAvsPension;
+  const person2AvsAfterCap = avsCapApplied
+    ? avsCapAnnual - person1AvsAfterCap
+    : person2.estimatedAnnualAvsPension;
+
+  const personIncome = (
+    avsAnnual: number,
+    projection: RetirementProjectionResult,
+    grossAnnualIncome: number,
+  ): CouplePersonIncome => {
+    const totalAnnual = avsAnnual + projection.annualPillar2Pension;
+    return {
+      avsAnnual,
+      pillar2Annual: projection.annualPillar2Pension,
+      totalAnnual,
+      replacementRate:
+        grossAnnualIncome > 0 ? Math.round((totalAnnual / grossAnnualIncome) * 10000) / 100 : 0,
+    };
+  };
+  const person1Income = personIncome(person1AvsAfterCap, person1, input.person1.grossAnnualIncome);
+  const person2Income = personIncome(person2AvsAfterCap, person2, input.person2.grossAnnualIncome);
+
   const combinedTotalAnnualIncome =
     combinedAvsAnnual + person1.annualPillar2Pension + person2.annualPillar2Pension;
   const combinedGrossIncome = input.person1.grossAnnualIncome + input.person2.grossAnnualIncome;
@@ -343,6 +387,8 @@ export function simulateCouple(input: CoupleSimulationInput): CoupleSimulationRe
   return {
     person1,
     person2,
+    person1Income,
+    person2Income,
     combinedAvsAnnualRaw,
     combinedAvsAnnual,
     avsCapApplied,

@@ -13,6 +13,7 @@ import '../../calculator/data/calculator_payloads.dart';
 import '../../calculator/presentation/widgets/results_view.dart';
 import '../../calculator/presentation/widgets/wizard_steps.dart';
 import '../../financial_profile/application/financial_profile_providers.dart';
+import '../../financial_profile/presentation/profile_form_validators.dart';
 import '../../financial_profile/presentation/widgets/municipality_picker_sheet.dart';
 import '../../premium/presentation/widgets/premium_widgets.dart';
 import '../../scenarios/application/scenario_prefill.dart';
@@ -66,6 +67,7 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
   final _income1Controller = TextEditingController();
   final _pillar2Capital1Controller = TextEditingController();
   final _pillar2Contribution1Controller = TextEditingController();
+  final _conversionRate1Controller = TextEditingController();
   final _balance3a1Controller = TextEditingController();
   int _age1 = _defaultSpouseAge;
   bool _has3a1 = false;
@@ -74,6 +76,7 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
   final _income2Controller = TextEditingController();
   final _pillar2Capital2Controller = TextEditingController();
   final _pillar2Contribution2Controller = TextEditingController();
+  final _conversionRate2Controller = TextEditingController();
   final _balance3a2Controller = TextEditingController();
   int _age2 = _defaultSpouseAge;
   bool _has3a2 = false;
@@ -88,10 +91,12 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
     _income1Controller.dispose();
     _pillar2Capital1Controller.dispose();
     _pillar2Contribution1Controller.dispose();
+    _conversionRate1Controller.dispose();
     _balance3a1Controller.dispose();
     _income2Controller.dispose();
     _pillar2Capital2Controller.dispose();
     _pillar2Contribution2Controller.dispose();
+    _conversionRate2Controller.dispose();
     _balance3a2Controller.dispose();
     super.dispose();
   }
@@ -158,6 +163,9 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
               pillar2Contribution: chfFieldToCentimes(
                 _pillar2Contribution1Controller.text,
               ),
+              conversionRate: tryParsePercentField(
+                _conversionRate1Controller.text,
+              ),
               hasPillar3a: _has3a1,
               pillar3aBalance: chfFieldToCentimes(_balance3a1Controller.text),
             ),
@@ -169,6 +177,9 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
               ),
               pillar2Contribution: chfFieldToCentimes(
                 _pillar2Contribution2Controller.text,
+              ),
+              conversionRate: tryParsePercentField(
+                _conversionRate2Controller.text,
               ),
               hasPillar3a: _has3a2,
               pillar3aBalance: chfFieldToCentimes(_balance3a2Controller.text),
@@ -271,6 +282,7 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
             incomeController: _income1Controller,
             pillar2CapitalController: _pillar2Capital1Controller,
             pillar2ContributionController: _pillar2Contribution1Controller,
+            conversionRateController: _conversionRate1Controller,
             has3a: _has3a1,
             has3aLabel: l10n.profileHas3a,
             onHas3aChanged: (value) => setState(() => _has3a1 = value),
@@ -285,6 +297,7 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
             incomeController: _income2Controller,
             pillar2CapitalController: _pillar2Capital2Controller,
             pillar2ContributionController: _pillar2Contribution2Controller,
+            conversionRateController: _conversionRate2Controller,
             has3a: _has3a2,
             has3aLabel: l10n.couplePartnerHas3a,
             onHas3aChanged: (value) => setState(() => _has3a2 = value),
@@ -311,8 +324,9 @@ class _CoupleScreenState extends ConsumerState<CoupleScreen> {
   }
 }
 
-/// Input card for a spouse: age (slider), gross income, LPP capital
-/// and contribution, 3a (switch + balance). CHF validators reused from
+/// Input card for a spouse: age (slider), gross income, LPP capital,
+/// contribution and conversion rate (optional — certificate figure),
+/// 3a (switch + balance). CHF validators reused from
 /// the calculator (`validateChfField`).
 class _SpouseFormCard extends StatelessWidget {
   const _SpouseFormCard({
@@ -322,6 +336,7 @@ class _SpouseFormCard extends StatelessWidget {
     required this.incomeController,
     required this.pillar2CapitalController,
     required this.pillar2ContributionController,
+    required this.conversionRateController,
     required this.has3a,
     required this.has3aLabel,
     required this.onHas3aChanged,
@@ -335,6 +350,7 @@ class _SpouseFormCard extends StatelessWidget {
   final TextEditingController incomeController;
   final TextEditingController pillar2CapitalController;
   final TextEditingController pillar2ContributionController;
+  final TextEditingController conversionRateController;
   final bool has3a;
   final String has3aLabel;
   final ValueChanged<bool> onHas3aChanged;
@@ -389,6 +405,21 @@ class _SpouseFormCard extends StatelessWidget {
             ),
             validator: (value) =>
                 validateChfField(l10n, value, required: false),
+            onFieldSubmitted: (_) => onSubmitted(),
+          ),
+          const SizedBox(height: 16),
+          // Optional — empty: the backend applies the 6.8% legal minimum,
+          // guaranteed on the mandatory part only (practitioner review
+          // 08.2026: 6.8% on the FULL capital overstates the LPP pension).
+          AppTextField(
+            label: l10n.coupleConversionRate,
+            controller: conversionRateController,
+            helperText: l10n.coupleConversionRateHint,
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+            ),
+            validator: (value) =>
+                validatePercentField(l10n, value, min: 0, max: 100),
             onFieldSubmitted: (_) => onSubmitted(),
           ),
           const SizedBox(height: 16),
@@ -493,11 +524,27 @@ class _CombinedSummaryCard extends StatelessWidget {
                   Icon(Icons.warning_amber, size: 20, color: colors.warning),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      l10n.coupleAvsCapWarning,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colors.warning,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.coupleAvsCapWarning,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colors.warning,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        // Phasing nuance (practitioner review 08.2026): with
+                        // an age gap the older spouse keeps a full pension
+                        // until the younger retires — this simulation shows
+                        // the situation once both pensions are paid.
+                        Text(
+                          l10n.coupleAvsCapPhasing,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -510,8 +557,11 @@ class _CombinedSummaryCard extends StatelessWidget {
   }
 }
 
-/// Side-by-side comparison (parity with iOS's `CoupleComparisonCard`:
-/// individual values **not** capped) + individual replacement rates.
+/// Side-by-side comparison — per-spouse values AFTER the couple AVS cap
+/// (`personNIncome`, allocated pro rata server-side). The practitioner
+/// review (08.2026) showed that uncapped per-person rows next to a capped
+/// total read as inflated pensions. 3a capital stays the raw projection
+/// (the cap only targets AVS).
 class _ComparisonCard extends StatelessWidget {
   const _ComparisonCard({required this.result});
 
@@ -520,8 +570,8 @@ class _ComparisonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final person1 = result.person1;
-    final person2 = result.person2;
+    final person1 = result.person1Income;
+    final person2 = result.person2Income;
 
     return AppCard(
       child: Column(
@@ -548,20 +598,20 @@ class _ComparisonCard extends StatelessWidget {
           const Divider(height: 24),
           _ComparisonRow(
             label: l10n.coupleAvs,
-            value1: formatChf(person1.estimatedAnnualAvsPension ~/ 12),
-            value2: formatChf(person2.estimatedAnnualAvsPension ~/ 12),
+            value1: formatChf(person1.avsAnnual ~/ 12),
+            value2: formatChf(person2.avsAnnual ~/ 12),
           ),
           const SizedBox(height: 8),
           _ComparisonRow(
             label: l10n.coupleBvg,
-            value1: formatChf(person1.annualPillar2Pension ~/ 12),
-            value2: formatChf(person2.annualPillar2Pension ~/ 12),
+            value1: formatChf(person1.pillar2Annual ~/ 12),
+            value2: formatChf(person2.pillar2Annual ~/ 12),
           ),
           const SizedBox(height: 8),
           _ComparisonRow(
             label: l10n.couplePillar3a,
-            value1: formatChf(person1.projectedPillar3aBalance),
-            value2: formatChf(person2.projectedPillar3aBalance),
+            value1: formatChf(result.person1.projectedPillar3aBalance),
+            value2: formatChf(result.person2.projectedPillar3aBalance),
           ),
           const SizedBox(height: 8),
           _ComparisonRow(
@@ -572,8 +622,8 @@ class _ComparisonCard extends StatelessWidget {
           const Divider(height: 24),
           _ComparisonRow(
             label: l10n.coupleTotalMonthly,
-            value1: formatChf(person1.totalAnnualRetirementIncome ~/ 12),
-            value2: formatChf(person2.totalAnnualRetirementIncome ~/ 12),
+            value1: formatChf(person1.totalAnnual ~/ 12),
+            value2: formatChf(person2.totalAnnual ~/ 12),
             isBold: true,
           ),
         ],

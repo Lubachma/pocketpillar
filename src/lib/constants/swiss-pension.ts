@@ -33,9 +33,11 @@ export const SWISS_PENSION = {
   AVS_FULL_CONTRIBUTION_YEARS: 44,
   /** Simplified career start age — estimated contribution years = age − 20 */
   AVS_CONTRIBUTION_START_AGE: 20,
-  /** Employee AVS contribution rate (%) */
+  /** Employee AVS/AI/APG salary deduction (%): AVS 4.35 + AI 0.7 + APG 0.25
+   * (excludes ALV 1.1% and family allowances). Informative — not used by the
+   * calculation engines, which work from pensions, not contributions. */
   AVS_CONTRIBUTION_RATE_EMPLOYEE: 5.3,
-  /** Employer AVS contribution rate (%) */
+  /** Employer share — same composition as the employee share (parity). */
   AVS_CONTRIBUTION_RATE_EMPLOYER: 5.3,
 
   // ─── LPP / BVG (2nd pillar) — law in force 2026 ───

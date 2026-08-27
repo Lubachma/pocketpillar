@@ -158,13 +158,27 @@ otherwise validation fails with 400.
   `min(retirementAge − 20, 44)`, rounded to the centime. **Indicative
   estimate**, not an official calculation. If the field is provided, it is
   used as-is (base ×12).
+  **Optional `canton` + `maritalStatus` + `municipality`** (practitioner
+  review 08.2026): when `canton` is present, the response adds
+  `pillar3aWithdrawalTax` (estimated tax on the 3a lump-sum withdrawal —
+  official 2026 AFC tables, married scale for
+  MARRIED/REGISTERED_PARTNERSHIP, single otherwise) and
+  `pillar3aNetLumpSum` (= `pillar3aAsLumpSum − pillar3aWithdrawalTax`);
+  without `canton`, neither field is present. The pillar 2 stays
+  annuitized in this endpoint (capital-withdrawal scenarios belong to
+  staggered-withdrawal).
 - **lpp-gap**: coordinated salary = 0 below the LPP entry threshold
   (CHF 22'680); otherwise `gross − CHF 26'460` (fixed coordination
   deduction, 7/8 of the max AVS pension), bounded between CHF 3'780
   (legal minimum) and CHF 64'260 (legal maximum); credits of 7/10/15/18%
-  (25-34/35-44/45-54/55-65), with the 18% rate extended beyond age 65;
-  both projections start from `currentBvgCapital`, and the gaps
-  (`contributionGap`, `capitalGap`, `pensionGap`) are clamped to 0.
+  (25-34/35-44/45-54/55-65), with the 18% rate extended beyond age 65.
+  `bvgMinContribution` is the minimum **at the current age**;
+  `projectedBvgMinCapital` steps the credit rate **bracket by bracket**
+  across the projection years (age reached at the start of each year —
+  500% of the coordinated salary over a full 25→65 career, art. 16 LPP;
+  practitioner review 08.2026). Both projections start from
+  `currentBvgCapital`, and the gaps (`contributionGap`, `capitalGap`,
+  `pensionGap`) are clamped to 0.
 - **property-purchase**: a withdrawal below the EPL minimum (CHF 20'000),
   or one that cannot be reached given the capital, is **rejected with 400**
   (`{ error: "Le retrait minimum pour l'achat immobilier est de CHF 20'000." }`),
@@ -186,19 +200,31 @@ otherwise validation fails with 400.
   scale-44 AVS default when `estimatedAvsPension` is omitted). Response:
   - `person1`/`person2`: full individual projections (shape of
     **retirement** — pillar 3a excluded from income).
+  - `person1Income`/`person2Income` (practitioner review 08.2026): the
+    **per-spouse display view** `{ avsAnnual, pillar2Annual, totalAnnual,
+    replacementRate }` — AVS **after** the couple cap, allocated pro rata
+    to the two pensions (LAVS art. 35 al. 3; two max pensions →
+    CHF 2'047.50/month each), `replacementRate` vs that spouse's own gross
+    income; equals the raw projection when the cap doesn't apply. Clients
+    must use this view for per-person rows (the raw `personN` pensions are
+    uncapped). The two `totalAnnual` always sum to
+    `combinedTotalAnnualIncome`.
   - Couple AVS 150% cap (`combinedAvsAnnualRaw`, `combinedAvsAnnual`,
     `avsCapApplied`, `avsCapAnnual` = CHF 45'360 in 2026) applied **only**
     to `MARRIED`/`REGISTERED_PARTNERSHIP` (LAVS art. 35; unmarried
     cohabitants keep two full pensions). `combinedTotalAnnualIncome` = capped
     AVS + LPP pensions; `combinedReplacementRate` on the sum of gross incomes.
+    The cap models the cruising state (both pensions being paid); with an
+    age gap the older spouse actually keeps a full pension until the
+    younger retires — the mobile app displays this caveat.
   - `taxEstimate`: annual comparison **always provided** — `married`
     (combined income at the married federal scale + cantonal + communal)
     vs. `unmarried` (2 × single scale), each broken down into
     `federalTax`/`cantonalTax`/`communalTax`/`totalTax`;
     `annualDifference` = married − unmarried (> 0 = marriage penalty);
     `cheaperStatus` ∈ `MARRIED | CONCUBINAGE | EQUAL`. Gross income is used
-    as a proxy for taxable income, and the cantonal tables (sampled AFC
-    single scale) do not distinguish marital status —
+    as a proxy for taxable income (the cantonal tables themselves are the
+    official sampled AFC 2026 scales, single AND married) —
     **indicative estimate**.
   - `withdrawalPlan`: pillar 3a the year before retirement, LPP capital at
     retirement, **tax-year anti-collision** (push back one year as long as

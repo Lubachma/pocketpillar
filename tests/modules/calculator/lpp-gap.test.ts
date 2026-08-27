@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { calculateLppGap } from '../../../src/modules/calculator/lpp-gap.js';
+import {
+  calculateLppGap,
+  getBvgContributionRate,
+} from '../../../src/modules/calculator/lpp-gap.js';
 
 /**
  * Reference constants (src/lib/constants/swiss-pension.ts — law in force 2026):
@@ -179,6 +182,59 @@ describe('calculateLppGap', () => {
     expect(result.projectedActualCapital).toBe(2_037_813);
     expect(result.capitalGap).toBe(1_889_950);
     expect(result.pensionGap).toBe(128_517); // 6.8% of each capital (rounded per path)
+  });
+
+  it('steps the credit rate bracket by bracket across the projection (practitioner review 08.2026)', () => {
+    // Case: 33-year-old, gross CHF 60'000 -> coordinated CHF 33'540, retiring at 36.
+    // Projection years are credited at the age reached at the START of each year:
+    // age 33 (7% -> 2'347.80), age 34 (7%), age 35 (10% -> 3'354).
+    // At 1.25%: y1 = 2'347.80; y2 = 2'347.80*1.0125 + 2'347.80 = 4'724.9475;
+    // y3 = 4'724.9475*1.0125 + 3'354 = 8'138.0093 -> CHF 8'138.01.
+    // (The pre-fix projection froze the entry rate: 7% for all 3 years -> 7'131.81.)
+    const result = calculateLppGap({
+      grossAnnualIncome: 6_000_000,
+      age: 33,
+      retirementAge: 36,
+      currentBvgCapital: 0,
+      actualAnnualContribution: 0,
+      conversionRate: 6.8,
+    });
+
+    // The displayed minimum contribution stays the CURRENT-age one (7%).
+    expect(result.bvgMinContribution).toBe(234_780);
+    expect(result.projectedBvgMinCapital).toBe(813_801);
+  });
+
+  it('projects a full 30→65 career at 7/10/15/18% instead of freezing 7% (≈1.8× more capital)', () => {
+    // Case: 30-year-old, gross CHF 95'000 -> coordinated capped at CHF 64'260.
+    // Credits: ages 30-34 at 7%, 35-44 at 10%, 45-54 at 15%, 55-64 at 18%,
+    // compounded at 1.25% -> CHF 358'534.29 legal-minimum capital at 65.
+    // (Frozen at 7% the projection gave CHF 195'990.49 — the practitioner
+    // review flagged exactly this understatement for young profiles.)
+    const result = calculateLppGap({
+      grossAnnualIncome: 9_500_000,
+      age: 30,
+      retirementAge: 65,
+      currentBvgCapital: 0,
+      actualAnnualContribution: 0,
+      conversionRate: 6.8,
+    });
+
+    expect(result.coordinatedSalary).toBe(6_426_000);
+    expect(result.bvgMinContribution).toBe(449_820); // 7% of 64'260 (current age)
+    expect(result.projectedBvgMinCapital).toBe(35_853_429);
+    expect(result.projectedMinAnnualPension).toBe(2_438_033); // 6.8% of 358'534.29
+  });
+
+  it('sums the credit rates to 500% over a full 25→65 career (art. 16 LPP)', () => {
+    // The practitioner's table showed "518%" (counting 55-65 as 11 years);
+    // art. 16 LPP credits each year at the age reached, i.e. 10 years per
+    // bracket: 10×7 + 10×10 + 10×15 + 10×18 = 500.
+    let total = 0;
+    for (let age = 25; age < 65; age++) {
+      total += getBvgContributionRate(age);
+    }
+    expect(total).toBe(500);
   });
 
   it('bounds the gaps at 0 when the actual situation exceeds the LPP minimum', () => {

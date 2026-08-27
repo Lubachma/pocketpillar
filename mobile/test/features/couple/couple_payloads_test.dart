@@ -23,7 +23,27 @@ void main() {
       'currentPillar3aBalance': 1000000,
       // 3a cap "with 2nd pillar" (guided calculator assumption).
       'annualPillar3aContribution': 725800,
+      // No conversionRate key: unset → backend legal default (6.8%).
     });
+  });
+
+  test('conversion rate forwarded when typed, omitted when unknown', () {
+    final withRate = buildCoupleSpousePayload(
+      const CoupleSpouseInput(
+        age: 40,
+        grossAnnualIncome: 9500000,
+        pillar2Capital: 2000000,
+        pillar2Contribution: 500000,
+        hasPillar3a: true,
+        pillar3aBalance: 1000000,
+        conversionRate: 5.4,
+      ),
+    );
+    expect(withRate['conversionRate'], 5.4);
+
+    // Unset → the key is absent (backend applies the 6.8% legal minimum,
+    // guaranteed on the mandatory part only — practitioner review 08.2026).
+    expect(buildCoupleSpousePayload(input).containsKey('conversionRate'), isFalse);
   });
 
   test('without 3a: balance and 3a contribution are zero', () {

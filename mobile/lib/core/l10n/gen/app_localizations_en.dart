@@ -399,6 +399,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calculatorProjectedPillar3a => 'Projected 3a balance';
 
   @override
+  String get calculatorWithdrawalTax3a => 'Estimated 3a withdrawal tax';
+
+  @override
+  String get calculatorNet3aAfterTax => 'Net 3a capital after tax';
+
+  @override
   String get calculatorAnnualRetirementIncome => 'Annual retirement income';
 
   @override
@@ -2059,7 +2065,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coupleBvg => 'BVG/month';
 
   @override
-  String get couplePillar3a => '3a capital';
+  String get couplePillar3a => 'Projected 3a capital';
 
   @override
   String get coupleTotalMonthly => 'Total/month';
@@ -2076,6 +2082,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get coupleAvsCapWarning =>
       'The couple AVS cap (150% of individual maximum) applies. Your combined AVS pension is reduced.';
+
+  @override
+  String get coupleAvsCapPhasing =>
+      'The cap applies once both pensions are paid; while only one spouse is retired, that pension stays uncapped.';
 
   @override
   String get coupleWithdrawalTitle => 'Optimal withdrawal plan';
@@ -2137,7 +2147,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coupleTaxDisclaimer =>
-      'Indicative estimate based on gross incomes (simplified federal, cantonal and communal schedules).';
+      'Indicative estimate based on gross incomes (official 2026 schedules: direct federal, cantonal and communal).';
+
+  @override
+  String get coupleConversionRate => 'BVG conversion rate (%)';
+
+  @override
+  String get coupleConversionRateHint =>
+      '6.8% = legal minimum, guaranteed on the mandatory part only. Pension funds often apply a lower blended rate — see your BVG certificate.';
 
   @override
   String get coupleWithdrawalTotalTax => 'Total plan tax';

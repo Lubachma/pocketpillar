@@ -122,6 +122,12 @@ CalculatorPayloads buildCalculatorPayloads(GuidedCalculatorInput input) {
       'annualPillar2Contribution': input.pillar2Contribution,
       'currentPillar3aBalance': pillar3aBalance,
       'annualPillar3aContribution': pillar3aContribution,
+      // Canton + marital status → the backend adds the estimated tax on the
+      // 3a lump-sum withdrawal (official FTA 2026 tables — practitioner
+      // review 08.2026).
+      'canton': input.canton,
+      'municipality': ?input.municipality,
+      'maritalStatus': input.maritalStatus,
     },
     taxSavings: <String, dynamic>{
       'canton': input.canton,

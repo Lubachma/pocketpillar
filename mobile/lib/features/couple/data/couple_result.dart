@@ -141,11 +141,47 @@ class CoupleWithdrawalPlanDto {
       );
 }
 
+/// Per-spouse income AFTER the couple AVS cap — the cap reduction is
+/// allocated pro rata to the two pensions server-side (LAVS art. 35 al. 3);
+/// equals the raw projection when the cap doesn't apply. Use THIS for the
+/// per-person display (practitioner review 08.2026: uncapped per-person rows
+/// next to a capped total read as a bug).
+class CouplePersonIncomeDto {
+  const CouplePersonIncomeDto({
+    required this.avsAnnual,
+    required this.pillar2Annual,
+    required this.totalAnnual,
+    required this.replacementRate,
+  });
+
+  /// Capped AVS share, in centimes/year.
+  final int avsAnnual;
+
+  /// LPP pension, in centimes/year.
+  final int pillar2Annual;
+
+  /// avsAnnual + pillar2Annual, in centimes/year.
+  final int totalAnnual;
+
+  /// vs this spouse's OWN gross income, in percent.
+  final double replacementRate;
+
+  factory CouplePersonIncomeDto.fromJson(Map<String, dynamic> json) =>
+      CouplePersonIncomeDto(
+        avsAnnual: (json['avsAnnual'] as num).toInt(),
+        pillar2Annual: (json['pillar2Annual'] as num).toInt(),
+        totalAnnual: (json['totalAnnual'] as num).toInt(),
+        replacementRate: (json['replacementRate'] as num).toDouble(),
+      );
+}
+
 /// Result of the couple simulation (`POST /calculator/couple`).
 class CoupleResult {
   const CoupleResult({
     required this.person1,
     required this.person2,
+    required this.person1Income,
+    required this.person2Income,
     required this.combinedAvsAnnualRaw,
     required this.combinedAvsAnnual,
     required this.avsCapApplied,
@@ -161,6 +197,12 @@ class CoupleResult {
 
   /// Retirement projection for the "Partner".
   final RetirementResultDto person2;
+
+  /// "You" income after the couple cap — display source for per-person rows.
+  final CouplePersonIncomeDto person1Income;
+
+  /// "Partner" income after the couple cap.
+  final CouplePersonIncomeDto person2Income;
 
   /// Gross sum of both AVS pensions, before the cap, in centimes/year.
   final int combinedAvsAnnualRaw;
@@ -191,6 +233,12 @@ class CoupleResult {
     ),
     person2: RetirementResultDto.fromJson(
       json['person2'] as Map<String, dynamic>,
+    ),
+    person1Income: CouplePersonIncomeDto.fromJson(
+      json['person1Income'] as Map<String, dynamic>,
+    ),
+    person2Income: CouplePersonIncomeDto.fromJson(
+      json['person2Income'] as Map<String, dynamic>,
     ),
     combinedAvsAnnualRaw: (json['combinedAvsAnnualRaw'] as num).toInt(),
     combinedAvsAnnual: (json['combinedAvsAnnual'] as num).toInt(),

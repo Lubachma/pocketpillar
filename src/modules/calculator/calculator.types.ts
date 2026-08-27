@@ -64,6 +64,15 @@ export interface RetirementProjectionInput {
    * 12 × 2'520) — la 13e rente (×13/12 dès 2026) est ajoutée par le moteur
    * selon l'année de retraite. */
   estimatedAvsPension: number; // centimes/year
+  /** Optional — when provided, the result includes the estimated tax on the
+   * 3a lump-sum withdrawal (official FTA 2026 tables per canton). */
+  canton?: Canton;
+  /** Withdrawal-tax schedule selector (joint for MARRIED/REGISTERED_PARTNERSHIP,
+   * single otherwise). Defaults to SINGLE. */
+  maritalStatus?: MaritalStatus;
+  /** Municipality of residence — real communal multiplier if covered (2026),
+   * otherwise cantonal average. */
+  municipality?: string;
 }
 
 export interface YearProjection {
@@ -175,4 +184,11 @@ export interface RetirementProjectionResult {
   totalAnnualRetirementIncome: number; // centimes/year
   replacementRate: number; // %
   yearByYearProjection: YearProjection[];
+  /** Estimated tax on the 3a lump-sum withdrawal at retirement (official FTA
+   * 2026 tables — the pillar 2 is annuitized in this model, so no capital
+   * withdrawal tax applies to it here). Present only when the input carries a
+   * canton (practitioner review 08.2026). */
+  pillar3aWithdrawalTax?: number; // centimes
+  /** pillar3aAsLumpSum − pillar3aWithdrawalTax. Present only with a canton. */
+  pillar3aNetLumpSum?: number; // centimes
 }

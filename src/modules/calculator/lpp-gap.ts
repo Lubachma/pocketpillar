@@ -1,9 +1,11 @@
 import { SWISS_PENSION } from '../../lib/constants/swiss-pension.js';
 import type { LppGapInput, LppGapResult } from './calculator.types.js';
 
-/** Get BVG contribution rate for a given age — past the last bracket, the last
- * rate (18%) still applies while working beyond the reference age */
-function getBvgContributionRate(age: number): number {
+/** Get BVG retirement-credit rate for a given age (art. 16 LPP: 7/10/15/18%,
+ * 500% of the coordinated salary over a full 25→65 career) — past the last
+ * bracket, the last rate (18%) still applies while working beyond the
+ * reference age */
+export function getBvgContributionRate(age: number): number {
   for (const bracket of SWISS_PENSION.BVG_CONTRIBUTION_RATES) {
     if (age >= bracket.ageFrom && age <= bracket.ageTo) {
       return bracket.rate;
@@ -24,6 +26,24 @@ function projectCapital(
   let capital = currentCapital;
   for (let i = 0; i < years; i++) {
     capital = capital * (1 + interestRate / 100) + annualContribution;
+  }
+  return Math.round(capital);
+}
+
+/** Project the LEGAL-MINIMUM capital at retirement: each year is credited at
+ * the rate of the age reached at the START of that year (art. 16 LPP —
+ * 7/10/15/18% brackets, NOT frozen at the current age's rate), compounded at
+ * the BVG minimum interest rate. */
+function projectBvgMinCapital(
+  currentCapital: number,
+  coordinatedSalary: number,
+  age: number,
+  retirementAge: number,
+): number {
+  let capital = currentCapital;
+  for (let a = age; a < retirementAge; a++) {
+    const annualMinContribution = Math.round((coordinatedSalary * getBvgContributionRate(a)) / 100);
+    capital = capital * (1 + SWISS_PENSION.BVG_INTEREST_RATE_MIN / 100) + annualMinContribution;
   }
   return Math.round(capital);
 }
@@ -58,18 +78,23 @@ export function calculateLppGap(input: LppGapInput): LppGapResult {
           SWISS_PENSION.BVG_MAX_COORDINATED_SALARY,
         );
 
-  // BVG minimum contribution
+  // BVG minimum contribution AT THE CURRENT AGE (displayed as-is; the
+  // projection below re-derives it year by year as the age brackets step up).
   const rate = getBvgContributionRate(age);
   const bvgMinContribution = Math.round((coordinatedSalary * rate) / 100);
   const contributionGap = Math.max(bvgMinContribution - actualAnnualContribution, 0);
 
   // Project capital at retirement — both paths start from the current capital so the
   // comparison is symmetric; gaps are clamped at 0 (no "negative gap").
-  const projectedBvgMinCapital = projectCapital(
+  // Min path: bracket-stepped credits (practitioner review 08.2026 — freezing
+  // the current-age rate understated the legal minimum by up to ~2× for young
+  // profiles). Actual path: the user's contribution is a certificate figure,
+  // not a scale — kept constant.
+  const projectedBvgMinCapital = projectBvgMinCapital(
     currentBvgCapital,
-    bvgMinContribution,
-    SWISS_PENSION.BVG_INTEREST_RATE_MIN,
-    yearsToRetirement,
+    coordinatedSalary,
+    age,
+    retirementAge,
   );
 
   const projectedActualCapital = projectCapital(

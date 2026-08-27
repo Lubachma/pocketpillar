@@ -155,6 +155,12 @@ export const retirementProjectionRequestSchema = z
     // No flat default: when the field is omitted, the handler estimates the
     // pension from income (simplified scale 44, `estimateAvsPension` — contract §7).
     estimatedAvsPension: z.number().int().nonnegative().optional(),
+    // Canton/marital status/municipality (optional): present → the response
+    // includes the estimated tax on the 3a lump-sum withdrawal (official FTA
+    // 2026 tables — practitioner review 08.2026); absent → no tax fields.
+    canton: z.enum(cantonValues).optional(),
+    maritalStatus: z.enum(maritalStatusValues).optional(),
+    municipality: z.string().min(1).max(100).optional(),
   })
   .refine((d) => d.retirementAge > d.currentAge, {
     message: 'retirementAge must be greater than currentAge',

@@ -814,6 +814,18 @@ abstract class AppLocalizations {
   /// **'Capital 3a projeté'**
   String get calculatorProjectedPillar3a;
 
+  /// No description provided for @calculatorWithdrawalTax3a.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impôt au retrait du 3a (estimé)'**
+  String get calculatorWithdrawalTax3a;
+
+  /// No description provided for @calculatorNet3aAfterTax.
+  ///
+  /// In fr, this message translates to:
+  /// **'Capital 3a net après impôt'**
+  String get calculatorNet3aAfterTax;
+
   /// No description provided for @calculatorAnnualRetirementIncome.
   ///
   /// In fr, this message translates to:
@@ -3829,7 +3841,7 @@ abstract class AppLocalizations {
   /// No description provided for @couplePillar3a.
   ///
   /// In fr, this message translates to:
-  /// **'Capital 3a'**
+  /// **'Capital 3a projeté'**
   String get couplePillar3a;
 
   /// No description provided for @coupleTotalMonthly.
@@ -3861,6 +3873,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Le plafond AVS couple (150% du maximum individuel) s\'applique. Votre rente AVS combinée est réduite.'**
   String get coupleAvsCapWarning;
+
+  /// No description provided for @coupleAvsCapPhasing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plafond s\'applique lorsque les deux rentes sont versées ; tant qu\'un seul conjoint est à la retraite, sa rente reste entière.'**
+  String get coupleAvsCapPhasing;
 
   /// No description provided for @coupleWithdrawalTitle.
   ///
@@ -3967,8 +3985,20 @@ abstract class AppLocalizations {
   /// No description provided for @coupleTaxDisclaimer.
   ///
   /// In fr, this message translates to:
-  /// **'Estimation indicative calculée sur les revenus bruts (barèmes simplifiés fédéral, cantonal et communal).'**
+  /// **'Estimation indicative calculée sur les revenus bruts (barèmes officiels 2026 : IFD, cantonal et communal).'**
   String get coupleTaxDisclaimer;
+
+  /// No description provided for @coupleConversionRate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux de conversion LPP (%)'**
+  String get coupleConversionRate;
+
+  /// No description provided for @coupleConversionRateHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'6.8 % = minimum légal, garanti sur la seule part obligatoire. Votre caisse applique souvent un taux global plus bas — voir votre certificat LPP.'**
+  String get coupleConversionRateHint;
 
   /// No description provided for @coupleWithdrawalTotalTax.
   ///

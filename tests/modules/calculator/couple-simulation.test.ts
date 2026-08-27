@@ -340,4 +340,67 @@ describe('simulateCouple', () => {
     expect(result.taxEstimate.unmarried.totalTax).toBe(2_111_828);
     expect(result.taxEstimate.cheaperStatus).toBe('CONCUBINAGE');
   });
+
+  it("allocates the capped AVS per spouse: CHF 2'047.50/month each at two max pensions (practitioner review 08.2026)", () => {
+    // Two max pensions (CHF 30'240 ×12 each → 32'760 with the 13th): raw
+    // combined 65'520 > cap 49'140 → each spouse displays 24'570/year
+    // = CHF 2'047.50/month (the practitioner's exact number).
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ currentAge: 38, estimatedAvsPension: 3_024_000 }),
+    });
+
+    expect(result.person1Income.avsAnnual).toBe(2_457_000);
+    expect(result.person2Income.avsAnnual).toBe(2_457_000);
+    expect(result.person1Income.avsAnnual + result.person2Income.avsAnnual).toBe(
+      result.combinedAvsAnnual,
+    );
+    expect(result.person1Income.pillar2Annual).toBe(result.person1.annualPillar2Pension);
+    expect(result.person1Income.totalAnnual).toBe(2_457_000 + result.person1.annualPillar2Pension);
+    // Per-spouse replacement rate vs their OWN gross income (95'000 here).
+    expect(result.person1Income.replacementRate).toBe(
+      Math.round(((2_457_000 + result.person1.annualPillar2Pension) / 9_500_000) * 10000) / 100,
+    );
+    // The per-spouse view always sums back to the combined (capped) income.
+    expect(result.person1Income.totalAnnual + result.person2Income.totalAnnual).toBe(
+      result.combinedTotalAnnualIncome,
+    );
+  });
+
+  it('allocates the cap pro rata when the two pensions differ (LAVS art. 35 al. 3)', () => {
+    // p1 = 32'760/year (13th incl.), p2 = 20'000/year → raw 52'760 > cap 49'140.
+    // p1 share = round(49'140 × 32'760/52'760) = 30'512.25 ; p2 gets the rest
+    // (18'627.75) so the two shares sum exactly to the cap.
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ currentAge: 38, estimatedAvsPension: 1_846_154 }),
+    });
+
+    expect(result.combinedAvsAnnualRaw).toBe(5_276_000);
+    expect(result.avsCapApplied).toBe(true);
+    expect(result.person1Income.avsAnnual).toBe(3_051_225);
+    expect(result.person2Income.avsAnnual).toBe(1_862_775);
+    expect(result.person1Income.avsAnnual + result.person2Income.avsAnnual).toBe(4_914_000);
+  });
+
+  it('keeps the uncapped pensions per spouse when no cap applies (concubinage)', () => {
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'CONCUBINAGE',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ currentAge: 38, estimatedAvsPension: 3_024_000 }),
+    });
+
+    expect(result.avsCapApplied).toBe(false);
+    expect(result.person1Income.avsAnnual).toBe(3_276_000);
+    expect(result.person2Income.avsAnnual).toBe(3_276_000);
+    // Same numbers as the raw projection — the per-spouse view only differs
+    // when the couple cap bites.
+    expect(result.person1Income.totalAnnual).toBe(result.person1.totalAnnualRetirementIncome);
+    expect(result.person1Income.replacementRate).toBe(result.person1.replacementRate);
+  });
 });

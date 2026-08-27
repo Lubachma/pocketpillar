@@ -11,6 +11,7 @@ class AppTextField extends StatelessWidget {
     this.autofillHints,
     this.validator,
     this.onFieldSubmitted,
+    this.helperText,
     super.key,
   });
 
@@ -23,6 +24,9 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final ValueChanged<String>? onFieldSubmitted;
 
+  /// Persistent caption under the field (multi-line allowed).
+  final String? helperText;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -33,7 +37,11 @@ class AppTextField extends StatelessWidget {
       autofillHints: autofillHints,
       validator: validator,
       onFieldSubmitted: onFieldSubmitted,
-      decoration: InputDecoration(labelText: label),
+      decoration: InputDecoration(
+        labelText: label,
+        helperText: helperText,
+        helperMaxLines: 3,
+      ),
     );
   }
 }

@@ -28,7 +28,12 @@ void main() {
         'currentPillar3aBalance': 1000000,
         // Assumed 3a cap (iOS parity): 7'258 with 2nd pillar.
         'annualPillar3aContribution': 725800,
+        // Canton + marital status → the backend estimates the 3a
+        // withdrawal tax (no municipality here → key omitted).
+        'canton': 'VD',
+        'maritalStatus': 'SINGLE',
       });
+      expect(payloads.retirement.containsKey('municipality'), isFalse);
     });
 
     test('without 3a: balance and annual contribution at 0', () {
@@ -141,6 +146,8 @@ void main() {
         ),
       );
       expect(withMunicipality.taxSavings['municipality'], 'Adliswil');
+      // Retirement payload forwards the same residence (3a withdrawal tax).
+      expect(withMunicipality.retirement['municipality'], 'Adliswil');
 
       // Without a municipality: the key is omitted from the body (falls
       // back to cantonal average).
