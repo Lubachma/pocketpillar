@@ -69,6 +69,24 @@ void main() {
     );
   });
 
+  test('parses the retirement timeline (phases, ages, cap)', () {
+    final base = CoupleResult.fromJson(coupleResponseJson());
+    expect(base.timeline, hasLength(2));
+    final first = base.timeline.first;
+    expect(first.startYear, 2052);
+    expect(first.endYear, 2057);
+    expect(first.person1Retired, isFalse);
+    expect(first.person2Retired, isTrue);
+    expect(first.person2TotalAnnual, 3800000);
+    expect(first.combinedAnnual, 3800000);
+    expect(base.timeline.last.endYear, isNull);
+
+    final capped = CoupleResult.fromJson(coupleCappedResponseJson());
+    expect(capped.timeline, hasLength(1));
+    expect(capped.timeline.single.avsCapApplied, isTrue);
+    expect(capped.timeline.single.person1AvsAnnual, 2205000);
+  });
+
   test('parses an empty plan (no capital)', () {
     final result = CoupleResult.fromJson(coupleEmptyPlanResponseJson());
 

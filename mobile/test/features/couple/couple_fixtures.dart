@@ -35,6 +35,35 @@ Map<String, dynamic> _personIncomeJson({
   'replacementRate': replacementRate,
 };
 
+Map<String, dynamic> _timelinePhaseJson({
+  required int startYear,
+  int? endYear,
+  required int person1Age,
+  required int person2Age,
+  required bool person1Retired,
+  required bool person2Retired,
+  required int person1Avs,
+  required int person2Avs,
+  required int person1Lpp,
+  required int person2Lpp,
+  bool avsCapApplied = false,
+}) => {
+  'startYear': startYear,
+  'endYear': endYear,
+  'person1Age': person1Age,
+  'person2Age': person2Age,
+  'person1Retired': person1Retired,
+  'person2Retired': person2Retired,
+  'person1AvsAnnual': person1Avs,
+  'person2AvsAnnual': person2Avs,
+  'person1Pillar2Annual': person1Lpp,
+  'person2Pillar2Annual': person2Lpp,
+  'person1TotalAnnual': person1Avs + person1Lpp,
+  'person2TotalAnnual': person2Avs + person2Lpp,
+  'avsCapApplied': avsCapApplied,
+  'combinedAnnual': person1Avs + person1Lpp + person2Avs + person2Lpp,
+};
+
 /// Base response: no AVS cap, 4 staggered withdrawals 2048–2051
 /// (fixed years — the plan comes from the server, not the client clock).
 Map<String, dynamic> coupleResponseJson() => {
@@ -66,6 +95,35 @@ Map<String, dynamic> coupleResponseJson() => {
   'combinedAvsAnnual': 4152000,
   'avsCapApplied': false,
   'avsCapAnnual': 4410000,
+  // Age gap: the partner retires first (full pension), then both.
+  'timeline': [
+    _timelinePhaseJson(
+      // Years distinct from the withdrawal-plan steps (2048–2051) so the
+      // screen tests can target either card unambiguously.
+      startYear: 2052,
+      endYear: 2057,
+      person1Age: 60,
+      person2Age: 65,
+      person1Retired: false,
+      person2Retired: true,
+      person1Avs: 0,
+      person2Avs: 1800000,
+      person1Lpp: 0,
+      person2Lpp: 2000000,
+    ),
+    _timelinePhaseJson(
+      startYear: 2057,
+      endYear: null,
+      person1Age: 65,
+      person2Age: 70,
+      person1Retired: true,
+      person2Retired: true,
+      person1Avs: 2352000,
+      person2Avs: 1800000,
+      person1Lpp: 3000000,
+      person2Lpp: 2000000,
+    ),
+  ],
   'combinedTotalAnnualIncome': 9152000,
   'combinedReplacementRate': 59.05,
   'taxEstimate': {
@@ -153,6 +211,22 @@ Map<String, dynamic> coupleCappedResponseJson() => {
   'combinedAvsAnnualRaw': 5880000,
   'combinedAvsAnnual': 4410000,
   'avsCapApplied': true,
+  // Same retirement year: a single, capped, open-ended phase.
+  'timeline': [
+    _timelinePhaseJson(
+      startYear: 2056,
+      endYear: null,
+      person1Age: 65,
+      person2Age: 65,
+      person1Retired: true,
+      person2Retired: true,
+      person1Avs: 2205000,
+      person2Avs: 2205000,
+      person1Lpp: 3000000,
+      person2Lpp: 2000000,
+      avsCapApplied: true,
+    ),
+  ],
   'combinedTotalAnnualIncome': 9410000,
   'combinedReplacementRate': 49.53,
 };

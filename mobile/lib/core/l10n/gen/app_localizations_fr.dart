@@ -2275,6 +2275,33 @@ class AppLocalizationsFr extends AppLocalizations {
       '6.8 % = minimum légal, garanti sur la seule part obligatoire. Votre caisse applique souvent un taux global plus bas — voir votre certificat LPP.';
 
   @override
+  String get coupleTimelineTitle => 'Chronologie des retraites';
+
+  @override
+  String get coupleTimelineYouRetire => 'Vous prenez votre retraite';
+
+  @override
+  String get coupleTimelinePartnerRetires =>
+      'Votre partenaire prend sa retraite';
+
+  @override
+  String get coupleTimelineBothRetired => 'Les deux rentes courent';
+
+  @override
+  String coupleTimelineAges(int age1, int age2) {
+    return 'Vous $age1 ans · Partenaire $age2 ans';
+  }
+
+  @override
+  String get coupleTimelineCapBadge => 'Plafond AVS appliqué';
+
+  @override
+  String get coupleTimelineFullBadge => 'Rente pleine';
+
+  @override
+  String get coupleTimelineHouseholdMonthly => 'Revenu du couple/mois';
+
+  @override
   String get coupleWithdrawalTotalTax => 'Impôt total du plan';
 
   @override

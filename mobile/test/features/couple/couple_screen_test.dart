@@ -292,6 +292,48 @@ void main() {
     expect(repo.lastMunicipality, isNull);
   });
 
+  testWidgets('renders the retirement timeline: phases, ages, badges', (
+    tester,
+  ) async {
+    await pumpScreen(tester, prefill: _prefill);
+    // Partner income is required before the form submits.
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Revenu brut (CHF)').last,
+      '60000',
+    );
+    await tester.tap(find.text('Calculer la retraite du couple'));
+    await tester.pumpAndSettle();
+
+    // Base fixture: partner retires first (full pension), then both.
+    expect(find.text('Chronologie des retraites'), findsOneWidget);
+    expect(
+      find.text('Votre partenaire prend sa retraite'),
+      findsOneWidget,
+    );
+    expect(find.text('Les deux rentes courent'), findsOneWidget);
+    expect(find.text('Vous 60 ans · Partenaire 65 ans'), findsOneWidget);
+    // No cap in the base fixture → no badges at all.
+    expect(find.text('Plafond AVS appliqué'), findsNothing);
+    expect(find.text('Rente pleine'), findsNothing);
+  });
+
+  testWidgets('timeline cap badge on the capped cruising phase', (
+    tester,
+  ) async {
+    repo.result = _cappedResult;
+    await pumpScreen(tester, prefill: _prefill);
+    // Partner income is required before the form submits.
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Revenu brut (CHF)').last,
+      '60000',
+    );
+    await tester.tap(find.text('Calculer la retraite du couple'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Les deux rentes courent'), findsOneWidget);
+    expect(find.text('Plafond AVS appliqué'), findsOneWidget);
+  });
+
   testWidgets('annual-contribution help on both spouse cards '
       '(practitioner review 08.2026)', (tester) async {
     await pumpScreen(tester);

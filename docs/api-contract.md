@@ -209,6 +209,14 @@ otherwise validation fails with 400.
     must use this view for per-person rows (the raw `personN` pensions are
     uncapped). The two `totalAnnual` always sum to
     `combinedTotalAnnualIncome`.
+  - `timeline` (chantier "frise" 08.2026): chronological dated phases —
+    ONE entry when both spouses retire the same year, TWO with an age gap
+    (`{ startYear, endYear|null, person1Age, person2Age, personNRetired,
+    personNAvsAnnual, personNPillar2Annual, personNTotalAnnual,
+    avsCapApplied, combinedAnnual }`). Before the SECOND retirement the
+    earlier-retired spouse draws a FULL individual pension (LAVS art. 35
+    caps only once both pensions run); the final phase is open-ended
+    (`endYear: null`) and always equals the headline combined figures.
   - Couple AVS 150% cap (`combinedAvsAnnualRaw`, `combinedAvsAnnual`,
     `avsCapApplied`, `avsCapAnnual` = CHF 45'360 in 2026) applied **only**
     to `MARRIED`/`REGISTERED_PARTNERSHIP` (LAVS art. 35; unmarried

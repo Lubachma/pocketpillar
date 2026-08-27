@@ -28,6 +28,8 @@ class CoupleResultsSection extends StatelessWidget {
       children: [
         _CombinedSummaryCard(result: result),
         const SizedBox(height: 16),
+        _TimelineCard(timeline: result.timeline),
+        const SizedBox(height: 16),
         _ComparisonCard(result: result),
         const SizedBox(height: 16),
         _TaxEstimateCard(estimate: result.taxEstimate),
@@ -119,6 +121,196 @@ class _CombinedSummaryCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Argo-style retirement timeline (chantier 08.2026 — the practitioner:
+/// "we always put the dates/ages on a chart, otherwise it's confusing").
+/// One milestone per phase: with an age gap the first phase shows the
+/// earlier-retired spouse's FULL pension, the cruising phase carries the
+/// cap badge when it bites. Everything is served by the API.
+class _TimelineCard extends StatelessWidget {
+  const _TimelineCard({required this.timeline});
+
+  final List<CoupleTimelinePhaseDto> timeline;
+
+  String _phaseTitle(AppLocalizations l10n, CoupleTimelinePhaseDto phase) {
+    if (phase.person1Retired && phase.person2Retired) {
+      return l10n.coupleTimelineBothRetired;
+    }
+    return phase.person1Retired
+        ? l10n.coupleTimelineYouRetire
+        : l10n.coupleTimelinePartnerRetires;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final capComesLater = timeline.any((p) => p.avsCapApplied);
+
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ScenarioSectionTitle(l10n.coupleTimelineTitle),
+          const SizedBox(height: 4),
+          for (var i = 0; i < timeline.length; i++)
+            _TimelinePhaseRow(
+              phase: timeline[i],
+              title: _phaseTitle(l10n, timeline[i]),
+              // Highlight the practitioner's nuance: a full, uncapped
+              // pension in the interim phase of a couple whose cruising
+              // phase IS capped.
+              showFullBadge: !timeline[i].avsCapApplied && capComesLater,
+              isLast: i == timeline.length - 1,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One milestone of the timeline: year dot + rail, title, ages, per-spouse
+/// monthly amounts and the household income of the phase.
+class _TimelinePhaseRow extends StatelessWidget {
+  const _TimelinePhaseRow({
+    required this.phase,
+    required this.title,
+    required this.showFullBadge,
+    required this.isLast,
+  });
+
+  final CoupleTimelinePhaseDto phase;
+  final String title;
+  final bool showFullBadge;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final colors = context.appColors;
+
+    final spouseAmounts = [
+      if (phase.person1Retired)
+        '${l10n.coupleYou} ${formatChf(phase.person1TotalAnnual ~/ 12)}',
+      if (phase.person2Retired)
+        '${l10n.couplePartner} ${formatChf(phase.person2TotalAnnual ~/ 12)}',
+    ].join(' · ');
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 24,
+            child: Column(
+              children: [
+                const SizedBox(height: 6),
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: phase.avsCapApplied
+                        ? colors.warning
+                        : theme.colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        '${phase.startYear}',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (phase.avsCapApplied)
+                        _TimelineBadge(
+                          label: l10n.coupleTimelineCapBadge,
+                          color: colors.warning,
+                        )
+                      else if (showFullBadge)
+                        _TimelineBadge(
+                          label: l10n.coupleTimelineFullBadge,
+                          color: colors.positive,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(title, style: theme.textTheme.bodyMedium),
+                  Text(
+                    l10n.coupleTimelineAges(phase.person1Age, phase.person2Age),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  if (spouseAmounts.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      spouseAmounts,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 4),
+                  Text(
+                    '${l10n.coupleTimelineHouseholdMonthly} : '
+                    '${formatChf(phase.combinedAnnual ~/ 12)}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimelineBadge extends StatelessWidget {
+  const _TimelineBadge({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
       ),
     );
   }

@@ -387,6 +387,103 @@ describe('simulateCouple', () => {
     expect(result.person1Income.avsAnnual + result.person2Income.avsAnnual).toBe(4_914_000);
   });
 
+  it('exposes a single-phase timeline when both spouses retire the same year', () => {
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ estimatedAvsPension: 3_024_000 }),
+    });
+
+    expect(result.timeline).toHaveLength(1);
+    const [phase] = result.timeline;
+    expect(phase.startYear).toBe(YEAR + 25);
+    expect(phase.endYear).toBeNull();
+    expect(phase.person1Age).toBe(65);
+    expect(phase.person2Age).toBe(65);
+    expect(phase.person1Retired).toBe(true);
+    expect(phase.person2Retired).toBe(true);
+    expect(phase.avsCapApplied).toBe(true);
+    // The cruising phase IS the existing headline: same capped shares,
+    // same combined income.
+    expect(phase.person1AvsAnnual).toBe(2_457_000);
+    expect(phase.person2AvsAnnual).toBe(2_457_000);
+    expect(phase.combinedAnnual).toBe(result.combinedTotalAnnualIncome);
+  });
+
+  it("phases the timeline on an age gap: full pension until the younger retires, then the cap (practitioner's own case)", () => {
+    // p1 is 40, p2 is 38 → p1 retires at YEAR+25, p2 at YEAR+27. Between the
+    // two retirements the elder draws a FULL pension (LAVS art. 35 caps only
+    // once both pensions are running) — the exact nuance the practitioner
+    // flagged ("rente pleine ~1 an puis plafonné").
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ currentAge: 38, estimatedAvsPension: 3_024_000 }),
+    });
+
+    expect(result.timeline).toHaveLength(2);
+    const [first, cruising] = result.timeline;
+
+    // Phase 1 — only p1 retired: full individual pension, no cap.
+    expect(first.startYear).toBe(YEAR + 25);
+    expect(first.endYear).toBe(YEAR + 27);
+    expect(first.person1Age).toBe(65);
+    expect(first.person2Age).toBe(63);
+    expect(first.person1Retired).toBe(true);
+    expect(first.person2Retired).toBe(false);
+    expect(first.avsCapApplied).toBe(false);
+    expect(first.person1AvsAnnual).toBe(3_276_000); // full, ×13/12
+    expect(first.person2AvsAnnual).toBe(0);
+    expect(first.person2Pillar2Annual).toBe(0);
+    expect(first.person1TotalAnnual).toBe(3_276_000 + result.person1.annualPillar2Pension);
+    expect(first.combinedAnnual).toBe(first.person1TotalAnnual);
+
+    // Phase 2 — both retired: pro-rata capped shares, headline figures.
+    expect(cruising.startYear).toBe(YEAR + 27);
+    expect(cruising.endYear).toBeNull();
+    expect(cruising.person1Age).toBe(67);
+    expect(cruising.person2Age).toBe(65);
+    expect(cruising.person2Retired).toBe(true);
+    expect(cruising.avsCapApplied).toBe(true);
+    expect(cruising.person1AvsAnnual).toBe(2_457_000);
+    expect(cruising.person2AvsAnnual).toBe(2_457_000);
+    expect(cruising.combinedAnnual).toBe(result.combinedTotalAnnualIncome);
+  });
+
+  it('never caps the timeline of unmarried couples, in either phase', () => {
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'CONCUBINAGE',
+      person1: spouse({ estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ currentAge: 38, estimatedAvsPension: 3_024_000 }),
+    });
+
+    expect(result.timeline).toHaveLength(2);
+    expect(result.timeline[0].avsCapApplied).toBe(false);
+    expect(result.timeline[1].avsCapApplied).toBe(false);
+    // Both keep their full pensions once retired.
+    expect(result.timeline[1].person1AvsAnnual).toBe(3_276_000);
+    expect(result.timeline[1].person2AvsAnnual).toBe(3_276_000);
+  });
+
+  it('orders the phases correctly when the PARTNER retires first', () => {
+    const result = simulateCouple({
+      canton: 'ZH',
+      maritalStatus: 'MARRIED',
+      person1: spouse({ currentAge: 38, estimatedAvsPension: 3_024_000 }),
+      person2: spouse({ estimatedAvsPension: 3_024_000 }),
+    });
+
+    const [first] = result.timeline;
+    expect(first.person1Retired).toBe(false);
+    expect(first.person2Retired).toBe(true);
+    expect(first.person1AvsAnnual).toBe(0);
+    expect(first.person2AvsAnnual).toBe(3_276_000);
+    expect(first.combinedAnnual).toBe(3_276_000 + result.person2.annualPillar2Pension);
+  });
+
   it('keeps the uncapped pensions per spouse when no cap applies (concubinage)', () => {
     const result = simulateCouple({
       canton: 'ZH',

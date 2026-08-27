@@ -174,6 +174,65 @@ class CouplePersonIncomeDto {
       );
 }
 
+/// One dated phase of the couple's retirement (Argo-style timeline,
+/// chantier 08.2026): with an age gap, the earlier-retired spouse draws a
+/// FULL pension until the second retirement (LAVS art. 35 caps only once
+/// both pensions run); the final phase is open-ended and equals the
+/// headline combined figures. Amounts in centimes/year.
+class CoupleTimelinePhaseDto {
+  const CoupleTimelinePhaseDto({
+    required this.startYear,
+    required this.endYear,
+    required this.person1Age,
+    required this.person2Age,
+    required this.person1Retired,
+    required this.person2Retired,
+    required this.person1AvsAnnual,
+    required this.person2AvsAnnual,
+    required this.person1Pillar2Annual,
+    required this.person2Pillar2Annual,
+    required this.person1TotalAnnual,
+    required this.person2TotalAnnual,
+    required this.avsCapApplied,
+    required this.combinedAnnual,
+  });
+
+  final int startYear;
+
+  /// Exclusive end year — null for the final, open-ended phase.
+  final int? endYear;
+  final int person1Age;
+  final int person2Age;
+  final bool person1Retired;
+  final bool person2Retired;
+  final int person1AvsAnnual;
+  final int person2AvsAnnual;
+  final int person1Pillar2Annual;
+  final int person2Pillar2Annual;
+  final int person1TotalAnnual;
+  final int person2TotalAnnual;
+  final bool avsCapApplied;
+  final int combinedAnnual;
+
+  factory CoupleTimelinePhaseDto.fromJson(Map<String, dynamic> json) =>
+      CoupleTimelinePhaseDto(
+        startYear: (json['startYear'] as num).toInt(),
+        endYear: (json['endYear'] as num?)?.toInt(),
+        person1Age: (json['person1Age'] as num).toInt(),
+        person2Age: (json['person2Age'] as num).toInt(),
+        person1Retired: json['person1Retired'] as bool,
+        person2Retired: json['person2Retired'] as bool,
+        person1AvsAnnual: (json['person1AvsAnnual'] as num).toInt(),
+        person2AvsAnnual: (json['person2AvsAnnual'] as num).toInt(),
+        person1Pillar2Annual: (json['person1Pillar2Annual'] as num).toInt(),
+        person2Pillar2Annual: (json['person2Pillar2Annual'] as num).toInt(),
+        person1TotalAnnual: (json['person1TotalAnnual'] as num).toInt(),
+        person2TotalAnnual: (json['person2TotalAnnual'] as num).toInt(),
+        avsCapApplied: json['avsCapApplied'] as bool,
+        combinedAnnual: (json['combinedAnnual'] as num).toInt(),
+      );
+}
+
 /// Result of the couple simulation (`POST /calculator/couple`).
 class CoupleResult {
   const CoupleResult({
@@ -187,6 +246,7 @@ class CoupleResult {
     required this.avsCapAnnual,
     required this.combinedTotalAnnualIncome,
     required this.combinedReplacementRate,
+    required this.timeline,
     required this.taxEstimate,
     required this.withdrawalPlan,
   });
@@ -223,6 +283,9 @@ class CoupleResult {
   /// Combined replacement rate in percent.
   final double combinedReplacementRate;
 
+  /// Dated retirement phases, chronological (1 without an age gap, else 2).
+  final List<CoupleTimelinePhaseDto> timeline;
+
   final CoupleTaxEstimateDto taxEstimate;
   final CoupleWithdrawalPlanDto withdrawalPlan;
 
@@ -247,6 +310,10 @@ class CoupleResult {
         .toInt(),
     combinedReplacementRate: (json['combinedReplacementRate'] as num)
         .toDouble(),
+    timeline: [
+      for (final item in json['timeline'] as List<dynamic>? ?? [])
+        CoupleTimelinePhaseDto.fromJson(item as Map<String, dynamic>),
+    ],
     taxEstimate: CoupleTaxEstimateDto.fromJson(
       json['taxEstimate'] as Map<String, dynamic>,
     ),

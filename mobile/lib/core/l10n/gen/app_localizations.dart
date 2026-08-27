@@ -4186,6 +4186,54 @@ abstract class AppLocalizations {
   /// **'6.8 % = minimum légal, garanti sur la seule part obligatoire. Votre caisse applique souvent un taux global plus bas — voir votre certificat LPP.'**
   String get coupleConversionRateHint;
 
+  /// No description provided for @coupleTimelineTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chronologie des retraites'**
+  String get coupleTimelineTitle;
+
+  /// No description provided for @coupleTimelineYouRetire.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous prenez votre retraite'**
+  String get coupleTimelineYouRetire;
+
+  /// No description provided for @coupleTimelinePartnerRetires.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre partenaire prend sa retraite'**
+  String get coupleTimelinePartnerRetires;
+
+  /// No description provided for @coupleTimelineBothRetired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux rentes courent'**
+  String get coupleTimelineBothRetired;
+
+  /// No description provided for @coupleTimelineAges.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous {age1} ans · Partenaire {age2} ans'**
+  String coupleTimelineAges(int age1, int age2);
+
+  /// No description provided for @coupleTimelineCapBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond AVS appliqué'**
+  String get coupleTimelineCapBadge;
+
+  /// No description provided for @coupleTimelineFullBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rente pleine'**
+  String get coupleTimelineFullBadge;
+
+  /// No description provided for @coupleTimelineHouseholdMonthly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenu du couple/mois'**
+  String get coupleTimelineHouseholdMonthly;
+
   /// No description provided for @coupleWithdrawalTotalTax.
   ///
   /// In fr, this message translates to:

@@ -171,10 +171,12 @@ non-blocking; the app words all results as estimates:
   between mandatory (6.8 % guaranteed) and supra-mandatory capital
   (fund-specific, usually lower) is not modeled — the UI says so and asks
   for the certificate rate.
-- **Couple AVS cap is single-period**: the cap is applied to the cruising
-  state where both spouses draw their pension; with an age gap, the older
-  spouse actually receives a full pension until the younger retires (the
-  UI carries this caveat).
+- **Couple AVS cap phasing — now modeled**: the couple simulation returns
+  a dated timeline (one phase per retirement): with an age gap the
+  earlier-retired spouse draws a full pension until the second retirement,
+  and the pro-rata cap applies only from then on (LAVS art. 35 — the
+  practitioner's "full pension for about a year, then capped"). The
+  headline combined figures still describe the cruising phase.
 - **Incomplete careers** (arrival in Switzerland, contribution gaps): only
   representable through the projected contribution years — the estimate
   assumes an uninterrupted career from age 20.

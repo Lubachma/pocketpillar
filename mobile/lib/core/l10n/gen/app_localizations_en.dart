@@ -2268,6 +2268,32 @@ class AppLocalizationsEn extends AppLocalizations {
       '6.8% = legal minimum, guaranteed on the mandatory part only. Pension funds often apply a lower blended rate — see your BVG certificate.';
 
   @override
+  String get coupleTimelineTitle => 'Retirement timeline';
+
+  @override
+  String get coupleTimelineYouRetire => 'You retire';
+
+  @override
+  String get coupleTimelinePartnerRetires => 'Your partner retires';
+
+  @override
+  String get coupleTimelineBothRetired => 'Both pensions are running';
+
+  @override
+  String coupleTimelineAges(int age1, int age2) {
+    return 'You $age1 · Partner $age2';
+  }
+
+  @override
+  String get coupleTimelineCapBadge => 'AVS cap applied';
+
+  @override
+  String get coupleTimelineFullBadge => 'Full pension';
+
+  @override
+  String get coupleTimelineHouseholdMonthly => 'Couple income/month';
+
+  @override
   String get coupleWithdrawalTotalTax => 'Total plan tax';
 
   @override

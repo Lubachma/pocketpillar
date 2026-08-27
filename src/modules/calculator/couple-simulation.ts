@@ -105,6 +105,40 @@ export interface CouplePersonIncome {
   replacementRate: number;
 }
 
+/**
+ * One dated phase of the couple's retirement — the Argo-style timeline the
+ * practitioner asked for ("we always put the dates/ages on a chart"). With
+ * an age gap there are two phases: until the younger spouse retires, the
+ * elder draws a FULL individual pension (LAVS art. 35 caps only once both
+ * pensions are running); from the second retirement on, the pro-rata
+ * capped cruising figures apply (they equal the headline fields).
+ */
+export interface CoupleTimelinePhase {
+  /** First calendar year of the phase. */
+  startYear: number;
+  /** Exclusive end year — null for the final, open-ended phase. */
+  endYear: number | null;
+  /** Age each spouse reaches in startYear. */
+  person1Age: number;
+  person2Age: number;
+  /** Whether each spouse draws their pension during this phase. */
+  person1Retired: boolean;
+  person2Retired: boolean;
+  /** AVS served per spouse (0 before retirement; capped pro rata only when
+   * both draw and the couple is married/registered — centimes/year). */
+  person1AvsAnnual: number;
+  person2AvsAnnual: number;
+  /** LPP pensions served (0 before that spouse's retirement). */
+  person1Pillar2Annual: number;
+  person2Pillar2Annual: number;
+  /** AVS + LPP per spouse during the phase (centimes/year). */
+  person1TotalAnnual: number;
+  person2TotalAnnual: number;
+  avsCapApplied: boolean;
+  /** Household retirement income during the phase (centimes/year). */
+  combinedAnnual: number;
+}
+
 export interface CoupleSimulationResult {
   person1: RetirementProjectionResult;
   person2: RetirementProjectionResult;
@@ -128,6 +162,10 @@ export interface CoupleSimulationResult {
   /** Capped AVS + LPP pensions of both spouses (centimes/year). */
   combinedTotalAnnualIncome: number;
   combinedReplacementRate: number; // %
+  /** Dated retirement phases, chronological (1 entry when both retire the
+   * same year, 2 with an age gap). The last phase is open-ended and equals
+   * the headline combined figures. */
+  timeline: CoupleTimelinePhase[];
   taxEstimate: CoupleTaxEstimate;
   withdrawalPlan: CoupleWithdrawalPlan;
 }
@@ -355,6 +393,55 @@ export function simulateCouple(input: CoupleSimulationInput): CoupleSimulationRe
 
   const combinedTotalAnnualIncome =
     combinedAvsAnnual + person1.annualPillar2Pension + person2.annualPillar2Pension;
+  // Timeline (practitioner review 08.2026): before the SECOND retirement
+  // the earlier-retired spouse draws a full pension — art. 35 LAVS caps
+  // only once both pensions run. The cruising phase reuses the capped
+  // shares computed above, so the timeline always reconciles with the
+  // headline figures.
+  const retirementYear1 = SWISS_PENSION.CURRENT_YEAR + person1.yearsToRetirement;
+  const retirementYear2 = SWISS_PENSION.CURRENT_YEAR + person2.yearsToRetirement;
+  const phaseAt = (startYear: number, endYear: number | null): CoupleTimelinePhase => {
+    const person1Retired = startYear >= retirementYear1;
+    const person2Retired = startYear >= retirementYear2;
+    const bothRetired = person1Retired && person2Retired;
+    const person1AvsAnnual = person1Retired
+      ? bothRetired
+        ? person1AvsAfterCap
+        : person1.estimatedAnnualAvsPension
+      : 0;
+    const person2AvsAnnual = person2Retired
+      ? bothRetired
+        ? person2AvsAfterCap
+        : person2.estimatedAnnualAvsPension
+      : 0;
+    const person1Pillar2Annual = person1Retired ? person1.annualPillar2Pension : 0;
+    const person2Pillar2Annual = person2Retired ? person2.annualPillar2Pension : 0;
+    const person1TotalAnnual = person1AvsAnnual + person1Pillar2Annual;
+    const person2TotalAnnual = person2AvsAnnual + person2Pillar2Annual;
+    return {
+      startYear,
+      endYear,
+      person1Age: input.person1.currentAge + (startYear - SWISS_PENSION.CURRENT_YEAR),
+      person2Age: input.person2.currentAge + (startYear - SWISS_PENSION.CURRENT_YEAR),
+      person1Retired,
+      person2Retired,
+      person1AvsAnnual,
+      person2AvsAnnual,
+      person1Pillar2Annual,
+      person2Pillar2Annual,
+      person1TotalAnnual,
+      person2TotalAnnual,
+      avsCapApplied: bothRetired && avsCapApplied,
+      combinedAnnual: person1TotalAnnual + person2TotalAnnual,
+    };
+  };
+  const firstRetirement = Math.min(retirementYear1, retirementYear2);
+  const lastRetirement = Math.max(retirementYear1, retirementYear2);
+  const timeline: CoupleTimelinePhase[] =
+    firstRetirement === lastRetirement
+      ? [phaseAt(lastRetirement, null)]
+      : [phaseAt(firstRetirement, lastRetirement), phaseAt(lastRetirement, null)];
+
   const combinedGrossIncome = input.person1.grossAnnualIncome + input.person2.grossAnnualIncome;
   const combinedReplacementRate =
     combinedGrossIncome > 0
@@ -395,6 +482,7 @@ export function simulateCouple(input: CoupleSimulationInput): CoupleSimulationRe
     avsCapAnnual,
     combinedTotalAnnualIncome,
     combinedReplacementRate,
+    timeline,
     taxEstimate,
     withdrawalPlan,
   };

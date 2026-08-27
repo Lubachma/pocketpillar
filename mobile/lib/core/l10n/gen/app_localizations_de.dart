@@ -2276,6 +2276,33 @@ class AppLocalizationsDe extends AppLocalizations {
       '6.8 % = gesetzliches Minimum, garantiert nur auf dem obligatorischen Teil. Ihre Kasse wendet oft einen tieferen Gesamtsatz an — siehe BVG-Ausweis.';
 
   @override
+  String get coupleTimelineTitle => 'Zeitachse der Pensionierungen';
+
+  @override
+  String get coupleTimelineYouRetire => 'Sie gehen in Pension';
+
+  @override
+  String get coupleTimelinePartnerRetires =>
+      'Ihr Partner oder Ihre Partnerin geht in Pension';
+
+  @override
+  String get coupleTimelineBothRetired => 'Beide Renten laufen';
+
+  @override
+  String coupleTimelineAges(int age1, int age2) {
+    return 'Sie $age1 · Partner/-in $age2';
+  }
+
+  @override
+  String get coupleTimelineCapBadge => 'AHV-Plafonierung aktiv';
+
+  @override
+  String get coupleTimelineFullBadge => 'Volle Rente';
+
+  @override
+  String get coupleTimelineHouseholdMonthly => 'Paareinkommen/Monat';
+
+  @override
   String get coupleWithdrawalTotalTax => 'Gesamtsteuer des Plans';
 
   @override
