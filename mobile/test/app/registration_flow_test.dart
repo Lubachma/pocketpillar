@@ -86,7 +86,12 @@ void main() {
     'integration: 409 on register — redirect held back, message visible, '
     'back to login',
     (tester) async {
-      SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
+      SharedPreferences.setMockInitialValues({
+        'hasSeenOnboarding': true,
+        // Full-app harness: keep the cold-start biometric lock (default
+        // ON) out of the way — its behavior has its own suite.
+        'biometricLockEnabled': false,
+      });
       final prefs = await SharedPreferences.getInstance();
       final auth = SessionEmittingAuthRepository();
       final api = Blocking409ApiClient();

@@ -324,4 +324,21 @@ void main() {
       },
     );
   });
+
+  test('transport timeouts pinned: connect 10 s, send 30 s (uploads), '
+      'receive 20 s', () {
+    // The default Dio carries the production BaseOptions (the harness
+    // injects its own): removing any timeout turns this red.
+    final client = ApiClient(
+      baseUrl: 'http://localhost:3000',
+      getAccessToken: () => null,
+      refreshAccessToken: () async => null,
+      onAuthExpired: () async {},
+      getLanguage: () => 'fr',
+    );
+
+    expect(client.httpOptions.connectTimeout, const Duration(seconds: 10));
+    expect(client.httpOptions.sendTimeout, const Duration(seconds: 30));
+    expect(client.httpOptions.receiveTimeout, const Duration(seconds: 20));
+  });
 }

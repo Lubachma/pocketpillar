@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_repository.dart';
@@ -61,6 +62,11 @@ class ApiClient {
 
   final Dio _dio;
   final Future<String?> Function() _refreshAccessToken;
+
+  /// Transport configuration — exposed so tests can pin the timeouts
+  /// (connect/send/receive) without reaching into the private Dio.
+  @visibleForTesting
+  BaseOptions get httpOptions => _dio.options;
 
   /// Shared in-flight refresh: concurrent 401s wait for the same
   /// refresh instead of each triggering their own (single-flight).

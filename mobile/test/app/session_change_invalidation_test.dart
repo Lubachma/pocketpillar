@@ -50,7 +50,12 @@ void main() {
       '(no cross-account leak); a token refresh invalidates nothing', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
+    SharedPreferences.setMockInitialValues({
+      'hasSeenOnboarding': true,
+      // Full-app harness: keep the cold-start biometric lock (default
+      // ON) out of the way — its behavior has its own suite.
+      'biometricLockEnabled': false,
+    });
     final prefs = await SharedPreferences.getInstance();
     final auth = _ControllableAuthRepository();
     final profiles = CountingFakeFinancialProfileRepository();
@@ -92,7 +97,12 @@ void main() {
 
   testWidgets('session change also resets dashboard, recommendations, score '
       'and documents (cross-account leak, review 08.2026)', (tester) async {
-    SharedPreferences.setMockInitialValues({'hasSeenOnboarding': true});
+    SharedPreferences.setMockInitialValues({
+      'hasSeenOnboarding': true,
+      // Full-app harness: keep the cold-start biometric lock (default
+      // ON) out of the way — its behavior has its own suite.
+      'biometricLockEnabled': false,
+    });
     final prefs = await SharedPreferences.getInstance();
     final auth = _ControllableAuthRepository();
     final profiles = CountingFakeFinancialProfileRepository();

@@ -68,8 +68,14 @@ class BiometricService {
       );
       return canUnlock;
     } on PlatformException catch (e) {
-      // Safety net (e.g. missing plugin): we never unlock.
+      // Platform-side failure outside the plugin's typed errors: never
+      // unlock.
       debugLog('Biometric error (${e.code}): lock kept');
+      return false;
+    } on Object catch (e) {
+      // True safety net — e.g. MissingPluginException, which is NOT a
+      // PlatformException (follow-up review): fail-closed here too.
+      debugLog('Biometric error ($e): lock kept');
       return false;
     }
   }

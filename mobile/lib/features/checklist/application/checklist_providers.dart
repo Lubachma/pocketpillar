@@ -18,6 +18,11 @@ import '../../../core/utils/clock.dart';
 /// watch the same provider: the dashboard's progress ring
 /// refreshes itself on return (TODO 3.2 resolved — no more single
 /// synchronous read).
+///
+/// KNOWN LIMIT (follow-up review 08.2026): the key is per YEAR, not per
+/// account — on a shared device, user B sees user A's local checkmarks.
+/// Device-local convenience data only (never sent to the backend);
+/// scoping the key by user id is the fix if this ever matters.
 final checklistCompletedIdsProvider =
     NotifierProvider<ChecklistCompletedIdsNotifier, Set<String>>(
       ChecklistCompletedIdsNotifier.new,
