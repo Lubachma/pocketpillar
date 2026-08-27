@@ -1,0 +1,46 @@
+name: Uptime
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    # Every 30 min — coarse on purpose: the API scales to zero, so a
+    # tighter cron would keep the machine warm and defeat the free tier.
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 3 attempts spread over ~50s: a cold start (a few seconds of boot)
+      # must not page anyone. A real outage fails all three.
+      - name: Probe /health
+        id: probe
+        run: |
+          for i in 1 2 3; do
+            if curl -fsS --max-time 25 https://api.pocketpillar.ch/health > /dev/null; then
+              echo "healthy on attempt $i"
+              exit 0
+            fi
+            sleep 12
+          done
+          echo "unreachable after 3 attempts"
+          exit 1
+
+      # ntfy push on failure — same topic as the demo-reset pulse. The
+      # topic is a repo secret; skip silently when it isn't configured.
+      - name: Alert (ntfy)
+        if: failure()
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          [ -z "$NTFY_TOPIC" ] && exit 0
+          curl -fsS --max-time 15 \
+            -H "Title: PocketPillar API DOWN" \
+            -H "Priority: high" \
+            -H "Tags: rotating_light" \
+            -d "api.pocketpillar.ch/health unreachable (3 attempts). $(date -u +%FT%TZ)" \
+            "https://ntfy.sh/$NTFY_TOPIC" > /dev/null

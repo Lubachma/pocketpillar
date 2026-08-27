@@ -13,6 +13,7 @@ Trilingual (French · German · English) — even server-computed labels follow 
 
 <p align="center">
   <a href="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Lubachma/pocketpillar/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/Lubachma/pocketpillar/actions/workflows/codeql.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm--NC%201.0.0-blue"></a>
 </p>
 
@@ -40,6 +41,7 @@ Trilingual (French · German · English) — even server-computed labels follow 
 - **Provider comparison** — fees, performance, ESG, server-scored best match.
 - **Document vault** — private storage (encrypted at rest), 5-minute signed download links.
 - **Year-end checklist** — what to pay in before December 31.
+- **Built-in pedagogy** — tap-anywhere help sheets (the 3 pillars, conversion rate, withdrawal tax…) and an in-app plain-words "how do we calculate?" page mirroring this repo's [methodology doc](docs/fiscal-accuracy.md).
 
 ## Swiss-grade accuracy
 
@@ -78,8 +80,8 @@ API reference: [docs/api-contract.md](docs/api-contract.md)
 
 ## Quality
 
-- **390 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
-- **499 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
+- **399 backend tests** (Vitest) — calculation functions are pure and tested against official anchor values.
+- **515 Flutter tests** (unit + widget) and mocked E2E journeys; `flutter analyze` at **0 issues**.
 - CI on every push/PR to `main` (typecheck, lint, format, tests with coverage thresholds, debug APK build).
 - Real-conditions smoke script against any deployment: `scripts/smoke-api.sh <base-url>` (7 steps, self-cleaning).
 - The public demo is reset every night by a scheduled job that replays the real API end to end.

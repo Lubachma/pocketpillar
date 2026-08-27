@@ -1,0 +1,29 @@
+name: CodeQL
+
+permissions:
+  contents: read
+  security-events: write
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly sweep even without pushes (Monday 06:17 UTC).
+    - cron: '17 6 * * 1'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Dart isn't supported by CodeQL — the backend (TypeScript) is the
+      # security-sensitive surface anyway (auth, tax engines, API).
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - uses: github/codeql-action/analyze@v3

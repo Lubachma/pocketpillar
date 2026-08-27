@@ -13,6 +13,7 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 
 <p align="center">
   <a href="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Lubachma/pocketpillar/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Lubachma/pocketpillar/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/Lubachma/pocketpillar/actions/workflows/codeql.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="Licence : PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm--NC%201.0.0-blue"></a>
 </p>
 
@@ -40,6 +41,7 @@ Trilingue (français · allemand · anglais) — même les libellés calculés c
 - **Comparaison de prestataires** — frais, performance, ESG, meilleur choix scoré côté serveur.
 - **Coffre-fort documents** — stockage privé (chiffré au repos), liens de téléchargement signés (5 minutes).
 - **Checklist de fin d'année** — ce qu'il reste à verser avant le 31 décembre.
+- **Pédagogie intégrée** — fiches d'aide au toucher partout (les 3 piliers, taux de conversion, impôt au retrait…) et une page « comment calculons-nous ? » en mots simples, miroir de la [doc de méthodologie](docs/fiscal-accuracy.md) de ce repo.
 
 ## Précision suisse
 
@@ -78,8 +80,8 @@ Référence API : [docs/api-contract.md](docs/api-contract.md) (en anglais)
 
 ## Qualité
 
-- **390 tests backend** (Vitest) — fonctions de calcul pures, testées contre les valeurs d'ancrage officielles.
-- **499 tests Flutter** (unitaires + widget) et parcours E2E mockés ; `flutter analyze` à **0 issue**.
+- **399 tests backend** (Vitest) — fonctions de calcul pures, testées contre les valeurs d'ancrage officielles.
+- **515 tests Flutter** (unitaires + widget) et parcours E2E mockés ; `flutter analyze` à **0 issue**.
 - CI à chaque push/PR vers `main` (typecheck, lint, format, tests avec seuils de couverture, build APK debug).
 - Smoke test en conditions réelles contre n'importe quel déploiement : `scripts/smoke-api.sh <base-url>` (7 étapes, auto-nettoyant).
 - La démo publique est réinitialisée chaque nuit par une tâche planifiée qui rejoue la vraie API de bout en bout.
