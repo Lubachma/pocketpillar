@@ -45,6 +45,8 @@ export async function sendPulse(
         Tags: options.failed ? 'rotating_light' : 'chart_with_upwards_trend',
       },
       body: message.body,
+      // The failure path must not hang either (incident 2026-08-28).
+      signal: AbortSignal.timeout(10_000),
     });
   } catch (error) {
     console.warn('pulse ntfy non envoyé (sans gravité):', error);

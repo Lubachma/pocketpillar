@@ -16,6 +16,13 @@
  *
  * Execution: daily Fly scheduled machine —
  * `node dist/scripts/reset-demo.js`.
+ *
+ * Resilience (incident 2026-08-28 — API stopped behind the proxy, one
+ * fetch held for undici's 300 s, demo account left deleted for hours):
+ * a `/health` gate wakes the API and BLOCKS any deletion until it is
+ * reachable; every call carries a 15 s timeout; API calls retry
+ * transient failures; a run fails within minutes and Fly's restart
+ * policy re-runs the whole (idempotent) script.
  */
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
@@ -31,6 +38,7 @@ import {
   demoSubscriptionData,
 } from './demo-fixtures.js';
 import { sendPulse } from './demo-pulse.js';
+import { resilientFetch, timeoutFetch } from './http-resilience.js';
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -50,20 +58,55 @@ const NTFY_TOPIC = process.env.NTFY_TOPIC ?? '';
 /** Connections counted before the purge (server-side technical logs). */
 let sessionsSinceReset = 0;
 
-const authOptions = { auth: { autoRefreshToken: false, persistSession: false } };
-const admin = createClient(SUPABASE_URL, SERVICE_KEY, authOptions);
-const anon = createClient(SUPABASE_URL, ANON_KEY, authOptions);
+// Short-timeout fetch (incident 2026-08-28): no supabase-js call may
+// hang for undici's 300 s default.
+const clientOptions = {
+  auth: { autoRefreshToken: false, persistSession: false },
+  global: { fetch: timeoutFetch() },
+};
+const admin = createClient(SUPABASE_URL, SERVICE_KEY, clientOptions);
+const anon = createClient(SUPABASE_URL, ANON_KEY, clientOptions);
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: requireEnv('DATABASE_URL') }),
 });
 
 async function signIn(): Promise<string | null> {
-  const { data } = await anon.auth.signInWithPassword({
+  const { data, error } = await anon.auth.signInWithPassword({
     email: DEMO_EMAIL,
     password: DEMO_PASSWORD,
   });
+  // Availability ≠ invalidity (same lesson as the backend auth cache):
+  // a network failure here must NOT read as "password rotated" — that
+  // conclusion leads straight to the account purge. Only an explicit
+  // AuthApiError (wrong credentials) may return null.
+  if (error && error.name !== 'AuthApiError') {
+    throw new Error(`signIn démo indisponible (${error.name}): ${error.message}`);
+  }
   return data.session?.access_token ?? null;
+}
+
+/**
+ * Wakes the API (`min_machines_running = 0`: the machine is stopped at
+ * reset time) and proves it reachable BEFORE anything is deleted — a
+ * reset that cannot reach the API must abort with the demo account
+ * intact (incident 2026-08-28: fetch held 300 s by the proxy, account
+ * already purged, recreation never ran).
+ */
+async function waitForApiHealth(): Promise<void> {
+  const deadline = Date.now() + 120_000;
+  let lastError: unknown = null;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(`${API}/health`, { signal: AbortSignal.timeout(10_000) });
+      if (response.ok) return;
+      lastError = new Error(`GET /health → ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 5_000));
+  }
+  throw new Error(`API injoignable — reset abandonné, compte démo intact (${String(lastError)})`);
 }
 
 async function api(
@@ -72,7 +115,7 @@ async function api(
   path: string,
   body?: unknown,
 ): Promise<Record<string, unknown>> {
-  const response = await fetch(`${API}${path}`, {
+  const response = await resilientFetch(`${API}${path}`, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -124,7 +167,10 @@ async function adminPurgeByEmail(): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  // 0 — Pulse: count the outgoing account's connections before the purge.
+  // 0 — API reachable first: nothing is deleted before that proof.
+  await waitForApiHealth();
+
+  // 0 bis — Pulse: count the outgoing account's connections before the purge.
   const previousAuthId = await findAuthUserIdByEmail();
   if (previousAuthId) {
     try {
@@ -178,7 +224,7 @@ async function main(): Promise<void> {
     new Blob([DEMO_DOCUMENT.bytes()], { type: DEMO_DOCUMENT.mimeType }),
     DEMO_DOCUMENT.filename,
   );
-  const upload = await fetch(`${API}/documents`, {
+  const upload = await resilientFetch(`${API}/documents`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
     body: form,
