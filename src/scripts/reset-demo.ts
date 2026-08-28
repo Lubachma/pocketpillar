@@ -261,5 +261,11 @@ main()
     if (NTFY_TOPIC) {
       await sendPulse(NTFY_TOPIC, sessionsSinceReset, { failed: true });
     }
+    // Fly restarts a failed run immediately (on-failure, max 3): without
+    // spacing, a persistent failure is a BURST toward Supabase — the
+    // 2026-08-28 burst got the egress IP banned ~40 min by the edge's
+    // abuse protection, cutting the whole backend off auth. One retry
+    // every ~2 min costs nothing and stays under every radar.
+    await new Promise((resolve) => setTimeout(resolve, 90_000));
   })
   .finally(() => prisma.$disconnect());
